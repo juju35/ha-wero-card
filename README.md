@@ -16,6 +16,7 @@ Custom Lovelace card for Home Assistant that displays your [Wero](https://wero-w
 - QR code generated in pure JS (embedded Reed-Solomon algorithm), with a spec-compliant quiet zone
 - Wero logo in the header (can be disabled)
 - Copy-link button to share the payment link by message
+- Tap the QR code to show it fullscreen (tap again or press Escape to close)
 - Fully compatible with Home Assistant dark mode and sections dashboards
 - French / English, auto-detected
 - HACS-ready, single file (~20 KB)
