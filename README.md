@@ -7,6 +7,8 @@
 
 [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=juju35&repository=ha-wero-card&category=plugin)
 
+![wero-qr-card](https://raw.githubusercontent.com/juju35/ha-wero-card/main/screenshots/card.png)
+
 Custom Lovelace card for Home Assistant that displays your [Wero](https://wero-wallet.eu) QR code, so guests can pay you back without asking for your phone number or IBAN.
 
 **Zero external dependencies** — the QR code is generated in pure JavaScript with an embedded Reed-Solomon encoder. No CDN, no network requests.
