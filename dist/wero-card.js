@@ -146,7 +146,8 @@ class WeroCard extends HTMLElement {
 
     this.shadowRoot.innerHTML = `
       <style>
-        ha-card { padding: 16px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+        :host { display: block; height: 100%; }
+        ha-card { height: 100%; box-sizing: border-box; padding: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; }
         .header { display: flex; align-items: center; gap: 10px; width: 100%; }
         .logo { height: 26px; width: auto; display: block; }
         .title { flex: 1; font-size: 16px; font-weight: 500; color: var(--primary-text-color); }
