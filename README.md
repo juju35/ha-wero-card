@@ -19,9 +19,10 @@ Custom Lovelace card for Home Assistant that displays your [Wero](https://wero-w
 - Wero logo in the header (can be disabled)
 - Copy-link button to share the payment link by message
 - Tap the QR code to show it fullscreen (tap again or press Escape to close)
+- Visual editor: add and configure the card from the dashboard UI, no YAML needed
 - Fully compatible with Home Assistant dark mode and sections dashboards
 - French / English, auto-detected
-- HACS-ready, single file (~20 KB)
+- HACS-ready, single file (~25 KB)
 
 ## Getting your Wero link
 
@@ -52,6 +53,10 @@ There is no public format to build a Wero QR code from a phone number or an IBAN
 4. Clear your browser cache and refresh
 
 ## Configuration
+
+### Visual editor
+
+Edit your dashboard → **Add card** → search for **Wero QR Card**. Every option below can be set from the form; switch to the code editor if you prefer YAML.
 
 ### Minimal
 
