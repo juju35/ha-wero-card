@@ -5,7 +5,6 @@
 [![Release](https://img.shields.io/github/v/release/juju35/ha-wero-card)](https://github.com/juju35/ha-wero-card/releases/latest)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-
 [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=juju35&repository=ha-wero-card&category=plugin)
 
 <img src="https://raw.githubusercontent.com/juju35/ha-wero-card/main/screenshots/card.png" alt="wero-qr-card" width="350">
