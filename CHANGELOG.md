@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.3.3
+
+### Changes
+- HACS now asks for Home Assistant 2024.8 or later, the version that brought the sections view the card supports; the README says so under **Prerequisites**.
+- README: **Add to HACS** button in the installation steps, as in the other ha-* repositories.
+
+### Maintenance
+- CHANGELOG headings use the same plain English set as the other ha-* repositories.
+
 ## 1.3.2
 
 ### Maintenance
@@ -36,7 +45,7 @@
 ### What's new
 - The QR code background now uses the yellow of the Wero logo (#fff48d), with dark modules (#1d1c1c) so it still scans reliably. This applies to the card and to the fullscreen view.
 
-### Other
+### Changes
 - README screenshot updated.
 
 ## 1.2.0
@@ -45,7 +54,7 @@
 - Visual editor: add the card from **Add card → Wero QR Card** and set every option from a form (link, title, payee name, logo, QR size, language), no YAML needed.
 - The card picker now shows a live preview of the card.
 
-### Other
+### Changes
 - Editor labels in French and English, following Home Assistant's language.
 - The YAML saved by the editor leaves out empty fields and default values.
 
@@ -55,7 +64,7 @@
 - Tap the QR code to show it fullscreen on a dark background.
 - Tap it again, tap the background, or press Escape to close it.
 
-### Other
+### Changes
 - The card version is now logged to the browser console on load.
 
 ## 1.0.0
