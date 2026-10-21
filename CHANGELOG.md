@@ -3,13 +3,13 @@
 ## 1.3.0
 
 ### Changes
-- Header aligned with the other juju35 cards: title 18px next to the Wero logo.
+- Header aligned with the other ha-* cards: title 18px next to the Wero logo.
 - Rounded corners, spacing and label sizes aligned with the other cards.
 
 ### Development
 - The card source moves to `src/wero-card.js`; `npm run build` stamps the version from `package.json` into `dist/wero-card.js`, and CI checks that `dist/` is up to date.
 - `npm run screenshots` renders the README screenshots (light and dark).
-- Releases are published from this CHANGELOG when `version` in `package.json` has no tag yet, like the other juju35 repositories (Release Drafter removed).
+- Releases are now published from `CHANGELOG.md`, added in this version, when `version` in `package.json` has no tag yet, like the other ha-* repositories (Release Drafter removed).
 
 ## 1.2.3
 
