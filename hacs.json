@@ -2,5 +2,6 @@
   "name": "Wero QR Card",
   "render_readme": true,
   "content_in_root": false,
-  "filename": "wero-card.js"
+  "filename": "wero-card.js",
+  "homeassistant": "2024.8.0"
 }
