@@ -147,22 +147,22 @@ class WeroCard extends HTMLElement {
     this.shadowRoot.innerHTML = `
       <style>
         :host { display: block; height: 100%; }
-        ha-card { height: 100%; box-sizing: border-box; padding: 16px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 12px; }
-        .header { display: flex; align-items: center; gap: 12px; width: 100%; }
-        .logo { height: 28px; width: auto; display: block; flex: none; }
-        .name { flex: 1; min-width: 0; font-size: 18px; font-weight: 500; line-height: 1.25; color: var(--primary-text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        ha-card { height: 100%; box-sizing: border-box; padding: 12px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 10px; }
+        .header { display: flex; align-items: center; gap: 10px; width: 100%; }
+        .logo { height: 24px; width: auto; display: block; flex: none; }
+        .name { flex: 1; min-width: 0; font-size: 16px; font-weight: 500; line-height: 1.25; color: var(--primary-text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         ha-icon { color: var(--secondary-text-color); --mdc-icon-size: 22px; }
         .header > ha-icon { --mdc-icon-size: 40px; }
         button { background: none; border: none; cursor: pointer; padding: 0; display: flex; align-items: center; }
         .qr-wrap { background: #fff48d; border-radius: 10px; overflow: hidden; line-height: 0; max-width: 100%; cursor: zoom-in; }
-        .qr-wrap svg { max-width: 100%; height: auto; }
+        .qr-wrap svg { max-width: 100%; height: auto; width: 176px; }
         dialog { border: none; padding: 0; margin: auto; background: #fff48d; border-radius: 12px; line-height: 0; overflow: hidden; cursor: zoom-out; }
         dialog::backdrop { background: rgba(0,0,0,0.85); }
         dialog svg { width: min(90vw, 90vh); height: auto; display: block; }
-        .info-row { width: 100%; box-sizing: border-box; background: var(--secondary-background-color, rgba(127,127,127,.08)); border-radius: 10px; padding: 8px 12px; }
-        .lbl { font-size: 12px; color: var(--secondary-text-color); margin-bottom: 2px; }
-        .val { font-size: 14px; font-weight: 500; word-break: break-word; color: var(--primary-text-color); }
-        .hint { font-size: 12px; color: var(--secondary-text-color); text-align: center; }
+        .info-row { width: 100%; box-sizing: border-box; background: var(--secondary-background-color, rgba(127,127,127,.08)); border-radius: 10px; padding: 6px 10px; }
+        .lbl { font-size: 11px; color: var(--secondary-text-color); margin-bottom: 0; }
+        .val { font-size: 13px; font-weight: 500; word-break: break-word; color: var(--primary-text-color); }
+        .hint { font-size: 11px; color: var(--secondary-text-color); text-align: center; }
       </style>
       <ha-card>
         <div class="header">
