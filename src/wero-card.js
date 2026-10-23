@@ -148,7 +148,7 @@ class WeroCard extends HTMLElement {
         :host { display: block; height: 100%; }
         ha-card { height: 100%; box-sizing: border-box; padding: 12px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 10px; }
         .header { display: flex; align-items: center; gap: 10px; width: 100%; }
-        .logo { height: 24px; width: auto; display: block; flex: none; }
+        .logo { height: 36px; width: auto; display: block; flex: none; }
         .name { flex: 1; min-width: 0; font-size: 16px; font-weight: 500; line-height: 1.25; color: var(--primary-text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         ha-icon { color: var(--secondary-text-color); --mdc-icon-size: 22px; }
         .header > ha-icon { --mdc-icon-size: 40px; }

@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.4.2
+
+### Changes
+- Wero logo shown 36 px high, the same height as the WiFi logo of ha-wifi-card (was 24 px).
+
 ## 1.4.1
 
 ### Maintenance
