@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.5.0
+
+### Changes
+- `qr_size` now takes effect: the QR code used to stay at 176 px whatever the setting. Without `qr_size` nothing changes (176 px, now also the default shown in the editor and the README, instead of 200).
+- Card size in the sections view explicitly follows its content (`rows: auto`, unchanged in practice), and the card picker description reads "Wero QR code, no CDN".
+
+### Fixes
+- Long payment links (about 110 characters or more) produced a QR code that could not be scanned; every length now works.
+- A payment link containing an emoji no longer produces an unreadable QR code.
+- The copy confirmation shows on the right icon even if the card is redrawn meanwhile.
+
+### Maintenance
+- CI: actions pinned by commit SHA, read-only token permissions, Dependabot for GitHub Actions, duplicate-code annotations, and QR round-trip tests run on every push.
+
 ## 1.4.3
 
 ### Maintenance
