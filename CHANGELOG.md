@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.5.1
+
+### Fixes
+- A negative, zero or non-numeric `qr_size` falls back to the default 176 px instead of hiding the QR code.
+- The copy icon no longer stays on the check mark when the card is removed from the page and shown again during the copy confirmation.
+- Very long payment links (well over a thousand characters) no longer get a larger QR code than needed: the built-in encoder had a wrong table entry for one size, and an error other than "too long" is no longer silently skipped.
+
+### Maintenance
+- New tests for `qr_size`, the copy icon and the QR encoder (12 in all); the screenshot script renders each capture in its own page, and the duplicate-code check ignores test folders.
+
 ## 1.5.0
 
 ### Changes
