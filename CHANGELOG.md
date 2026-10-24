@@ -1,5 +1,29 @@
 # Changelog
 
+## 1.5.1
+
+### Fixes
+- A negative, zero or non-numeric `qr_size` falls back to the default 176 px instead of hiding the QR code.
+- The copy icon no longer stays on the check mark when the card is removed from the page and shown again during the copy confirmation.
+- Very long payment links (well over a thousand characters) no longer get a larger QR code than needed: the built-in encoder had a wrong table entry for one size, and an error other than "too long" is no longer silently skipped.
+
+### Maintenance
+- New tests for `qr_size`, the copy icon and the QR encoder (12 in all); the screenshot script renders each capture in its own page, and the duplicate-code check ignores test folders.
+
+## 1.5.0
+
+### Changes
+- `qr_size` now takes effect: the QR code used to stay at 176 px whatever the setting. Without `qr_size` nothing changes (176 px, now also the default shown in the editor and the README, instead of 200).
+- Card size in the sections view explicitly follows its content (`rows: auto`, unchanged in practice), and the card picker description reads "Wero QR code, no CDN".
+
+### Fixes
+- Long payment links (about 110 characters or more) produced a QR code that could not be scanned; every length now works.
+- A payment link containing an emoji no longer produces an unreadable QR code.
+- The copy confirmation shows on the right icon even if the card is redrawn meanwhile.
+
+### Maintenance
+- CI: actions pinned by commit SHA, read-only token permissions, Dependabot for GitHub Actions, duplicate-code annotations, and QR round-trip tests run on every push.
+
 ## 1.4.3
 
 ### Maintenance

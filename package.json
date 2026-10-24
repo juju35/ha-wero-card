@@ -1,6 +1,6 @@
 {
   "name": "ha-wero-card",
-  "version": "1.4.3",
+  "version": "1.5.1",
   "description": "Lovelace card for Home Assistant displaying a Wero payment QR code, no CDN.",
   "private": true,
   "type": "module",
