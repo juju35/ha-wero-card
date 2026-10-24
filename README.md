@@ -88,7 +88,7 @@ url: https://share.weropay.eu/p/1/c/XXXXXXXXXX
 title: Remboursement
 name: Alex
 logo: true
-qr_size: 200
+qr_size: 176
 language: fr
 ```
 
@@ -100,7 +100,7 @@ language: fr
 | `title` | ❌ | Auto (i18n) | Card title |
 | `name` | ❌ | — | Payee name, shown under the QR code |
 | `logo` | ❌ | `true` | Show the Wero logo in the header (`false` shows a generic icon) |
-| `qr_size` | ❌ | `200` | QR code size in pixels (quiet zone included) |
+| `qr_size` | ❌ | `176` | QR code size in pixels (quiet zone included); shrinks to fit a narrower card |
 | `language` | ❌ | Auto | Force language: `fr` or `en` (auto-detects from HA settings) |
 
 ## Screenshots

@@ -7,10 +7,12 @@
   "scripts": {
     "build": "node scripts/build.mjs",
     "check": "node scripts/build.mjs && node --check dist/wero-card.js",
-    "screenshots": "node scripts/screenshots.mjs"
+    "screenshots": "node scripts/screenshots.mjs",
+    "test": "node --test test/*.test.mjs"
   },
   "license": "MIT",
   "devDependencies": {
+    "jsqr": "^1.4.0",
     "playwright": "^1.56.1"
   }
 }
