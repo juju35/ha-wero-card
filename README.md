@@ -86,7 +86,7 @@ url: https://share.weropay.eu/p/1/c/XXXXXXXXXX
 type: custom:wero-card
 url: https://share.weropay.eu/p/1/c/XXXXXXXXXX
 title: Remboursement
-name: Julien
+name: Alex
 logo: true
 qr_size: 200
 language: fr

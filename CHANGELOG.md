@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.4.3
+
+### Maintenance
+- Neutral name in the README example and the screenshot mock data; screenshots regenerated.
+
 ## 1.4.2
 
 ### Changes
