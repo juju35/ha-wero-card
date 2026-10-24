@@ -101,3 +101,44 @@ test("qr_size sets the displayed size", () => {
   assert.match(html, /id="qr"[^>]*style="--wero-qr-size:300px"/);
   assert.match(html, /<svg [^>]*width="300"/);
 });
+
+test("the copy feedback reaches the icon of the current render, and the timer stops on disconnect", async () => {
+  const card = new WeroCard();
+  card.setConfig({ url: "https://share.weropay.eu/p/1/c/AbCdEfGhIj" });
+  // Each render gets its own icon node; getElementById returns the latest one
+  const icons = [];
+  const newIcon = () => {
+    const attrs = {};
+    icons.push({ attrs, setAttribute: (k, v) => (attrs[k] = v) });
+  };
+  newIcon();
+  card.shadowRoot.getElementById = (id) => (id === "ico" ? icons.at(-1) : {});
+  let resolve;
+  ctx.navigator = { clipboard: { writeText: () => new Promise((r) => (resolve = r)) } };
+  ctx.isSecureContext = true;
+  const timers = [];
+  ctx.setTimeout = (fn) => timers.push(fn) && timers.length;
+  ctx.clearTimeout = (id) => (timers[id - 1] = null);
+  try {
+    card._copy();
+    newIcon(); // re-render while the clipboard call is pending
+    resolve();
+    await Promise.resolve();
+    await Promise.resolve();
+    assert.equal(icons[0].attrs.icon, undefined);
+    assert.equal(icons[1].attrs.icon, "mdi:check");
+    card.disconnectedCallback();
+    assert.equal(timers[0], null);
+  } finally {
+    delete ctx.navigator;
+    delete ctx.isSecureContext;
+    delete ctx.setTimeout;
+    delete ctx.clearTimeout;
+  }
+});
+
+test("grid options and picker entry", () => {
+  assert.deepEqual({ ...new WeroCard().getGridOptions() }, { columns: 6, min_columns: 4, rows: "auto" });
+  const entry = ctx.customCards.find((c) => c.type === "wero-card");
+  assert.equal(entry.description, "Wero QR code, no CDN");
+});
