@@ -122,11 +122,12 @@ class WeroCard extends HTMLElement {
 
   _copy() {
     var url = this._config.url;
-    var ico = this.shadowRoot.getElementById('ico');
+    // Looked up when used: the card may re-render (language change) while the clipboard call runs
+    var setIcon = (icon) => this.shadowRoot.getElementById('ico')?.setAttribute('icon', icon);
     var done = () => {
-      ico.setAttribute('icon', 'mdi:check');
+      setIcon('mdi:check');
       clearTimeout(this._copyTimer);
-      this._copyTimer = setTimeout(() => ico.setAttribute('icon', 'mdi:content-copy'), 1500);
+      this._copyTimer = setTimeout(() => setIcon('mdi:content-copy'), 1500);
     };
     var legacy = () => {
       var ta = document.createElement('textarea');
@@ -191,9 +192,13 @@ class WeroCard extends HTMLElement {
     dlg.onclick = () => dlg.close();
   }
 
+  disconnectedCallback() {
+    clearTimeout(this._copyTimer);
+  }
+
   getCardSize() { return 5; }
 
-  getGridOptions() { return { columns: 6, min_columns: 4 }; }
+  getGridOptions() { return { columns: 6, min_columns: 4, rows: 'auto' }; }
 }
 
 // ── wero-card-editor (visual editor, built on HA's own ha-form) ──────────────
@@ -265,7 +270,7 @@ if (!window.customCards.some((c) => c.type === 'wero-card')) {
   window.customCards.push({
     type: 'wero-card',
     name: 'Wero QR Card',
-    description: 'QR code Wero — no CDN',
+    description: 'Wero QR code, no CDN',
     preview: true,
     documentationURL: 'https://github.com/juju35/ha-wero-card',
   });
