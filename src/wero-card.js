@@ -158,8 +158,10 @@ class WeroCard extends HTMLElement {
       <style>
         :host { display: block; height: 100%; }
         ha-card { height: 100%; box-sizing: border-box; padding: 12px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 10px; }
-        .header { display: flex; align-items: center; gap: 10px; width: 100%; }
-        .logo { height: 40px; width: auto; display: block; flex: none; object-fit: contain; }
+        .header { display: flex; align-items: center; gap: 10px; width: 100%; margin-bottom: -2px; }
+        /* The Wero wordmark on a 40 px tile of its own yellow, 2 px from the tile edges */
+        .logo { width: 40px; height: 40px; box-sizing: border-box; padding: 0 2px; border-radius: 10px; background: #fff48d;
+                display: block; flex: none; object-fit: contain; }
         .badge { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; flex: none;
                  --c: var(--primary-color, #03a9f4); background: color-mix(in srgb, var(--c) 16%, transparent); color: var(--c); }
         .badge ha-icon { color: inherit; --mdc-icon-size: 24px; }

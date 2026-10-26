@@ -3,7 +3,8 @@
 ## Unreleased
 
 ### Changes
-- Header: the Wero logo is 40 px high, like the 40 px header icons of the other ha-* cards; without the logo, the QR code icon sits in a 40 px round tinted badge (24 px icon).
+- Header: the Wero wordmark sits on a 40 × 40 px tile of the Wero yellow (10 px radius), scaled to the tile width, like the 40 px header icons of the other ha-* cards; without the logo, the QR code icon sits in a 40 px round tinted badge (24 px icon).
+- Header: 8 px between the header and the QR code.
 
 ## 1.5.1
 
