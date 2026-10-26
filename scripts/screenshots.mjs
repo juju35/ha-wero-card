@@ -69,7 +69,7 @@ export async function render(shots, { icons = {}, hass = {} } = {}) {
   for (const s of shots) {
     // A fresh page per shot: the scripts declare top-level constants
     const page = await browser.newPage({ deviceScaleFactor: 2, viewport: { width: 1000, height: 2000 } });
-    page.on("pageerror", (err) => console.error(`page error: ${err.message}`));
+    page.on("pageerror", (err) => console.error(`${s.file}: ${err.message}`));
     await page.setContent(pageHtml(s.theme, s.width));
     await page.addScriptTag({ content: haElements(icons) });
     await page.addScriptTag({ content: cardJs });
@@ -85,7 +85,13 @@ export async function render(shots, { icons = {}, hass = {} } = {}) {
     );
     if (s.after) await s.after(page);
     await page.waitForTimeout(400);
-    await page.locator(s.type).screenshot({ path: `${root}screenshots/${s.file}.png`, animations: "disabled" });
+    // The card with the 16 px page padding around it, on the theme background.
+    const box = await page.locator("#root").boundingBox();
+    await page.screenshot({
+      path: `${root}screenshots/${s.file}.png`,
+      clip: { x: 0, y: 0, width: s.width + 32, height: Math.ceil(box.height) + 32 },
+      animations: "disabled",
+    });
     console.log(`screenshots/${s.file}.png`);
     await page.close();
   }
@@ -100,8 +106,8 @@ const config = { url: "https://share.weropay.eu/p/1/c/EXAMPLE0123", name: "Alex"
 
 await render(
   [
-    { file: "card", type: "wero-card", theme: "light", width: 360, config },
-    { file: "card-dark", type: "wero-card", theme: "dark", width: 360, config: { ...config, title: "Remboursement" }, hass: { language: "fr" } },
+    { file: "card", type: "wero-card", theme: "light", width: 460, config },
+    { file: "card-dark", type: "wero-card", theme: "dark", width: 460, config: { ...config, title: "Refund" } },
   ],
   { icons }
 );
