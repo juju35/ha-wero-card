@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+### Changes
+- Header: the Wero logo is 40 px high, like the 40 px header icons of the other ha-* cards; without the logo, the QR code icon sits in a 40 px round tinted badge (24 px icon).
+
 ## 1.5.1
 
 ### Fixes

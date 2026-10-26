@@ -159,10 +159,12 @@ class WeroCard extends HTMLElement {
         :host { display: block; height: 100%; }
         ha-card { height: 100%; box-sizing: border-box; padding: 12px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 10px; }
         .header { display: flex; align-items: center; gap: 10px; width: 100%; }
-        .logo { height: 36px; width: auto; display: block; flex: none; }
+        .logo { height: 40px; width: auto; display: block; flex: none; object-fit: contain; }
+        .badge { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; flex: none;
+                 --c: var(--primary-color, #03a9f4); background: color-mix(in srgb, var(--c) 16%, transparent); color: var(--c); }
+        .badge ha-icon { color: inherit; --mdc-icon-size: 24px; }
         .name { flex: 1; min-width: 0; font-size: 16px; font-weight: 500; line-height: 1.25; color: var(--primary-text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         ha-icon { color: var(--secondary-text-color); --mdc-icon-size: 22px; }
-        .header > ha-icon { --mdc-icon-size: 40px; }
         button { background: none; border: none; cursor: pointer; padding: 0; display: flex; align-items: center; }
         .qr-wrap { background: #fff48d; border-radius: 10px; overflow: hidden; line-height: 0; max-width: 100%; cursor: zoom-in; }
         .qr-wrap svg { max-width: 100%; height: auto; width: var(--wero-qr-size, 176px); }
@@ -176,7 +178,7 @@ class WeroCard extends HTMLElement {
       </style>
       <ha-card>
         <div class="header">
-          ${c.logo ? `<img class="logo" src="${WERO_LOGO}" alt="Wero">` : '<ha-icon icon="mdi:qrcode-scan"></ha-icon>'}
+          ${c.logo ? `<img class="logo" src="${WERO_LOGO}" alt="Wero">` : '<div class="badge"><ha-icon icon="mdi:qrcode-scan"></ha-icon></div>'}
           <span class="name">${weroEsc(c.title)}</span>
           <button id="copy" title="${copy}" aria-label="${copy}"><ha-icon icon="mdi:content-copy" id="ico"></ha-icon></button>
         </div>
