@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.7.0
+
+### Fixes
+- README: the feature list announced the single file as "~25 KB" while the built `dist/wero-card.js` is now ~28 KB; the stated size is corrected.
+
 ## 1.6.0
 ### Changes
 - Header: the Wero wordmark sits on a 40 × 40 px tile of the Wero yellow (10 px radius), scaled to the tile width, like the 40 px header icons of the other ha-* cards; without the logo, the QR code icon sits in a 40 px round tinted badge (24 px icon).
