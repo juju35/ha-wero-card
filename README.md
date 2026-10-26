@@ -23,7 +23,7 @@ Custom Lovelace card for Home Assistant that displays your [Wero](https://wero-w
 - Visual editor: add and configure the card from the dashboard UI, no YAML needed
 - Fully compatible with Home Assistant dark mode and sections dashboards
 - French / English, auto-detected
-- HACS-ready, single file (~25 KB)
+- HACS-ready, single file (~28 KB)
 
 ## Prerequisites
 
