@@ -229,3 +229,17 @@ test("a re-render closes an open zoom dialog cleanly and reopens it", () => {
   card._render();
   assert.deepEqual(calls, ["close", "showModal"]);
 });
+
+test("I18N parity: every language has exactly the keys of en, and the editor offers each one", () => {
+  const i18n = ctx.WeroI18n;
+  // Arrays from the vm context have another prototype: copy them before deepEqual
+  const keys = (o) => Array.from(Object.keys(o)).sort();
+  const ref = keys(i18n.en);
+  for (const lang of ["fr", "de", "es"]) {
+    assert.ok(i18n[lang], `missing language ${lang}`);
+    assert.deepEqual(keys(i18n[lang]), ref, lang);
+    for (const [k, v] of Object.entries(i18n[lang])) assert.ok(typeof v === "string" && v.trim(), `${lang}.${k} empty`);
+  }
+  const options = ctx.WERO_EDITOR_SCHEMA.find((f) => f.name === "language").selector.select.options;
+  assert.deepEqual(Array.from(options, (o) => o.value).sort(), keys(i18n));
+});
