@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.7.1
+
+### Fixes
+- Changing the Home Assistant language while the zoomed QR code is open no longer leaves a stale dialog: it closes cleanly and reopens on the refreshed card. The zoom dialog's QR code is now built only when first opened.
+- README: the dark screenshot caption no longer says "French" (the capture is in English).
+
+### Maintenance
+- The QR encoder picks the code size directly from its capacity table instead of trying every size in turn (same result).
+- CI: release gated on tests, new Screenshots workflow, `hacs/action` pinned to a release tag, `npm ci` before the build check, unused ruff tooling removed; 2 new tests (14 in all).
+
 ## 1.7.0
 
 ### Fixes
