@@ -97,19 +97,20 @@ class WeroCard extends HTMLElement {
   }
 
   _buildQrSvg(text, size) {
-    var qr = null;
-    for (var t = 1; t <= 40 && !qr; t++) {
-      try {
-        var q = new QRCodeModel(t, QRErrorCorrectLevel.M);
-        q.addData(text);
-        q.make();
-        qr = q;
-      } catch (e) {
-        // Too small for the payload: try the next version; anything else is a bug
-        if (!/code length overflow/.test(e?.message)) throw e;
-      }
+    // Smallest version whose data capacity (RS block table) fits the byte-mode
+    // payload: 4 mode bits + the length field + the payload itself
+    var bytes = new QR8bitByte(text).getLength();
+    var type = 0;
+    for (var t = 1; t <= 40 && !type; t++) {
+      var blocks = QRRSBlock.getRSBlocks(t, QRErrorCorrectLevel.M);
+      var capacity = 0;
+      for (var b = 0; b < blocks.length; b++) capacity += blocks[b].dataCount;
+      if (4 + QRUtil.getLengthInBits(4, t) + bytes * 8 <= capacity * 8) type = t;
     }
-    if (!qr) throw new Error('url is too long for a QR code');
+    if (!type) throw new Error('url is too long for a QR code');
+    var qr = new QRCodeModel(type, QRErrorCorrectLevel.M);
+    qr.addData(text);
+    qr.make();
     var n = qr.getModuleCount();
     var quiet = 4; // quiet zone required by the QR spec, in modules
     var dim = n + quiet * 2;

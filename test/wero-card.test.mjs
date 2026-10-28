@@ -187,7 +187,7 @@ test("QR version 35 is built with the right alignment patterns", () => {
   assert.deepEqual([...ctx.QRUtil.getPatternPosition(35)], [6, 30, 54, 78, 102, 126, 150]);
 });
 
-test("only a too-long payload moves to the next QR version; other errors are raised", () => {
+test("QR build errors are raised; a too-long payload is rejected up front", () => {
   const Model = ctx.QRCodeModel;
   ctx.QRCodeModel = function () {
     this.addData = () => {};
