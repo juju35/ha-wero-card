@@ -22,8 +22,8 @@ Custom Lovelace card for Home Assistant that displays your [Wero](https://wero-w
 - Tap the QR code to show it fullscreen (tap again or press Escape to close)
 - Visual editor: add and configure the card from the dashboard UI, no YAML needed
 - Fully compatible with Home Assistant dark mode and sections dashboards
-- French / English, auto-detected
-- HACS-ready, single file (~28 KB)
+- English, French, German and Spanish, auto-detected
+- HACS-ready, single file (~29 KB)
 
 ## Prerequisites
 
@@ -101,7 +101,7 @@ language: fr
 | `name` | ❌ | — | Payee name, shown under the QR code |
 | `logo` | ❌ | `true` | Show the Wero logo in the header (`false` shows a generic icon) |
 | `qr_size` | ❌ | `176` | QR code size in pixels (quiet zone included); shrinks to fit a narrower card |
-| `language` | ❌ | Auto | Force language: `fr` or `en` (auto-detects from HA settings) |
+| `language` | ❌ | Auto | Force language: `en`, `fr`, `de` or `es` (auto-detects from HA settings) |
 
 ## Screenshots
 
@@ -138,6 +138,8 @@ npm run screenshots  # renders the card into screenshots/
 |---|---|
 | English | `en` |
 | Français | `fr` |
+| Deutsch | `de` |
+| Español | `es` |
 
 Contributions for additional languages are welcome!
 
