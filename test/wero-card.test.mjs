@@ -187,7 +187,7 @@ test("QR version 35 is built with the right alignment patterns", () => {
   assert.deepEqual([...ctx.QRUtil.getPatternPosition(35)], [6, 30, 54, 78, 102, 126, 150]);
 });
 
-test("only a too-long payload moves to the next QR version; other errors are raised", () => {
+test("QR build errors are raised; a too-long payload is rejected up front", () => {
   const Model = ctx.QRCodeModel;
   ctx.QRCodeModel = function () {
     this.addData = () => {};
@@ -201,4 +201,31 @@ test("only a too-long payload moves to the next QR version; other errors are rai
     ctx.QRCodeModel = Model;
   }
   assert.throws(() => WeroCard.prototype._buildQrSvg("x".repeat(3000), 176), /too long/);
+});
+
+test("the zoom dialog starts empty: a single QR SVG in the markup", () => {
+  const html = render({});
+  assert.match(html, /<dialog id="zoom"[^>]*><\/dialog>/);
+  assert.equal([...html.matchAll(/<svg /g)].length, 1);
+});
+
+test("a re-render closes an open zoom dialog cleanly and reopens it", () => {
+  const card = new WeroCard();
+  card.setConfig({ url: "https://share.weropay.eu/p/1/c/AbCdEfGhIj" });
+  const calls = [];
+  const dlg = {
+    open: true,
+    firstChild: {},
+    close: () => {
+      dlg.open = false;
+      calls.push("close");
+    },
+    showModal: () => {
+      dlg.open = true;
+      calls.push("showModal");
+    },
+  };
+  card.shadowRoot.getElementById = (id) => (id === "zoom" ? dlg : {});
+  card._render();
+  assert.deepEqual(calls, ["close", "showModal"]);
 });

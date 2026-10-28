@@ -23,11 +23,11 @@ jobs:
         with:
           node-version: 22
 
+      - name: Install dependencies
+        run: npm ci
+
       - name: Build and check the card
         run: npm run check
-
-      - name: Install test dependencies
-        run: npm ci
 
       - name: Unit tests
         run: npm test

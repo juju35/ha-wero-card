@@ -97,19 +97,20 @@ class WeroCard extends HTMLElement {
   }
 
   _buildQrSvg(text, size) {
-    var qr = null;
-    for (var t = 1; t <= 40 && !qr; t++) {
-      try {
-        var q = new QRCodeModel(t, QRErrorCorrectLevel.M);
-        q.addData(text);
-        q.make();
-        qr = q;
-      } catch (e) {
-        // Too small for the payload: try the next version; anything else is a bug
-        if (!/code length overflow/.test(e?.message)) throw e;
-      }
+    // Smallest version whose data capacity (RS block table) fits the byte-mode
+    // payload: 4 mode bits + the length field + the payload itself
+    var bytes = new QR8bitByte(text).getLength();
+    var type = 0;
+    for (var t = 1; t <= 40 && !type; t++) {
+      var blocks = QRRSBlock.getRSBlocks(t, QRErrorCorrectLevel.M);
+      var capacity = 0;
+      for (var b = 0; b < blocks.length; b++) capacity += blocks[b].dataCount;
+      if (4 + QRUtil.getLengthInBits(4, t) + bytes * 8 <= capacity * 8) type = t;
     }
-    if (!qr) throw new Error('url is too long for a QR code');
+    if (!type) throw new Error('url is too long for a QR code');
+    var qr = new QRCodeModel(type, QRErrorCorrectLevel.M);
+    qr.addData(text);
+    qr.make();
     var n = qr.getModuleCount();
     var quiet = 4; // quiet zone required by the QR spec, in modules
     var dim = n + quiet * 2;
@@ -153,6 +154,11 @@ class WeroCard extends HTMLElement {
     var qrStyle = c.qr_size ? ` style="--wero-qr-size:${c.qr_size}px"` : '';
     var copy = weroEsc(this._t('copy'));
     var zoom = weroEsc(this._t('zoom'));
+    // A re-render (e.g. language change via `set hass`) replaces an open zoom
+    // dialog: close it cleanly first and reopen the new one afterwards
+    var prevDlg = this.shadowRoot.getElementById('zoom');
+    var wasOpen = !!(prevDlg && prevDlg.open);
+    if (wasOpen) prevDlg.close();
 
     this.shadowRoot.innerHTML = `
       <style>
@@ -185,7 +191,7 @@ class WeroCard extends HTMLElement {
           <button id="copy" title="${copy}" aria-label="${copy}"><ha-icon icon="mdi:content-copy" id="ico"></ha-icon></button>
         </div>
         <div class="qr-wrap" id="qr" role="button" tabindex="0" title="${zoom}" aria-label="${zoom}"${qrStyle}>${svg}</div>
-        <dialog id="zoom" aria-label="${zoom}">${svg}</dialog>
+        <dialog id="zoom" aria-label="${zoom}"></dialog>
         ${c.name ? `<div class="info-row"><div class="lbl">${weroEsc(this._t('payee'))}</div><div class="val">${weroEsc(c.name)}</div></div>` : ''}
         <div class="hint">${weroEsc(this._t('hint'))}</div>
       </ha-card>`;
@@ -193,11 +199,16 @@ class WeroCard extends HTMLElement {
     this.shadowRoot.getElementById('copy').onclick = () => this._copy();
     var qr = this.shadowRoot.getElementById('qr');
     var dlg = this.shadowRoot.getElementById('zoom');
-    var open = () => { if (!dlg.open) dlg.showModal(); };
+    var open = () => {
+      // The dialog gets its copy of the QR (a clone, the SVG path can be big) on first open only
+      if (!dlg.firstChild) dlg.appendChild(qr.firstElementChild.cloneNode(true));
+      if (!dlg.open) dlg.showModal();
+    };
     qr.onclick = open;
     qr.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } };
     // Escape is handled natively by <dialog>; a click anywhere (QR or backdrop) closes it
     dlg.onclick = () => dlg.close();
+    if (wasOpen) open();
   }
 
   disconnectedCallback() {
