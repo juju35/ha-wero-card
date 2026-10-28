@@ -13,5 +13,5 @@
   },
   "formatter": { "enabled": false },
   "assist": { "enabled": false },
-  "javascript": { "globals": ["customElements", "HTMLElement", "hass"] }
+  "javascript": { "globals": ["customElements", "HTMLElement"] }
 }
