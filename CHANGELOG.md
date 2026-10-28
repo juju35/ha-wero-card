@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.8.0
+
+### Changes
+- German and Spanish translations: the card and its visual editor are now available in English, French, German and Spanish (auto-detected from Home Assistant, or forced with `language: de` / `language: es`); the editor's language selector offers Deutsch and Español.
+
+### Maintenance
+- New test checking that every language has exactly the keys of English and is offered by the editor (15 tests in all).
+- README: languages listed, single-file size updated to ~29 KB.
+
 ## 1.7.1
 
 ### Fixes
