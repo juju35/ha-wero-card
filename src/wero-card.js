@@ -37,6 +37,34 @@ var WeroI18n = {
     ed_qr_size: 'QR code size (px)',
     ed_language: 'Language',
   },
+  de: {
+    default_title: 'Geld senden',
+    payee: 'Empfänger',
+    hint: 'Scanne den QR-Code mit deiner Banking-App',
+    copy: 'Link kopieren',
+    zoom: 'QR-Code vergrößern',
+    ed_url: 'Wero-Link (https://…)',
+    ed_url_help: 'Der Link, der in deinem Wero-QR-Code enthalten ist',
+    ed_title: 'Titel',
+    ed_name: 'Name des Empfängers',
+    ed_logo: 'Wero-Logo anzeigen',
+    ed_qr_size: 'Größe des QR-Codes (px)',
+    ed_language: 'Sprache',
+  },
+  es: {
+    default_title: 'Enviar dinero',
+    payee: 'Beneficiario',
+    hint: 'Escanea el código QR con tu app bancaria',
+    copy: 'Copiar enlace',
+    zoom: 'Ampliar el código QR',
+    ed_url: 'Enlace de Wero (https://…)',
+    ed_url_help: 'El enlace codificado en tu código QR de Wero',
+    ed_title: 'Título',
+    ed_name: 'Nombre del beneficiario',
+    ed_logo: 'Mostrar el logotipo de Wero',
+    ed_qr_size: 'Tamaño del código QR (px)',
+    ed_language: 'Idioma',
+  },
 };
 
 // Default displayed size of the QR code, in px (quiet zone included)
@@ -232,6 +260,8 @@ var WERO_EDITOR_SCHEMA = [
   { name: 'language', selector: { select: { mode: 'dropdown', options: [
     { value: 'fr', label: 'Français' },
     { value: 'en', label: 'English' },
+    { value: 'de', label: 'Deutsch' },
+    { value: 'es', label: 'Español' },
   ] } } },
 ];
 
