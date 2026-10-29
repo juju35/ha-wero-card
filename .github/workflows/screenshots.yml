@@ -7,11 +7,15 @@ on:
     paths:
       - "src/**"
       - "scripts/**"
+      # A Playwright/Chromium bump (Dependabot) can change the rendering
+      - "package-lock.json"
 
 # Protected main is never pushed to: the job commits the refreshed screenshots
 # back onto the pull request's own branch, so they land through the normal merge.
+# actions: write lets it re-dispatch the PR checks on that commit.
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: screenshots-${{ github.head_ref || github.ref_name }}
@@ -35,19 +39,29 @@ jobs:
       - run: npm ci
       # Download the browser binary (no apt here) separately from its system libraries, so the apt work all sits in
       # the one time-boxed, retried step below and a hung mirror can never stall an unguarded install.
-      - run: npx playwright install chromium
+      - name: Install Chromium
+        timeout-minutes: 10
+        run: |
+          ok=
+          for i in 1 2 3; do
+            timeout 180 npx playwright install chromium && ok=1 && break
+            echo "Chromium download attempt $i failed or timed out, retrying in 15s"; sleep 15
+          done
+          [ -n "$ok" ] || { echo "::error::Chromium download failed 3 times"; exit 1; }
       # Roboto + the browser's apt deps, each apt call time-boxed and retried so a
       # flaky mirror is abandoned and retried instead of hanging.
       - name: Install Roboto and browser deps
         timeout-minutes: 12
         run: |
+          ok=
           for i in 1 2 3; do
             timeout 150 sudo apt-get update \
               && timeout 300 sudo apt-get install -y fonts-roboto \
               && timeout 300 npx playwright install-deps chromium \
-              && break
+              && ok=1 && break
             echo "apt attempt $i failed or timed out, retrying in 15s"; sleep 15
           done
+          [ -n "$ok" ] || { echo "::error::apt failed 3 times"; exit 1; }
       - run: npm run build
       - name: Render screenshots
         run: |
@@ -57,6 +71,7 @@ jobs:
             exit 1
           }
       - name: Commit refreshed screenshots
+        id: commit
         if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
         run: |
           if [ -z "$(git status --porcelain screenshots)" ]; then
@@ -68,6 +83,17 @@ jobs:
           git add screenshots
           git commit -m "chore: refresh screenshots"
           git push
+          echo "pushed=true" >> "$GITHUB_OUTPUT"
+      # A push made with GITHUB_TOKEN starts no pull_request run, but a workflow_dispatch does:
+      # re-run the PR checks explicitly so the screenshots commit gets its own Validate/Lint/HACS runs.
+      - name: Re-run checks on the screenshot commit
+        if: steps.commit.outputs.pushed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for wf in lint.yml validate.yml hacs.yml; do
+            [ -f ".github/workflows/$wf" ] && gh workflow run "$wf" --ref "${{ github.head_ref }}"
+          done
       - name: Upload screenshots (manual run)
         if: github.event_name == 'workflow_dispatch'
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0

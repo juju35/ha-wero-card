@@ -95,9 +95,11 @@ class WeroCard extends HTMLElement {
   }
 
   set hass(hass) {
-    var prevLang = this._hassLang;
+    // Re-render only when the language actually used changes (not on every raw
+    // hass.language change: a forced `language`, or "fr" -> "fr-FR", shows nothing new)
+    var prevLang = this._configRaw ? this._getLang() : null;
     this._hassLang = hass?.language ? hass.language : null;
-    if (this._configRaw && prevLang !== this._hassLang) this._applyConfig();
+    if (this._configRaw && prevLang !== this._getLang()) this._applyConfig();
   }
 
   _getLang() {
@@ -157,19 +159,24 @@ class WeroCard extends HTMLElement {
     var url = this._config.url;
     // Looked up when used: the card may re-render (language change) while the clipboard call runs
     var setIcon = (icon) => this.shadowRoot.getElementById('ico')?.setAttribute('icon', icon);
-    var done = () => {
-      setIcon('mdi:check');
+    var flash = (icon) => {
+      setIcon(icon);
       clearTimeout(this._copyTimer);
       this._copyTimer = setTimeout(() => setIcon('mdi:content-copy'), 1500);
     };
+    var done = () => flash('mdi:check');
+    var failed = () => flash('mdi:alert');
     var legacy = () => {
       var ta = document.createElement('textarea');
       ta.value = url;
       ta.style.cssText = 'position:fixed;opacity:0';
       document.body.appendChild(ta);
       ta.select();
-      try { if (document.execCommand('copy')) done(); } catch (_e) { /* clipboard unavailable */ }
+      var ok = false;
+      try { ok = document.execCommand('copy'); } catch (_e) { /* clipboard unavailable */ }
       ta.remove();
+      if (ok) done();
+      else failed();
     };
     if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(url).then(done, legacy);
     else legacy();
@@ -177,7 +184,15 @@ class WeroCard extends HTMLElement {
 
   _render() {
     var c = this._config;
-    var svg = this._buildQrSvg(c.url, c.qr_size || WERO_QR_SIZE);
+    // The QR (8 mask trials) is only rebuilt when its payload or size changes,
+    // not on a re-render for a language change
+    var size = c.qr_size || WERO_QR_SIZE;
+    var key = `${size}|${c.url}`;
+    if (this._svgKey !== key) {
+      this._svg = this._buildQrSvg(c.url, size);
+      this._svgKey = key;
+    }
+    var svg = this._svg;
     // A configured size overrides the 176 px of the stylesheet (it still shrinks to fit the card)
     var qrStyle = c.qr_size ? ` style="--wero-qr-size:${c.qr_size}px"` : '';
     var copy = weroEsc(this._t('copy'));
@@ -282,19 +297,32 @@ class WeroCardEditor extends HTMLElement {
     return strings[key] || WeroI18n.en[key] || key;
   }
 
+  async _createForm() {
+    // ha-form is lazy-loaded by HA; loading a built-in card's editor guarantees it is defined.
+    if (!customElements.get('ha-form')) {
+      var entities = customElements.get('hui-entities-card');
+      if (entities?.getConfigElement) await entities.getConfigElement();
+    }
+    var form = document.createElement('ha-form');
+    form.schema = WERO_EDITOR_SCHEMA;
+    form.computeLabel = (s) => this._t(`ed_${s.name}`);
+    form.computeHelper = (s) => (s.name === 'url' ? this._t('ed_url_help') : undefined);
+    form.addEventListener('value-changed', (ev) => this._valueChanged(ev));
+    this.appendChild(form);
+    this._form = form;
+  }
+
   async _render() {
-    if (!this._form) {
-      // ha-form is lazy-loaded by HA; loading a built-in card's editor guarantees it is defined.
-      if (!customElements.get('ha-form')) {
-        var entities = customElements.get('hui-entities-card');
-        if (entities?.getConfigElement) await entities.getConfigElement();
-      }
-      this._form = document.createElement('ha-form');
-      this._form.schema = WERO_EDITOR_SCHEMA;
-      this._form.computeLabel = (s) => this._t(`ed_${s.name}`);
-      this._form.computeHelper = (s) => (s.name === 'url' ? this._t('ed_url_help') : undefined);
-      this._form.addEventListener('value-changed', (ev) => this._valueChanged(ev));
-      this.appendChild(this._form);
+    // setConfig can be called again while ha-form is still loading: every call
+    // waits on the same promise, so a single form (and listener) is ever created.
+    // _render is not awaited by setConfig: errors are caught here, never left unhandled.
+    try {
+      if (!this._formReady) this._formReady = this._createForm();
+      await this._formReady;
+    } catch (err) {
+      this._formReady = null; // retried on the next setConfig
+      console.error('wero-card editor: could not load ha-form', err);
+      return;
     }
     this._form.hass = this._hass;
     this._form.data = Object.assign({ logo: true, qr_size: WERO_QR_SIZE }, this._config);
