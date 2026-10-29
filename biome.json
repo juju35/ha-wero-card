@@ -12,6 +12,5 @@
     }
   },
   "formatter": { "enabled": false },
-  "assist": { "enabled": false },
-  "javascript": { "globals": ["customElements", "HTMLElement"] }
+  "assist": { "enabled": false }
 }

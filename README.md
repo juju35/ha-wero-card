@@ -23,7 +23,7 @@ Custom Lovelace card for Home Assistant that displays your [Wero](https://wero-w
 - Visual editor: add and configure the card from the dashboard UI, no YAML needed
 - Fully compatible with Home Assistant dark mode and sections dashboards
 - English, French, German and Spanish, auto-detected
-- HACS-ready, single file (~29 KB)
+- HACS-ready, single file (~30 KB)
 
 ## Prerequisites
 
@@ -85,11 +85,11 @@ url: https://share.weropay.eu/p/1/c/XXXXXXXXXX
 ```yaml
 type: custom:wero-card
 url: https://share.weropay.eu/p/1/c/XXXXXXXXXX
-title: Remboursement
+title: Refund
 name: Alex
 logo: true
 qr_size: 176
-language: fr
+language: en
 ```
 
 ### Options reference
