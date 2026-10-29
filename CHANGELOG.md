@@ -8,7 +8,7 @@
 - The card no longer re-renders (nor rebuilds its QR code) when Home Assistant's language changes without changing the language displayed; a language change reuses the QR code already built.
 
 ### Maintenance
-- CI: the Chromium download of the Screenshots workflow is time-boxed and retried, the apt step fails explicitly after 3 attempts, and a `package-lock.json` change refreshes the screenshots.
+- CI: the Chromium download of the Screenshots workflow is time-boxed and retried, the apt step fails explicitly after 3 attempts, and a `package-lock.json` change refreshes the screenshots. When it pushes refreshed screenshots to a pull request, it re-runs the Lint, Validate and HACS checks on that commit (Lint can now also be started manually).
 - README: the full-options example is in English; single-file size updated to ~30 KB. Redundant Biome globals removed; 4 new tests (19 in all).
 
 ## 1.8.0
