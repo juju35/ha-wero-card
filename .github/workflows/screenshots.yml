@@ -7,7 +7,8 @@ on:
     paths:
       - "src/**"
       - "scripts/**"
-      # A Playwright/Chromium bump (Dependabot) can change the rendering
+      # A Playwright/Chromium bump (manual lock update; Dependabot only covers
+      # github-actions here) can change the rendering
       - "package-lock.json"
 
 # Protected main is never pushed to: the job commits the refreshed screenshots
