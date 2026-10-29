@@ -243,3 +243,115 @@ test("I18N parity: every language has exactly the keys of en, and the editor off
   const options = ctx.WERO_EDITOR_SCHEMA.find((f) => f.name === "language").selector.select.options;
   assert.deepEqual(Array.from(options, (o) => o.value).sort(), keys(i18n));
 });
+
+test("the editor creates a single ha-form when setConfig is called again while ha-form loads", async () => {
+  const Editor = ctx.customElements.get("wero-card-editor");
+  let release;
+  ctx.customElements.define("hui-entities-card", {
+    getConfigElement: () => new Promise((r) => (release = r)),
+  });
+  const created = [];
+  const prevCreate = ctx.document.createElement;
+  ctx.document.createElement = () => {
+    const el = { listeners: 0, addEventListener() { this.listeners++; } };
+    created.push(el);
+    return el;
+  };
+  try {
+    const editor = new Editor();
+    const appended = [];
+    editor.appendChild = (el) => appended.push(el);
+    editor.setConfig({ url: "https://a.example/1" });
+    editor.setConfig({ url: "https://a.example/2" });
+    release();
+    await new Promise((r) => setImmediate(r));
+    assert.equal(created.length, 1);
+    assert.equal(appended.length, 1);
+    assert.equal(created[0].listeners, 1);
+    assert.equal(created[0].data.url, "https://a.example/2");
+  } finally {
+    ctx.document.createElement = prevCreate;
+  }
+});
+
+test("a failed ha-form load is caught and retried on the next setConfig", async () => {
+  const Editor = ctx.customElements.get("wero-card-editor");
+  let fail = true;
+  ctx.customElements.define("hui-entities-card", {
+    getConfigElement: () => (fail ? Promise.reject(new Error("offline")) : Promise.resolve()),
+  });
+  const errors = [];
+  ctx.console.error = (...a) => errors.push(a);
+  const prevCreate = ctx.document.createElement;
+  ctx.document.createElement = () => ({ addEventListener() {} });
+  try {
+    const editor = new Editor();
+    editor.appendChild = () => {};
+    await editor._render(); // resolves: no unhandled rejection
+    assert.equal(errors.length, 1);
+    assert.equal(editor._form, undefined);
+    fail = false;
+    editor.setConfig({ url: "https://a.example/3" });
+    await new Promise((r) => setImmediate(r));
+    assert.equal(editor._form.data.url, "https://a.example/3");
+  } finally {
+    ctx.document.createElement = prevCreate;
+    delete ctx.console.error;
+  }
+});
+
+test("hass only re-renders when the resolved language changes, and the QR is not rebuilt for it", () => {
+  const card = new WeroCard();
+  card.setConfig({ url: "https://share.weropay.eu/p/1/c/AbCdEfGhIj" });
+  let renders = 0;
+  let builds = 0;
+  const render = card._render.bind(card);
+  const build = card._buildQrSvg.bind(card);
+  card._render = () => (renders++, render());
+  card._buildQrSvg = (...a) => (builds++, build(...a));
+  card.hass = { language: "en" }; // same as the document language: nothing to do
+  card.hass = { language: "en-GB" };
+  assert.equal(renders, 0);
+  card.hass = { language: "fr" };
+  assert.equal(renders, 1);
+  assert.match(card.shadowRoot.innerHTML, /Envoyer de l&#39;argent/);
+  assert.equal(builds, 0, "the cached QR is reused");
+
+  const forced = new WeroCard();
+  forced.setConfig({ url: "https://share.weropay.eu/p/1/c/AbCdEfGhIj", language: "de" });
+  let forcedRenders = 0;
+  const fr = forced._render.bind(forced);
+  forced._render = () => (forcedRenders++, fr());
+  forced.hass = { language: "fr" };
+  assert.equal(forcedRenders, 0);
+});
+
+test("a failed legacy copy shows a brief alert icon", () => {
+  const card = new WeroCard();
+  card.setConfig({ url: "https://share.weropay.eu/p/1/c/AbCdEfGhIj" });
+  const attrs = {};
+  card.shadowRoot.getElementById = (id) => (id === "ico" ? { setAttribute: (k, v) => (attrs[k] = v) } : {});
+  const timers = [];
+  ctx.navigator = {};
+  ctx.document.body = { appendChild() {} };
+  const prevCreate = ctx.document.createElement;
+  ctx.document.createElement = () => ({ style: {}, select() {}, remove() {} });
+  ctx.setTimeout = (fn) => timers.push(fn);
+  ctx.clearTimeout = () => {};
+  try {
+    for (const exec of [() => false, () => { throw new Error("denied"); }]) {
+      ctx.document.execCommand = exec;
+      card._copy();
+      assert.equal(attrs.icon, "mdi:alert");
+      timers.at(-1)();
+      assert.equal(attrs.icon, "mdi:content-copy");
+    }
+  } finally {
+    delete ctx.navigator;
+    delete ctx.document.body;
+    delete ctx.document.execCommand;
+    ctx.document.createElement = prevCreate;
+    delete ctx.setTimeout;
+    delete ctx.clearTimeout;
+  }
+});
