@@ -6,11 +6,12 @@
 - Sections dashboards: the card now takes at least 6 columns. At 4 columns the header left about 50 px to the title, which was cut in every language ("Wyśl…"); the title keeps at least 4 characters and shows its full text in a tooltip, and the copy button never shrinks.
 - Copy button: a round 24 px button with a tinted background on hover; the copy button and the QR code show a clear focus ring when reached with the keyboard.
 - Screen readers: "Link copied" or "Could not copy the link" is announced after a tap on the copy button (in the card's language).
-- A language change no longer drops the keyboard focus from the copy button or the QR code.
+- A language change no longer drops the keyboard focus from the copy button or the QR code, and giving the focus back no longer scrolls the dashboard to the card.
 
 ### Maintenance
 - Biome 2.6.4 (pre-commit hook and schema), like the other cards.
-- New tests: header at narrow widths, focus and hover states, screen-reader announcement, focus kept across a re-render (27 tests in all).
+- New tests: header at narrow widths, focus and hover states, screen-reader announcement, focus kept across a re-render without scrolling (31 tests in all).
+- Screenshots: the script rewrites a screenshot only when its decoded pixels change, so a re-encoding alone no longer produces a screenshot commit.
 - README: minimum width, keyboard use and screen-reader feedback; single-file size updated to ~36 KB.
 
 ## 1.8.3 - 2026-11-01
