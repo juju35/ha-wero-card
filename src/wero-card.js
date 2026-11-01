@@ -65,7 +65,44 @@ var WeroI18n = {
     ed_qr_size: 'Tamaño del código QR (px)',
     ed_language: 'Idioma',
   },
+  sr: {
+    default_title: 'Пошаљи новац',
+    payee: 'Прималац',
+    hint: 'Скенирајте QR код банкарском апликацијом',
+    copy: 'Копирај линк',
+    zoom: 'Увећај QR код',
+    ed_url: 'Wero линк (https://…)',
+    ed_url_help: 'Линк садржан у вашем Wero QR коду',
+    ed_title: 'Наслов',
+    ed_name: 'Име примаоца',
+    ed_logo: 'Прикажи Wero лого',
+    ed_qr_size: 'Величина QR кода (px)',
+    ed_language: 'Језик',
+  },
+  'sr-Latn': {
+    default_title: 'Pošalji novac',
+    payee: 'Primalac',
+    hint: 'Skenirajte QR kod bankarskom aplikacijom',
+    copy: 'Kopiraj link',
+    zoom: 'Uvećaj QR kod',
+    ed_url: 'Wero link (https://…)',
+    ed_url_help: 'Link sadržan u vašem Wero QR kodu',
+    ed_title: 'Naslov',
+    ed_name: 'Ime primaoca',
+    ed_logo: 'Prikaži Wero logo',
+    ed_qr_size: 'Veličina QR koda (px)',
+    ed_language: 'Jezik',
+  },
 };
+
+// Language actually used: the full code when translated ("sr-Latn"), else its
+// base ("fr-FR" -> "fr"), else English
+function weroResolveLang(lang) {
+  var full = String(lang || 'en');
+  if (WeroI18n[full]) return full;
+  var base = full.split('-')[0];
+  return WeroI18n[base] ? base : 'en';
+}
 
 // Default displayed size of the QR code, in px (quiet zone included)
 var WERO_QR_SIZE = 176;
@@ -103,12 +140,11 @@ class WeroCard extends HTMLElement {
   }
 
   _getLang() {
-    var lang = (this._configRaw?.language) || this._hassLang || document.documentElement.lang || 'en';
-    return String(lang).split('-')[0];
+    return weroResolveLang((this._configRaw?.language) || this._hassLang || document.documentElement.lang || 'en');
   }
 
   _t(key) {
-    var strings = WeroI18n[this._getLang()] || WeroI18n.en;
+    var strings = WeroI18n[this._getLang()];
     return strings[key] || WeroI18n.en[key] || key;
   }
 
@@ -277,6 +313,8 @@ var WERO_EDITOR_SCHEMA = [
     { value: 'en', label: 'English' },
     { value: 'de', label: 'Deutsch' },
     { value: 'es', label: 'Español' },
+    { value: 'sr', label: 'Српски' },
+    { value: 'sr-Latn', label: 'Srpski (latinica)' },
   ] } } },
 ];
 
@@ -292,8 +330,7 @@ class WeroCardEditor extends HTMLElement {
   }
 
   _t(key) {
-    var lang = String((this._hass?.language) || 'en').split('-')[0];
-    var strings = WeroI18n[lang] || WeroI18n.en;
+    var strings = WeroI18n[weroResolveLang(this._hass?.language)];
     return strings[key] || WeroI18n.en[key] || key;
   }
 
