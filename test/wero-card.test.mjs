@@ -230,15 +230,23 @@ test("a re-render closes an open zoom dialog cleanly and reopens it", () => {
   assert.deepEqual(calls, ["close", "showModal"]);
 });
 
+const LANGS = ["fr", "de", "es", "sr", "sr-Latn", "it", "nl", "pt", "pl"];
+
 test("I18N parity: every language has exactly the keys of en, and the editor offers each one", () => {
   const i18n = ctx.WeroI18n;
   // Arrays from the vm context have another prototype: copy them before deepEqual
   const keys = (o) => Array.from(Object.keys(o)).sort();
+  const shape = (v) => (Array.isArray(v) ? `array:${v.length}` : typeof v);
+  const placeholders = (v) => Array.from(String(v).matchAll(/\{(\w+)\}/g), (m) => m[1]).sort();
   const ref = keys(i18n.en);
-  for (const lang of ["fr", "de", "es", "sr", "sr-Latn"]) {
+  for (const lang of LANGS) {
     assert.ok(i18n[lang], `missing language ${lang}`);
     assert.deepEqual(keys(i18n[lang]), ref, lang);
-    for (const [k, v] of Object.entries(i18n[lang])) assert.ok(typeof v === "string" && v.trim(), `${lang}.${k} empty`);
+    for (const [k, v] of Object.entries(i18n[lang])) {
+      assert.ok(typeof v === "string" && v.trim(), `${lang}.${k} empty`);
+      assert.equal(shape(v), shape(i18n.en[k]), `${lang}.${k}`);
+      assert.deepEqual(placeholders(v), placeholders(i18n.en[k]), `${lang}.${k}`);
+    }
   }
   const options = ctx.WERO_EDITOR_SCHEMA.find((f) => f.name === "language").selector.select.options;
   assert.deepEqual(Array.from(options, (o) => o.value).sort(), keys(i18n));
@@ -264,7 +272,7 @@ test("Serbian: sr and sr-Latn mirror en (keys, placeholders) and keep to their o
 });
 
 test("language resolution: full code if translated, else its base, else en", () => {
-  const cases = { "fr-FR": "fr", "sr-Latn": "sr-Latn", sr: "sr", "pt-BR": "en", "sr-Cyrl": "sr", de: "de", "": "en" };
+  const cases = { "fr-FR": "fr", "sr-Latn": "sr-Latn", sr: "sr", "sr-Cyrl": "sr", de: "de", ja: "en", "": "en" };
   for (const [lang, expected] of Object.entries(cases)) {
     assert.equal(ctx.weroResolveLang(lang), expected, lang);
   }
@@ -283,8 +291,27 @@ test("language resolution: full code if translated, else its base, else en", () 
   const editor = new (ctx.customElements.get("wero-card-editor"))();
   editor._hass = { language: "sr-Latn" };
   assert.equal(editor._t("ed_language"), "Jezik");
-  editor._hass = { language: "pt-BR" };
+  editor._hass = { language: "ja" };
   assert.equal(editor._t("ed_language"), "Language");
+});
+
+test("language resolution: Italian, Dutch, European Portuguese and Polish", () => {
+  // pt-BR falls back to European Portuguese on purpose
+  const cases = { "it-IT": "it", "nl-BE": "nl", pt: "pt", "pt-BR": "pt", "pl-PL": "pl", "sr-Latn": "sr-Latn", ja: "en" };
+  for (const [lang, expected] of Object.entries(cases)) {
+    assert.equal(ctx.weroResolveLang(lang), expected, lang);
+  }
+  const card = new WeroCard();
+  card.setConfig({ url: "https://share.weropay.eu/p/1/c/AbCdEfGhIj" });
+  card.hass = { language: "pt-BR" };
+  assert.match(card.shadowRoot.innerHTML, /Enviar dinheiro/);
+  card.hass = { language: "pl-PL" };
+  assert.match(card.shadowRoot.innerHTML, /Wyślij pieniądze/);
+  const editor = new (ctx.customElements.get("wero-card-editor"))();
+  editor._hass = { language: "nl-BE" };
+  assert.equal(editor._t("ed_language"), "Taal");
+  editor._hass = { language: "it-IT" };
+  assert.equal(editor._t("ed_language"), "Lingua");
 });
 
 test("the editor creates a single ha-form when setConfig is called again while ha-form loads", async () => {
