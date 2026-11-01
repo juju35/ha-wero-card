@@ -144,7 +144,7 @@ npm run screenshots  # renders the card into screenshots/
 | Srpski (latinica) | `sr-Latn` |
 | Italiano | `it` |
 | Nederlands | `nl` |
-| Português | `pt` |
+| Português (Portugal) | `pt` |
 | Polski | `pl` |
 
 Regional variants fall back to their base language (`pt-BR` uses European Portuguese, `nl-BE` Dutch); untranslated languages fall back to English.

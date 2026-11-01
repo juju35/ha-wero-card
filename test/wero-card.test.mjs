@@ -250,6 +250,8 @@ test("I18N parity: every language has exactly the keys of en, and the editor off
   }
   const options = ctx.WERO_EDITOR_SCHEMA.find((f) => f.name === "language").selector.select.options;
   assert.deepEqual(Array.from(options, (o) => o.value).sort(), keys(i18n));
+  // pt is European Portuguese: the label says so (pt-BR falls back to it)
+  assert.equal(options.find((o) => o.value === "pt").label, "Português (Portugal)");
 });
 
 test("Serbian: sr and sr-Latn mirror en (keys, placeholders) and keep to their own script", () => {
