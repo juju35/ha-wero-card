@@ -323,7 +323,7 @@ class WeroCard extends HTMLElement {
     var prevDlg = this.shadowRoot.getElementById('zoom');
     var wasOpen = !!(prevDlg && prevDlg.open);
     if (wasOpen) prevDlg.close();
-    // innerHTML drops the keyboard focus: it is given back to the same control afterwards
+    // innerHTML drops the keyboard focus: it is given back to the same control afterwards, without scrolling the page
     var focusId = this.shadowRoot.activeElement?.id;
     if (focusId !== 'copy' && focusId !== 'qr') focusId = null;
 
@@ -383,7 +383,7 @@ class WeroCard extends HTMLElement {
     // Escape is handled natively by <dialog>; a click anywhere (QR or backdrop) closes it
     dlg.onclick = () => dlg.close();
     if (wasOpen) open();
-    else if (focusId) this.shadowRoot.getElementById(focusId)?.focus?.();
+    else if (focusId) this.shadowRoot.getElementById(focusId)?.focus?.({ preventScroll: true });
   }
 
   disconnectedCallback() {

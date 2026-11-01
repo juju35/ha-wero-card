@@ -529,15 +529,16 @@ test("the screen-reader messages exist in every language", () => {
   assert.match(render({}), /\.sr \{[^}]*position: absolute;[^}]*clip: rect\(0 0 0 0\)/);
 });
 
-test("a re-render keeps the keyboard focus on the copy button or the QR", () => {
+test("a re-render keeps the keyboard focus on the copy button or the QR, without scrolling", () => {
   for (const id of ["copy", "qr"]) {
     const card = new WeroCard();
     card.setConfig({ url: "https://share.weropay.eu/p/1/c/AbCdEfGhIj" });
     const focused = [];
     card.shadowRoot.activeElement = { id };
-    card.shadowRoot.getElementById = (i) => ({ id: i, focus: () => focused.push(i) });
+    card.shadowRoot.getElementById = (i) => ({ id: i, focus: (opts) => focused.push(JSON.stringify([i, opts])) });
     card._render();
-    assert.deepEqual(focused, [id], id);
+    // preventScroll: giving the focus back must not scroll the dashboard to the card
+    assert.deepEqual(focused, [JSON.stringify([id, { preventScroll: true }])], id);
   }
   // Nothing focused in the card: the re-render does not steal the focus
   const card = new WeroCard();
