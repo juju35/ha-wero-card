@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.8.3 - 2026-11-01
+
+### Changes
+- Added Italian, Dutch, European Portuguese and Polish translations: the card and its visual editor are available in Italian (`it`), Dutch (`nl`), European Portuguese (`pt`) and Polish (`pl`), auto-detected from Home Assistant or forced with `language:`; the editor's language selector offers Italiano, Nederlands, Português (Portugal) and Polski. `pt-BR` falls back to European Portuguese.
+
+### Maintenance
+- Tests: the parity test covers every language (keys, value types, placeholders, no empty value) and a new test checks the resolution of `it-IT`, `nl-BE`, `pt`, `pt-BR`, `pl-PL`, `sr-Latn` and `ja` (22 tests in all).
+- README: languages, `language` option and translations table updated; single-file size updated to ~34 KB.
+
 ## 1.8.2 - 2026-11-01
 
 ### Changes
