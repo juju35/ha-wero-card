@@ -22,8 +22,8 @@ Custom Lovelace card for Home Assistant that displays your [Wero](https://wero-w
 - Tap the QR code to show it fullscreen (tap again or press Escape to close)
 - Visual editor: add and configure the card from the dashboard UI, no YAML needed
 - Fully compatible with Home Assistant dark mode and sections dashboards
-- English, French, German, Spanish and Serbian (Cyrillic and Latin), auto-detected
-- HACS-ready, single file (~32 KB)
+- English, French, German, Spanish, Serbian (Cyrillic and Latin), Italian, Dutch, European Portuguese and Polish, auto-detected
+- HACS-ready, single file (~34 KB)
 
 ## Prerequisites
 
@@ -101,7 +101,7 @@ language: en
 | `name` | ❌ | — | Payee name, shown under the QR code |
 | `logo` | ❌ | `true` | Show the Wero logo in the header (`false` shows a generic icon) |
 | `qr_size` | ❌ | `176` | QR code size in pixels (quiet zone included); shrinks to fit a narrower card |
-| `language` | ❌ | Auto | Force language: `en`, `fr`, `de`, `es`, `sr` or `sr-Latn` (auto-detects from HA settings) |
+| `language` | ❌ | Auto | Force language: `en`, `fr`, `de`, `es`, `sr`, `sr-Latn`, `it`, `nl`, `pt` or `pl` (auto-detects from HA settings) |
 
 ## Screenshots
 
@@ -142,6 +142,12 @@ npm run screenshots  # renders the card into screenshots/
 | Español | `es` |
 | Српски | `sr` |
 | Srpski (latinica) | `sr-Latn` |
+| Italiano | `it` |
+| Nederlands | `nl` |
+| Português (Portugal) | `pt` |
+| Polski | `pl` |
+
+Regional variants fall back to their base language (`pt-BR` uses European Portuguese, `nl-BE` Dutch); untranslated languages fall back to English.
 
 Contributions for additional languages are welcome!
 
