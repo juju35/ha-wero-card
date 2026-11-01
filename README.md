@@ -122,7 +122,7 @@ The logo is kept out of the QR code on purpose: overlaying a logo on the modules
 npm install
 npm run build        # stamps the version of package.json into dist/wero-card.js
 npm run check        # builds and checks the card (run in CI)
-npm run screenshots  # renders the card into screenshots/
+npm run screenshots  # renders the card into screenshots/ (a file is rewritten only when its pixels change)
 ```
 
 `dist/` is not committed: `npm run build` creates it locally, CI builds it on every push, and the release workflow attaches the built file to the release, which is where HACS downloads it from.
