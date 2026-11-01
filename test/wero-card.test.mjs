@@ -235,13 +235,56 @@ test("I18N parity: every language has exactly the keys of en, and the editor off
   // Arrays from the vm context have another prototype: copy them before deepEqual
   const keys = (o) => Array.from(Object.keys(o)).sort();
   const ref = keys(i18n.en);
-  for (const lang of ["fr", "de", "es"]) {
+  for (const lang of ["fr", "de", "es", "sr", "sr-Latn"]) {
     assert.ok(i18n[lang], `missing language ${lang}`);
     assert.deepEqual(keys(i18n[lang]), ref, lang);
     for (const [k, v] of Object.entries(i18n[lang])) assert.ok(typeof v === "string" && v.trim(), `${lang}.${k} empty`);
   }
   const options = ctx.WERO_EDITOR_SCHEMA.find((f) => f.name === "language").selector.select.options;
   assert.deepEqual(Array.from(options, (o) => o.value).sort(), keys(i18n));
+});
+
+test("Serbian: sr and sr-Latn mirror en (keys, placeholders) and keep to their own script", () => {
+  const i18n = ctx.WeroI18n;
+  const keys = (o) => Array.from(Object.keys(o)).sort();
+  const shape = (v) => (Array.isArray(v) ? `array:${v.length}` : typeof v);
+  const placeholders = (v) => Array.from(String(v).matchAll(/\{(\w+)\}/g), (m) => m[1]).sort();
+  // Brands, abbreviations and units written in Latin letters in both scripts
+  const allowed = /\b(Wero|QR|https|px)\b/g;
+  for (const lang of ["sr", "sr-Latn"]) {
+    assert.deepEqual(keys(i18n[lang]), keys(i18n.en), lang);
+    for (const k of Object.keys(i18n.en)) {
+      assert.equal(shape(i18n[lang][k]), shape(i18n.en[k]), `${lang}.${k}`);
+      assert.deepEqual(placeholders(i18n[lang][k]), placeholders(i18n.en[k]), `${lang}.${k}`);
+      const text = String(i18n[lang][k]).replace(allowed, "");
+      if (lang === "sr") assert.doesNotMatch(text, /[A-Za-z]/, `Latin letter in sr.${k}`);
+      else assert.doesNotMatch(text, /[\u0400-\u04FF]/, `Cyrillic letter in sr-Latn.${k}`);
+    }
+  }
+});
+
+test("language resolution: full code if translated, else its base, else en", () => {
+  const cases = { "fr-FR": "fr", "sr-Latn": "sr-Latn", sr: "sr", "pt-BR": "en", "sr-Cyrl": "sr", de: "de", "": "en" };
+  for (const [lang, expected] of Object.entries(cases)) {
+    assert.equal(ctx.weroResolveLang(lang), expected, lang);
+  }
+  // Through the card: hass in sr-Latn shows Latin, a forced language keeps priority over hass
+  const card = new WeroCard();
+  card.setConfig({ url: "https://share.weropay.eu/p/1/c/AbCdEfGhIj" });
+  card.hass = { language: "sr-Latn" };
+  assert.match(card.shadowRoot.innerHTML, /Pošalji novac/);
+  card.hass = { language: "sr" };
+  assert.match(card.shadowRoot.innerHTML, /Пошаљи новац/);
+  const forced = new WeroCard();
+  forced.setConfig({ url: "https://share.weropay.eu/p/1/c/AbCdEfGhIj", language: "sr-Latn" });
+  forced.hass = { language: "fr-FR" };
+  assert.match(forced.shadowRoot.innerHTML, /Pošalji novac/);
+  // The editor follows hass the same way
+  const editor = new (ctx.customElements.get("wero-card-editor"))();
+  editor._hass = { language: "sr-Latn" };
+  assert.equal(editor._t("ed_language"), "Jezik");
+  editor._hass = { language: "pt-BR" };
+  assert.equal(editor._t("ed_language"), "Language");
 });
 
 test("the editor creates a single ha-form when setConfig is called again while ha-form loads", async () => {

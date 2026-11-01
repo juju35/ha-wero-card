@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.8.2 - 2026-11-01
+
+### Changes
+- Added Serbian (Cyrillic and Latin) translations: the card and its visual editor are available in Serbian, Cyrillic (`sr`) and Latin (`sr-Latn`) scripts, auto-detected from Home Assistant or forced with `language: sr` / `language: sr-Latn`; the editor's language selector offers Српски and Srpski (latinica).
+- Language detection: a full language code is used when it is translated (`sr-Latn`), otherwise its base (`fr-FR` gives French), otherwise English.
+
+### Maintenance
+- New tests: Serbian parity with English (keys, placeholders, script) and language resolution (21 tests in all).
+- README: Serbian listed, single-file size updated to ~32 KB.
+
 ## 1.8.1
 
 ### Fixes
