@@ -15,6 +15,8 @@ var WeroI18n = {
     hint: 'Scannez le QR code avec votre application bancaire',
     copy: 'Copier le lien',
     zoom: 'Agrandir le QR code',
+    copied: 'Lien copié',
+    copy_failed: 'Impossible de copier le lien',
     ed_url: 'Lien Wero (https://…)',
     ed_url_help: 'Le lien encodé dans votre QR code Wero',
     ed_title: 'Titre',
@@ -29,6 +31,8 @@ var WeroI18n = {
     hint: 'Scan the QR code with your banking app',
     copy: 'Copy link',
     zoom: 'Enlarge QR code',
+    copied: 'Link copied',
+    copy_failed: 'Could not copy the link',
     ed_url: 'Wero link (https://…)',
     ed_url_help: 'The link encoded in your Wero QR code',
     ed_title: 'Title',
@@ -43,6 +47,8 @@ var WeroI18n = {
     hint: 'Scanne den QR-Code mit deiner Banking-App',
     copy: 'Link kopieren',
     zoom: 'QR-Code vergrößern',
+    copied: 'Link kopiert',
+    copy_failed: 'Link konnte nicht kopiert werden',
     ed_url: 'Wero-Link (https://…)',
     ed_url_help: 'Der Link, der in deinem Wero-QR-Code enthalten ist',
     ed_title: 'Titel',
@@ -57,6 +63,8 @@ var WeroI18n = {
     hint: 'Escanea el código QR con tu app bancaria',
     copy: 'Copiar enlace',
     zoom: 'Ampliar el código QR',
+    copied: 'Enlace copiado',
+    copy_failed: 'No se pudo copiar el enlace',
     ed_url: 'Enlace de Wero (https://…)',
     ed_url_help: 'El enlace codificado en tu código QR de Wero',
     ed_title: 'Título',
@@ -71,6 +79,8 @@ var WeroI18n = {
     hint: 'Скенирајте QR код банкарском апликацијом',
     copy: 'Копирај линк',
     zoom: 'Увећај QR код',
+    copied: 'Линк је копиран',
+    copy_failed: 'Копирање линка није успело',
     ed_url: 'Wero линк (https://…)',
     ed_url_help: 'Линк садржан у вашем Wero QR коду',
     ed_title: 'Наслов',
@@ -85,6 +95,8 @@ var WeroI18n = {
     hint: 'Skenirajte QR kod bankarskom aplikacijom',
     copy: 'Kopiraj link',
     zoom: 'Uvećaj QR kod',
+    copied: 'Link je kopiran',
+    copy_failed: 'Kopiranje linka nije uspelo',
     ed_url: 'Wero link (https://…)',
     ed_url_help: 'Link sadržan u vašem Wero QR kodu',
     ed_title: 'Naslov',
@@ -99,6 +111,8 @@ var WeroI18n = {
     hint: 'Scansiona il codice QR con la tua app bancaria',
     copy: 'Copia link',
     zoom: 'Ingrandisci il codice QR',
+    copied: 'Link copiato',
+    copy_failed: 'Impossibile copiare il link',
     ed_url: 'Link Wero (https://…)',
     ed_url_help: 'Il link codificato nel tuo codice QR Wero',
     ed_title: 'Titolo',
@@ -113,6 +127,8 @@ var WeroI18n = {
     hint: 'Scan de QR-code met je bankapp',
     copy: 'Link kopiëren',
     zoom: 'QR-code vergroten',
+    copied: 'Link gekopieerd',
+    copy_failed: 'Kan de link niet kopiëren',
     ed_url: 'Wero-link (https://…)',
     ed_url_help: 'De link die in je Wero-QR-code staat',
     ed_title: 'Titel',
@@ -127,6 +143,8 @@ var WeroI18n = {
     hint: 'Leia o código QR com a sua aplicação bancária',
     copy: 'Copiar ligação',
     zoom: 'Ampliar o código QR',
+    copied: 'Ligação copiada',
+    copy_failed: 'Não foi possível copiar a ligação',
     ed_url: 'Ligação Wero (https://…)',
     ed_url_help: 'A ligação codificada no seu código QR Wero',
     ed_title: 'Título',
@@ -141,6 +159,8 @@ var WeroI18n = {
     hint: 'Zeskanuj kod QR w aplikacji bankowej',
     copy: 'Kopiuj link',
     zoom: 'Powiększ kod QR',
+    copied: 'Link skopiowany',
+    copy_failed: 'Nie udało się skopiować linku',
     ed_url: 'Link Wero (https://…)',
     ed_url_help: 'Link zakodowany w Twoim kodzie QR Wero',
     ed_title: 'Tytuł',
@@ -251,13 +271,22 @@ class WeroCard extends HTMLElement {
     var url = this._config.url;
     // Looked up when used: the card may re-render (language change) while the clipboard call runs
     var setIcon = (icon) => this.shadowRoot.getElementById('ico')?.setAttribute('icon', icon);
-    var flash = (icon) => {
-      setIcon(icon);
-      clearTimeout(this._copyTimer);
-      this._copyTimer = setTimeout(() => setIcon('mdi:content-copy'), 1500);
+    // The icon only changes visually: the result is also announced through the live region
+    var announce = (text) => {
+      var live = this.shadowRoot.getElementById('live');
+      if (live) live.textContent = text;
     };
-    var done = () => flash('mdi:check');
-    var failed = () => flash('mdi:alert');
+    var flash = (icon, key) => {
+      setIcon(icon);
+      announce(this._t(key));
+      clearTimeout(this._copyTimer);
+      this._copyTimer = setTimeout(() => {
+        setIcon('mdi:content-copy');
+        announce('');
+      }, 1500);
+    };
+    var done = () => flash('mdi:check', 'copied');
+    var failed = () => flash('mdi:alert', 'copy_failed');
     var legacy = () => {
       var ta = document.createElement('textarea');
       ta.value = url;
@@ -294,6 +323,9 @@ class WeroCard extends HTMLElement {
     var prevDlg = this.shadowRoot.getElementById('zoom');
     var wasOpen = !!(prevDlg && prevDlg.open);
     if (wasOpen) prevDlg.close();
+    // innerHTML drops the keyboard focus: it is given back to the same control afterwards
+    var focusId = this.shadowRoot.activeElement?.id;
+    if (focusId !== 'copy' && focusId !== 'qr') focusId = null;
 
     this.shadowRoot.innerHTML = `
       <style>
@@ -306,9 +338,15 @@ class WeroCard extends HTMLElement {
         .badge { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; flex: none;
                  --c: var(--primary-color, #03a9f4); background: color-mix(in srgb, var(--c) 16%, transparent); color: var(--c); }
         .badge ha-icon { color: inherit; --mdc-icon-size: 24px; }
-        .name { flex: 1; min-width: 0; font-size: 16px; font-weight: 500; line-height: 1.25; color: var(--primary-text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        /* The title gives way first (ellipsis, full text in its tooltip) but keeps about 4 characters; the logo and the button never shrink */
+        .name { flex: 1 1 auto; min-width: 4ch; font-size: 16px; font-weight: 500; line-height: 1.25; color: var(--primary-text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         ha-icon { color: var(--secondary-text-color); --mdc-icon-size: 22px; }
         button { background: none; border: none; cursor: pointer; padding: 0; display: flex; align-items: center; }
+        #copy { flex: none; width: 24px; height: 24px; border-radius: 50%; justify-content: center; }
+        #copy ha-icon { --mdc-icon-size: 18px; }
+        #copy:hover { background: color-mix(in srgb, var(--secondary-text-color) 16%, transparent); }
+        #copy:focus-visible, .qr-wrap:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 2px; }
+        .sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
         .qr-wrap { background: #fff48d; border-radius: 10px; overflow: hidden; line-height: 0; max-width: 100%; cursor: zoom-in; }
         .qr-wrap svg { max-width: 100%; height: auto; width: var(--wero-qr-size, 176px); }
         dialog { border: none; padding: 0; margin: auto; background: #fff48d; border-radius: 12px; line-height: 0; overflow: hidden; cursor: zoom-out; }
@@ -322,13 +360,14 @@ class WeroCard extends HTMLElement {
       <ha-card>
         <div class="header">
           ${c.logo ? `<img class="logo" src="${WERO_LOGO}" alt="Wero">` : '<div class="badge"><ha-icon icon="mdi:qrcode-scan"></ha-icon></div>'}
-          <span class="name">${weroEsc(c.title)}</span>
+          <span class="name" title="${weroEsc(c.title)}">${weroEsc(c.title)}</span>
           <button id="copy" title="${copy}" aria-label="${copy}"><ha-icon icon="mdi:content-copy" id="ico"></ha-icon></button>
         </div>
         <div class="qr-wrap" id="qr" role="button" tabindex="0" title="${zoom}" aria-label="${zoom}"${qrStyle}>${svg}</div>
         <dialog id="zoom" aria-label="${zoom}"></dialog>
         ${c.name ? `<div class="info-row"><div class="lbl">${weroEsc(this._t('payee'))}</div><div class="val">${weroEsc(c.name)}</div></div>` : ''}
         <div class="hint">${weroEsc(this._t('hint'))}</div>
+        <span class="sr" id="live" aria-live="polite"></span>
       </ha-card>`;
 
     this.shadowRoot.getElementById('copy').onclick = () => this._copy();
@@ -344,17 +383,21 @@ class WeroCard extends HTMLElement {
     // Escape is handled natively by <dialog>; a click anywhere (QR or backdrop) closes it
     dlg.onclick = () => dlg.close();
     if (wasOpen) open();
+    else if (focusId) this.shadowRoot.getElementById(focusId)?.focus?.();
   }
 
   disconnectedCallback() {
     // The timer that restores the copy icon is cancelled: restore it now
     clearTimeout(this._copyTimer);
     this.shadowRoot?.getElementById('ico')?.setAttribute('icon', 'mdi:content-copy');
+    var live = this.shadowRoot?.getElementById('live');
+    if (live) live.textContent = '';
   }
 
   getCardSize() { return 5; }
 
-  getGridOptions() { return { columns: 6, min_columns: 4, rows: 'auto' }; }
+  // 6 columns minimum: at 4 (about 160 px) the header leaves the title some 50 px, too few in any language
+  getGridOptions() { return { columns: 6, min_columns: 6, rows: 'auto' }; }
 }
 
 // ── wero-card-editor (visual editor, built on HA's own ha-form) ──────────────
