@@ -138,7 +138,8 @@ test("the copy feedback reaches the icon of the current render, and the timer st
 });
 
 test("grid options and picker entry", () => {
-  assert.deepEqual({ ...new WeroCard().getGridOptions() }, { columns: 6, min_columns: 4, rows: "auto" });
+  // 6 columns minimum: at 4 (about 160 px) the header left 52 px to the title, too few for any language
+  assert.deepEqual({ ...new WeroCard().getGridOptions() }, { columns: 6, min_columns: 6, rows: "auto" });
   const entry = ctx.customCards.find((c) => c.type === "wero-card");
   assert.equal(entry.description, "Wero QR code, no CDN");
 });
@@ -426,4 +427,125 @@ test("a failed legacy copy shows a brief alert icon", () => {
     delete ctx.setTimeout;
     delete ctx.clearTimeout;
   }
+});
+
+// CSS rule of `selector` in the card's stylesheet (first exact match)
+function cssRule(html, selector) {
+  const esc = selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const m = new RegExp(`(?:^|[}\\s])${esc}\\s*\\{([^}]*)\\}`).exec(html);
+  assert.ok(m, `no CSS rule for ${selector}`);
+  return m[1];
+}
+
+test("narrow header: the title shrinks with an ellipsis but keeps 4 characters, the copy button never shrinks", () => {
+  const html = render({});
+  const name = cssRule(html, ".name");
+  assert.match(name, /flex: 1 1 auto/);
+  assert.match(name, /min-width: 4ch/);
+  assert.match(name, /text-overflow: ellipsis/);
+  assert.match(name, /white-space: nowrap/);
+  assert.match(cssRule(html, "#copy"), /flex: none/);
+  assert.match(cssRule(html, ".logo"), /flex: none/);
+  assert.match(cssRule(html, ".badge"), /flex: none/);
+  // The full title stays available when it is cut
+  assert.match(html, /<span class="name" title="Send money">Send money<\/span>/);
+});
+
+test("the copy button and the QR have hover and keyboard focus states", () => {
+  const html = render({});
+  const copy = cssRule(html, "#copy");
+  assert.match(copy, /width: 24px/);
+  assert.match(copy, /height: 24px/);
+  assert.match(copy, /border-radius: 50%/);
+  assert.match(cssRule(html, "#copy:hover"), /background: color-mix\(in srgb, var\(--secondary-text-color\) 16%, transparent\)/);
+  assert.match(
+    html,
+    /#copy:focus-visible, \.qr-wrap:focus-visible \{[^}]*outline: 2px solid var\(--primary-color\);[^}]*outline-offset: 2px/,
+  );
+});
+
+// Shadow root stub whose elements keep their attributes and text, one set per render
+function trackElements(card) {
+  const els = {};
+  card.shadowRoot.getElementById = (id) => {
+    els[id] ??= {
+      attrs: {},
+      textContent: "",
+      setAttribute(k, v) {
+        this.attrs[k] = v;
+      },
+    };
+    return els[id];
+  };
+  return els;
+}
+
+test("the copy result is announced to screen readers, then cleared", async () => {
+  const card = new WeroCard();
+  card.setConfig({ url: "https://share.weropay.eu/p/1/c/AbCdEfGhIj", language: "fr" });
+  assert.match(card.shadowRoot.innerHTML, /<span class="sr" id="live" aria-live="polite"><\/span>/);
+  const els = trackElements(card);
+  const timers = [];
+  ctx.navigator = { clipboard: { writeText: () => Promise.resolve() } };
+  ctx.isSecureContext = true;
+  ctx.setTimeout = (fn) => timers.push(fn);
+  ctx.clearTimeout = () => {};
+  ctx.document.body = { appendChild() {} };
+  const prevCreate = ctx.document.createElement;
+  ctx.document.createElement = () => ({ style: {}, select() {}, remove() {} });
+  try {
+    card._copy();
+    await Promise.resolve();
+    assert.equal(els.ico.attrs.icon, "mdi:check");
+    assert.equal(els.live.textContent, "Lien copié");
+    timers.at(-1)();
+    assert.equal(els.ico.attrs.icon, "mdi:content-copy");
+    assert.equal(els.live.textContent, "");
+    // Refused by the browser: the failure is announced
+    ctx.navigator = {};
+    ctx.document.execCommand = () => false;
+    card._copy();
+    assert.equal(els.live.textContent, "Impossible de copier le lien");
+    card.disconnectedCallback();
+    assert.equal(els.live.textContent, "");
+  } finally {
+    delete ctx.navigator;
+    delete ctx.isSecureContext;
+    delete ctx.setTimeout;
+    delete ctx.clearTimeout;
+    delete ctx.document.body;
+    delete ctx.document.execCommand;
+    ctx.document.createElement = prevCreate;
+  }
+});
+
+test("the screen-reader messages exist in every language", () => {
+  for (const lang of ["en", ...LANGS]) {
+    for (const key of ["copied", "copy_failed"]) {
+      assert.ok(ctx.WeroI18n[lang][key], `${lang}.${key}`);
+      assert.notEqual(ctx.WeroI18n[lang][key], ctx.WeroI18n[lang].copy, `${lang}.${key}`);
+    }
+  }
+  assert.match(render({}), /\.sr \{[^}]*position: absolute;[^}]*clip: rect\(0 0 0 0\)/);
+});
+
+test("a re-render keeps the keyboard focus on the copy button or the QR, without scrolling", () => {
+  for (const id of ["copy", "qr"]) {
+    const card = new WeroCard();
+    card.setConfig({ url: "https://share.weropay.eu/p/1/c/AbCdEfGhIj" });
+    const focused = [];
+    card.shadowRoot.activeElement = { id };
+    card.shadowRoot.getElementById = (i) => ({ id: i, focus: (opts) => focused.push(JSON.stringify([i, opts])) });
+    card._render();
+    // preventScroll: giving the focus back must not scroll the dashboard to the card
+    assert.deepEqual(focused, [JSON.stringify([id, { preventScroll: true }])], id);
+  }
+  // Nothing focused in the card: the re-render does not steal the focus
+  const card = new WeroCard();
+  card.setConfig({ url: "https://share.weropay.eu/p/1/c/AbCdEfGhIj" });
+  const focused = [];
+  card.shadowRoot.activeElement = null;
+  card.shadowRoot.getElementById = (i) => ({ id: i, focus: () => focused.push(i) });
+  card._render();
+  assert.deepEqual(focused, []);
 });

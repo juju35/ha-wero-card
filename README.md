@@ -18,12 +18,13 @@ Custom Lovelace card for Home Assistant that displays your [Wero](https://wero-w
 
 - QR code generated in pure JS (embedded Reed-Solomon algorithm), with a spec-compliant quiet zone
 - Wero logo in the header (can be disabled)
-- Copy-link button to share the payment link by message
+- Copy-link button to share the payment link by message (the result is also announced to screen readers)
 - Tap the QR code to show it fullscreen (tap again or press Escape to close)
 - Visual editor: add and configure the card from the dashboard UI, no YAML needed
-- Fully compatible with Home Assistant dark mode and sections dashboards
+- Fully compatible with Home Assistant dark mode and sections dashboards (6 columns by default and at least, so the title stays readable)
+- Keyboard friendly: visible focus on the copy button and the QR code, Enter or Space opens the QR code fullscreen
 - English, French, German, Spanish, Serbian (Cyrillic and Latin), Italian, Dutch, European Portuguese and Polish, auto-detected
-- HACS-ready, single file (~34 KB)
+- HACS-ready, single file (~36 KB)
 
 ## Prerequisites
 
@@ -121,7 +122,7 @@ The logo is kept out of the QR code on purpose: overlaying a logo on the modules
 npm install
 npm run build        # stamps the version of package.json into dist/wero-card.js
 npm run check        # builds and checks the card (run in CI)
-npm run screenshots  # renders the card into screenshots/
+npm run screenshots  # renders the card into screenshots/ (a file is rewritten only when its pixels change)
 ```
 
 `dist/` is not committed: `npm run build` creates it locally, CI builds it on every push, and the release workflow attaches the built file to the release, which is where HACS downloads it from.

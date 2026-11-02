@@ -1,8 +1,9 @@
 // Renders the card with mock data and saves the README screenshots.
 // Usage: npm run build && npm run screenshots
 import { chromium } from "playwright";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
+import { samePixels } from "./png-pixels.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const cardJs = readFileSync(`${root}dist/wero-card.js`, "utf8");
@@ -87,12 +88,18 @@ export async function render(shots, { icons = {}, hass = {} } = {}) {
     await page.waitForTimeout(400);
     // The card with the 16 px page padding around it, on the theme background.
     const box = await page.locator("#root").boundingBox();
-    await page.screenshot({
-      path: `${root}screenshots/${s.file}.png`,
+    const png = await page.screenshot({
       clip: { x: 0, y: 0, width: s.width + 32, height: Math.ceil(box.height) + 32 },
       animations: "disabled",
     });
-    console.log(`screenshots/${s.file}.png`);
+    // Only rewritten when the decoded pixels differ: a re-encoding alone is not a new screenshot
+    const path = `${root}screenshots/${s.file}.png`;
+    if (existsSync(path) && samePixels(readFileSync(path), png)) {
+      console.log(`screenshots/${s.file}.png (unchanged)`);
+    } else {
+      writeFileSync(path, png);
+      console.log(`screenshots/${s.file}.png`);
+    }
     await page.close();
   }
   await browser.close();
