@@ -3,11 +3,11 @@
 ## 1.8.5 - 2026-11-04
 
 ### Changes
-- Added Romanian, Danish, Swedish, Bulgarian, Russian, Ukrainian, Hungarian, Irish, Slovak, Czech, Slovenian, Maltese, Latvian and Greek translations: the card and its visual editor are available in `ro`, `da`, `sv`, `bg`, `ru`, `uk`, `hu`, `ga`, `sk`, `cs`, `sl`, `mt`, `lv` and `el`, auto-detected from Home Assistant or forced with `language:`; the editor's language selector offers Română, Dansk, Svenska, Български, Русский, Українська, Magyar, Gaeilge, Slovenčina, Čeština, Slovenščina, Malti, Latviešu and Ελληνικά.
+- Added Romanian, Danish, Swedish, Bulgarian, Russian, Ukrainian, Hungarian, Slovak, Czech, Slovenian, Latvian and Greek translations: the card and its visual editor are available in `ro`, `da`, `sv`, `bg`, `ru`, `uk`, `hu`, `sk`, `cs`, `sl`, `lv` and `el`, auto-detected from Home Assistant or forced with `language:`; the editor's language selector offers Română, Dansk, Svenska, Български, Русский, Українська, Magyar, Slovenčina, Čeština, Slovenščina, Latviešu and Ελληνικά.
 
 ### Maintenance
-- Tests: the parity test covers the 14 new languages and a new test checks their resolution (`sv-FI`, `el-GR`, `cs-CZ`…) through the card and the editor (32 tests in all).
-- README: languages, `language` option and translations table updated; single-file size updated to ~44 KB.
+- Tests: the parity test covers the 12 new languages and a new test checks their resolution (`sv-FI`, `el-GR`, `cs-CZ`…) through the card and the editor (32 tests in all).
+- README: languages, `language` option and translations table updated; single-file size updated to ~43 KB.
 
 ## 1.8.4 - 2026-11-01
 

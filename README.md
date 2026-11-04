@@ -24,8 +24,8 @@ Custom Lovelace card for Home Assistant that displays your [Wero](https://wero-w
 - Visual editor: add and configure the card from the dashboard UI, no YAML needed
 - Fully compatible with Home Assistant dark mode and sections dashboards (6 columns by default and at least, so the title stays readable)
 - Keyboard friendly: visible focus on the copy button and the QR code, Enter or Space opens the QR code fullscreen
-- English, French, German, Spanish, Serbian (Cyrillic and Latin), Italian, Dutch, European Portuguese, Polish, Romanian, Danish, Swedish, Bulgarian, Russian, Ukrainian, Hungarian, Irish, Slovak, Czech, Slovenian, Maltese, Latvian and Greek, auto-detected
-- HACS-ready, single file (~44 KB)
+- English, French, German, Spanish, Serbian (Cyrillic and Latin), Italian, Dutch, European Portuguese, Polish, Romanian, Danish, Swedish, Bulgarian, Russian, Ukrainian, Hungarian, Slovak, Czech, Slovenian, Latvian and Greek, auto-detected
+- HACS-ready, single file (~43 KB)
 
 ## Prerequisites
 
@@ -103,7 +103,7 @@ language: en
 | `name` | ❌ | — | Payee name, shown under the QR code |
 | `logo` | ❌ | `true` | Show the Wero logo in the header (`false` shows a generic icon) |
 | `qr_size` | ❌ | `176` | QR code size in pixels (quiet zone included); shrinks to fit a narrower card |
-| `language` | ❌ | Auto | Force language: `en`, `fr`, `de`, `es`, `sr`, `sr-Latn`, `it`, `nl`, `pt`, `pl`, `ro`, `da`, `sv`, `bg`, `ru`, `uk`, `hu`, `ga`, `sk`, `cs`, `sl`, `mt`, `lv` or `el` (auto-detects from HA settings) |
+| `language` | ❌ | Auto | Force language: `en`, `fr`, `de`, `es`, `sr`, `sr-Latn`, `it`, `nl`, `pt`, `pl`, `ro`, `da`, `sv`, `bg`, `ru`, `uk`, `hu`, `sk`, `cs`, `sl`, `lv` or `el` (auto-detects from HA settings) |
 
 ## Screenshots
 
@@ -157,11 +157,9 @@ The card auto-detects the language from your Home Assistant settings. Currently 
 | Русский | `ru` |
 | Українська | `uk` |
 | Magyar | `hu` |
-| Gaeilge | `ga` |
 | Slovenčina | `sk` |
 | Čeština | `cs` |
 | Slovenščina | `sl` |
-| Malti | `mt` |
 | Latviešu | `lv` |
 | Ελληνικά | `el` |
 

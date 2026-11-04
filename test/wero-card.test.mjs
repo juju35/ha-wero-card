@@ -233,7 +233,7 @@ test("a re-render closes an open zoom dialog cleanly and reopens it", () => {
 
 const LANGS = [
   "fr", "de", "es", "sr", "sr-Latn", "it", "nl", "pt", "pl",
-  "ro", "da", "sv", "bg", "ru", "uk", "hu", "ga", "sk", "cs", "sl", "mt", "lv", "el",
+  "ro", "da", "sv", "bg", "ru", "uk", "hu", "sk", "cs", "sl", "lv", "el",
 ];
 
 test("I18N parity: every language has exactly the keys of en, and the editor offers each one", () => {
@@ -320,10 +320,10 @@ test("language resolution: Italian, Dutch, European Portuguese and Polish", () =
   assert.equal(editor._t("ed_language"), "Lingua");
 });
 
-test("language resolution: Romanian to Greek (14 languages)", () => {
+test("language resolution: Romanian to Greek (12 languages)", () => {
   const cases = {
     "ro-RO": "ro", "da-DK": "da", "sv-SE": "sv", "sv-FI": "sv", "bg-BG": "bg", "ru-RU": "ru", "uk-UA": "uk",
-    "hu-HU": "hu", "ga-IE": "ga", "sk-SK": "sk", "cs-CZ": "cs", "sl-SI": "sl", "mt-MT": "mt", "lv-LV": "lv",
+    "hu-HU": "hu", "sk-SK": "sk", "cs-CZ": "cs", "sl-SI": "sl", "lv-LV": "lv",
     "el-GR": "el", el: "el", ja: "en",
   };
   for (const [lang, expected] of Object.entries(cases)) {
@@ -338,8 +338,8 @@ test("language resolution: Romanian to Greek (14 languages)", () => {
   const editor = new (ctx.customElements.get("wero-card-editor"))();
   editor._hass = { language: "el-GR" };
   assert.equal(editor._t("ed_language"), "Γλώσσα");
-  editor._hass = { language: "ga" };
-  assert.equal(editor._t("ed_language"), "Teanga");
+  editor._hass = { language: "hu" };
+  assert.equal(editor._t("ed_language"), "Nyelv");
 });
 
 test("the editor creates a single ha-form when setConfig is called again while ha-form loads", async () => {
