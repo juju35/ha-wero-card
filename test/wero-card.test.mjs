@@ -231,7 +231,10 @@ test("a re-render closes an open zoom dialog cleanly and reopens it", () => {
   assert.deepEqual(calls, ["close", "showModal"]);
 });
 
-const LANGS = ["fr", "de", "es", "sr", "sr-Latn", "it", "nl", "pt", "pl"];
+const LANGS = [
+  "fr", "de", "es", "sr", "sr-Latn", "it", "nl", "pt", "pl",
+  "ro", "da", "sv", "bg", "ru", "uk", "hu", "ga", "sk", "cs", "sl", "mt", "lv", "el",
+];
 
 test("I18N parity: every language has exactly the keys of en, and the editor offers each one", () => {
   const i18n = ctx.WeroI18n;
@@ -315,6 +318,28 @@ test("language resolution: Italian, Dutch, European Portuguese and Polish", () =
   assert.equal(editor._t("ed_language"), "Taal");
   editor._hass = { language: "it-IT" };
   assert.equal(editor._t("ed_language"), "Lingua");
+});
+
+test("language resolution: Romanian to Greek (14 languages)", () => {
+  const cases = {
+    "ro-RO": "ro", "da-DK": "da", "sv-SE": "sv", "sv-FI": "sv", "bg-BG": "bg", "ru-RU": "ru", "uk-UA": "uk",
+    "hu-HU": "hu", "ga-IE": "ga", "sk-SK": "sk", "cs-CZ": "cs", "sl-SI": "sl", "mt-MT": "mt", "lv-LV": "lv",
+    "el-GR": "el", el: "el", ja: "en",
+  };
+  for (const [lang, expected] of Object.entries(cases)) {
+    assert.equal(ctx.weroResolveLang(lang), expected, lang);
+  }
+  const card = new WeroCard();
+  card.setConfig({ url: "https://share.weropay.eu/p/1/c/AbCdEfGhIj" });
+  card.hass = { language: "cs-CZ" };
+  assert.match(card.shadowRoot.innerHTML, /Poslat peníze/);
+  card.hass = { language: "uk" };
+  assert.match(card.shadowRoot.innerHTML, /Надіслати гроші/);
+  const editor = new (ctx.customElements.get("wero-card-editor"))();
+  editor._hass = { language: "el-GR" };
+  assert.equal(editor._t("ed_language"), "Γλώσσα");
+  editor._hass = { language: "ga" };
+  assert.equal(editor._t("ed_language"), "Teanga");
 });
 
 test("the editor creates a single ha-form when setConfig is called again while ha-form loads", async () => {
