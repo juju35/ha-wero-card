@@ -110,7 +110,7 @@ language: en
 
 | Light | Dark |
 |---|---|
-| ![card](https://raw.githubusercontent.com/juju35/ha-wero-card/main/screenshots/card.png) | ![card dark](https://raw.githubusercontent.com/juju35/ha-wero-card/main/screenshots/card-dark.png) |
+| <img src="https://raw.githubusercontent.com/juju35/ha-wero-card/main/screenshots/card.png" alt="card" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-wero-card/main/screenshots/card-dark.png" alt="card dark" width="400"> |
 
 ## How it works
 
