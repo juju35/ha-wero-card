@@ -24,8 +24,8 @@ Custom Lovelace card for Home Assistant that displays your [Wero](https://wero-w
 - Visual editor: add and configure the card from the dashboard UI, no YAML needed
 - Fully compatible with Home Assistant dark mode and sections dashboards (6 columns by default and at least, so the title stays readable)
 - Keyboard friendly: visible focus on the copy button and the QR code, Enter or Space opens the QR code fullscreen
-- English, French, German, Spanish, Serbian (Cyrillic and Latin), Italian, Dutch, European Portuguese and Polish, auto-detected
-- HACS-ready, single file (~36 KB)
+- English, French, German, Spanish, Serbian (Cyrillic and Latin), Italian, Dutch, European Portuguese, Polish, Romanian, Danish, Swedish, Bulgarian, Russian, Ukrainian, Hungarian, Slovak, Czech, Slovenian, Latvian and Greek, auto-detected
+- HACS-ready, single file (~43 KB)
 
 ## Prerequisites
 
@@ -103,7 +103,7 @@ language: en
 | `name` | ❌ | — | Payee name, shown under the QR code |
 | `logo` | ❌ | `true` | Show the Wero logo in the header (`false` shows a generic icon) |
 | `qr_size` | ❌ | `176` | QR code size in pixels (quiet zone included); shrinks to fit a narrower card |
-| `language` | ❌ | Auto | Force language: `en`, `fr`, `de`, `es`, `sr`, `sr-Latn`, `it`, `nl`, `pt` or `pl` (auto-detects from HA settings) |
+| `language` | ❌ | Auto | Force language: `en`, `fr`, `de`, `es`, `sr`, `sr-Latn`, `it`, `nl`, `pt`, `pl`, `ro`, `da`, `sv`, `bg`, `ru`, `uk`, `hu`, `sk`, `cs`, `sl`, `lv` or `el` (auto-detects from HA settings) |
 
 ## Screenshots
 
@@ -150,6 +150,18 @@ The card auto-detects the language from your Home Assistant settings. Currently 
 | Nederlands | `nl` |
 | Português (Portugal) | `pt` |
 | Polski | `pl` |
+| Română | `ro` |
+| Dansk | `da` |
+| Svenska | `sv` |
+| Български | `bg` |
+| Русский | `ru` |
+| Українська | `uk` |
+| Magyar | `hu` |
+| Slovenčina | `sk` |
+| Čeština | `cs` |
+| Slovenščina | `sl` |
+| Latviešu | `lv` |
+| Ελληνικά | `el` |
 
 Regional variants fall back to their base language (`pt-BR` uses European Portuguese, `nl-BE` Dutch); untranslated languages fall back to English.
 
