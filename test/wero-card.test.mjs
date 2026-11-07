@@ -208,6 +208,8 @@ test("the zoom dialog starts empty: a single QR SVG in the markup", () => {
   const html = render({});
   assert.match(html, /<dialog id="zoom"[^>]*><\/dialog>/);
   assert.equal([...html.matchAll(/<svg /g)].length, 1);
+  // Inside the role=button wrapper the SVG is hidden from screen readers: the button's label speaks for it
+  assert.match(html, /<div class="qr-wrap" id="qr" role="button"[^>]*><svg aria-hidden="true" [^>]*role="img"/);
 });
 
 test("a re-render closes an open zoom dialog cleanly and reopens it", () => {
@@ -603,7 +605,7 @@ test("mini card: one compact row with the logo, title, payee, a QR thumbnail and
   assert.match(html, /<img class="logo"/);
   assert.match(html, /<div class="txt"><span class="name" title="Send money">Send money<\/span><span class="sub" title="Alex">Alex<\/span><\/div>/);
   // The thumbnail opens the full screen QR, like the big one: its label says so
-  assert.match(html, /<div class="qr-wrap thumb" id="qr" role="button" tabindex="0" title="Enlarge QR code" aria-label="Enlarge QR code">/);
+  assert.match(html, /<div class="qr-wrap thumb" id="qr" role="button" tabindex="0" title="Enlarge QR code" aria-label="Enlarge QR code"><svg aria-hidden="true" /);
   assert.match(html, /<button id="copy"/);
   assert.match(html, /<button class="zoom" title="Show the full card" aria-label="Show the full card"><ha-icon icon="mdi:arrow-expand">/);
   // No big QR, no payee row and no hint in the compact view; the full screen QR's dialog is there
@@ -641,13 +643,16 @@ test("mini card: the QR thumbnail (click, Enter or Space) opens the full screen 
     const els = keepElements(card);
     let shown = 0;
     els.zoom = { id: "zoom", open: false, firstChild: null, appendChild(n) { this.firstChild = n; }, showModal() { shown++; this.open = true; }, close() {} };
-    els.qr = { id: "qr", firstElementChild: { cloneNode: () => ({ svg: true }) } };
+    const removed = [];
+    els.qr = { id: "qr", firstElementChild: { cloneNode: () => ({ svg: true, removeAttribute: (a) => removed.push(a) }) } };
     card._render();
     let prevented = false;
     if (act === "click") els.qr.onclick();
     else els.qr.onkeydown({ key: act, preventDefault: () => (prevented = true) });
     assert.equal(shown, 1, act);
-    assert.deepEqual({ ...els.zoom.firstChild }, { svg: true }, act);
+    assert.equal(els.zoom.firstChild.svg, true, act);
+    // The full screen copy is an image again, not hidden like the button's QR
+    assert.deepEqual(removed, ["aria-hidden"], act);
     assert.equal(card._zoomed, false, act);
     assert.equal(prevented, act !== "click", act);
   }
