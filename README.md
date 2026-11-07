@@ -1,6 +1,6 @@
 # ha-wero-card
 
-[![HACS](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/integration)
+[![Marketplace](https://img.shields.io/badge/Marketplace-Custom-41BDF5.svg)](https://www.home-assistant.io/integrations/marketplace/)
 [![HACS Validation](https://github.com/juju35/ha-wero-card/actions/workflows/hacs.yml/badge.svg)](https://github.com/juju35/ha-wero-card/actions/workflows/hacs.yml)
 [![Validate](https://github.com/juju35/ha-wero-card/actions/workflows/validate.yml/badge.svg)](https://github.com/juju35/ha-wero-card/actions/workflows/validate.yml)
 [![Lint](https://github.com/juju35/ha-wero-card/actions/workflows/lint.yml/badge.svg)](https://github.com/juju35/ha-wero-card/actions/workflows/lint.yml)
@@ -12,7 +12,7 @@ Custom Lovelace card for Home Assistant that displays your [Wero](https://wero-w
 
 **Zero external dependencies** — the QR code is generated in pure JavaScript with an embedded Reed-Solomon encoder. No CDN, no network requests.
 
-[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=juju35&repository=ha-wero-card&category=plugin)
+[![Open your Home Assistant instance and open a repository inside the Marketplace.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/marketplace_repository/?owner=juju35&repository=ha-wero-card&category=plugin)
 
 <img src="https://raw.githubusercontent.com/juju35/ha-wero-card/main/screenshots/card.png" alt="wero-qr-card" width="350">
 
@@ -26,7 +26,7 @@ Custom Lovelace card for Home Assistant that displays your [Wero](https://wero-w
 - Fully compatible with Home Assistant dark mode and sections dashboards (6 columns by default and at least, so the title stays readable)
 - Keyboard friendly: visible focus on the copy button and the QR code, Enter or Space opens the QR code fullscreen
 - English, French, German, Spanish, Serbian (Cyrillic and Latin), Italian, Dutch, European Portuguese, Polish, Romanian, Danish, Swedish, Bulgarian, Russian, Ukrainian, Hungarian, Slovak, Czech, Slovenian, Latvian and Greek, auto-detected
-- HACS-ready, single file (~43 KB)
+- Ready for the Marketplace, single file (~43 KB)
 
 ## Prerequisites
 
@@ -46,19 +46,19 @@ There is no public format to build a Wero QR code from a phone number or an IBAN
 
 ## Installation
 
-### Via HACS (recommended)
+### Via the Marketplace (recommended)
 
 Click the button below to add the repository directly:
 
-[![Add to HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=juju35&repository=ha-wero-card&category=plugin)
+[![Add to the Marketplace](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/marketplace_repository/?owner=juju35&repository=ha-wero-card&category=plugin)
 
-Then click **Download**, and reload your browser when HACS asks you to.
+Then click **Install**, and reload your browser when the Marketplace asks you to.
 
 Or manually:
 
-1. Open HACS → **⋮** (top right) → **Custom repositories**
+1. Open **Settings → Marketplace → Add from link** (top right; this needs a GitHub account connected)
 2. Add `https://github.com/juju35/ha-wero-card` — Type: **Dashboard**
-3. Search for **Wero QR Card** and click **Download**
+3. Open **Wero QR Card** and click **Install**
 4. Clear your browser cache and refresh
 
 ### Manual
@@ -127,7 +127,7 @@ npm run check        # builds and checks the card (run in CI)
 npm run screenshots  # renders the card into screenshots/ (a file is rewritten only when its pixels change)
 ```
 
-`dist/` is not committed: `npm run build` creates it locally, CI builds it on every push, and the release workflow attaches the built file to the release, which is where HACS downloads it from.
+`dist/` is not committed: `npm run build` creates it locally, CI builds it on every push, and the release workflow attaches the built file to the release, which is where the Marketplace installs it from.
 
 ### Releasing
 
