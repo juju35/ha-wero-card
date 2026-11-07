@@ -20,7 +20,7 @@ Custom Lovelace card for Home Assistant that displays your [Wero](https://wero-w
 
 - QR code generated in pure JS (embedded Reed-Solomon algorithm), with a spec-compliant quiet zone
 - Wero logo in the header (can be disabled)
-- Two cards: `wero-card` and its mini version `wero-mini-card` (logo, title and payee on one row with a QR thumbnail; a detail button or a tap on the thumbnail shows the full card with the scannable QR code)
+- Two cards: `wero-card` and its mini version `wero-mini-card` (logo, title and payee on one row with a QR thumbnail that opens the full screen QR code; a detail button shows the full card)
 - Copy-link button to share the payment link by message (the result is also announced to screen readers)
 - Tap the QR code to show it fullscreen (tap again or press Escape to close)
 - Visual editor: add and configure the card from the dashboard UI, no YAML needed
@@ -105,7 +105,7 @@ name: Alex
 zoom: true
 ```
 
-The mini card takes the same options as the full card, plus `zoom`. It shows the logo, the title and the payee name on one row, with a small QR thumbnail on the right. The detail button (top right) or a tap on the thumbnail switches to the full card, with the big scannable QR code; the button, or a click anywhere outside the card, brings the compact view back. The copy button stays in the compact header; on a card 200 px wide or less the thumbnail gets smaller and the copy button gives way (the full card keeps it).
+The mini card takes the same options as the full card, plus `zoom`. It shows the logo, the title and the payee name on one row, with a small QR thumbnail on the right. A tap on the thumbnail opens the QR code full screen, like the big one of the full card. The detail button (top right) switches to the full card; the button, or a click anywhere outside the card, brings the compact view back. The copy button stays in the compact header; on a card 200 px wide or less the thumbnail gets smaller and the copy button gives way (the full card keeps it).
 
 ### Options reference
 

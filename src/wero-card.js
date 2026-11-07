@@ -616,16 +616,16 @@ class WeroCard extends HTMLElement {
       this._svgKey = key;
     }
     var svg = this._svg;
-    // Mini card in its compact view: one row, the QR as a thumbnail that opens the full card
+    // Mini card in its compact view: one row, the QR as a thumbnail that opens the full screen QR, like the big one
     var compact = this._compact();
     // A configured size overrides the 176 px of the stylesheet (it still shrinks to fit the card)
     var qrStyle = c.qr_size && !compact ? ` style="--wero-qr-size:${c.qr_size}px"` : '';
     var copy = weroEsc(this._t('copy'));
-    var zoom = weroEsc(this._t(compact ? 'zoom_in' : 'zoom'));
+    var zoom = weroEsc(this._t('zoom'));
     var title = `<span class="name" title="${weroEsc(c.title)}">${weroEsc(c.title)}</span>`;
     var qrEl = `<div class="qr-wrap${compact ? ' thumb' : ''}" id="qr" role="button" tabindex="0" title="${zoom}" aria-label="${zoom}"${qrStyle}>${svg}</div>`;
     var body = compact
-      ? ''
+      ? `<dialog id="zoom" aria-label="${zoom}"></dialog>`
       : `${qrEl}
         <dialog id="zoom" aria-label="${zoom}"></dialog>
         ${c.name ? `<div class="info-row"><div class="lbl">${weroEsc(this._t('payee'))}</div><div class="val">${weroEsc(c.name)}</div></div>` : ''}
@@ -718,13 +718,12 @@ class WeroCard extends HTMLElement {
       if (!dlg.firstChild) dlg.appendChild(qr.firstElementChild.cloneNode(true));
       if (!dlg.open) dlg.showModal();
     };
-    // The compact view's thumbnail is too small to scan: it opens the full card instead
-    var activate = compact ? () => this._setZoom(true) : open;
-    qr.onclick = activate;
-    qr.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activate(); } };
+    // The big QR and the compact view's thumbnail both open the full screen QR
+    qr.onclick = open;
+    qr.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } };
     // Escape is handled natively by <dialog>; a click anywhere (QR or backdrop) closes it
     if (dlg) dlg.onclick = () => dlg.close();
-    if (wasOpen && !compact) open();
+    if (wasOpen) open();
     else if (focusId) this.shadowRoot.getElementById(focusId)?.focus?.({ preventScroll: true });
   }
 

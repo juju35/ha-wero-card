@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.9.1 - 2026-11-07
+
+### Changes
+- Mini card: a tap on the QR thumbnail opens the QR code full screen directly (like the full card's QR), instead of switching to the full card; the detail button still does.
+
 ## 1.9.0 - 2026-11-07
 
 ### What's new
