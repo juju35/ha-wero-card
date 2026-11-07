@@ -76,7 +76,7 @@ test("one changed pixel, or another size, is a change", () => {
 });
 
 test("the README screenshots decode (Paeth/Up/Average filters of Chromium's encoder)", () => {
-  for (const f of ["card", "card-dark"]) {
+  for (const f of ["card", "card-dark", "mini-card", "mini-card-dark", "mini-card-narrow", "mini-card-narrow-dark"]) {
     const png = readFileSync(new URL(`../screenshots/${f}.png`, import.meta.url));
     const img = decodePng(png);
     assert.equal(img.data.length, img.width * img.height * 4, f);
