@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.9.0 - 2026-11-07
+
+### What's new
+- Mini card `wero-mini-card`: the Wero logo, the title and the payee name on one row, with a small QR thumbnail and the copy button, about a quarter of the full card's height. Its detail button (top right, `zoom: false` removes it) or a tap on the thumbnail switches to the full card with the big scannable QR code; the button, or a click anywhere outside the card, brings the compact view back. On a card 200 px wide or less the thumbnail gets smaller and the copy button gives way.
+- The mini card has its own visual editor (the same fields plus the detail button toggle) and its own entry in the card picker, translated in the 22 languages of the card.
+
+### Maintenance
+- Tests: compact markup, detail button and thumbnail, `zoom: false`, grid options, click outside the card, editor and translations of the mini card (41 tests in all).
+- Screenshots and README: mini card (light, dark and narrow), `zoom` option and YAML example; single-file size updated to ~55 KB.
+
 ## 1.8.6 - 2026-11-04
 
 ### Documentation

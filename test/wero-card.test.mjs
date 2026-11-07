@@ -574,3 +574,200 @@ test("a re-render keeps the keyboard focus on the copy button or the QR, without
   card._render();
   assert.deepEqual(focused, []);
 });
+
+// ── wero-mini-card ───────────────────────────────────────────────────────────
+const WeroMiniCard = ctx.customElements.get("wero-mini-card");
+const URL_ = "https://share.weropay.eu/p/1/c/AbCdEfGhIj";
+
+function mini(config = {}) {
+  const card = new WeroMiniCard();
+  const attrs = {};
+  card.setAttribute = (k, v) => (attrs[k] = v);
+  card.setConfig({ url: URL_, name: "Alex", ...config });
+  card.attrs = attrs;
+  return card;
+}
+
+// Persistent elements by id, so that the handlers set by a render can be called
+function keepElements(card) {
+  const els = {};
+  card.shadowRoot.getElementById = (id) => (els[id] ??= { id, focus() {} });
+  return els;
+}
+
+test("mini card: one compact row with the logo, title, payee, a QR thumbnail and the detail button", () => {
+  const card = mini();
+  const html = card.shadowRoot.innerHTML;
+  assert.equal(card.attrs.mini, "");
+  assert.match(html, /<ha-card class="mini">/);
+  assert.match(html, /<img class="logo"/);
+  assert.match(html, /<div class="txt"><span class="name" title="Send money">Send money<\/span><span class="sub" title="Alex">Alex<\/span><\/div>/);
+  // The thumbnail opens the full card: its label says so
+  assert.match(html, /<div class="qr-wrap thumb" id="qr" role="button" tabindex="0" title="Show the full card" aria-label="Show the full card">/);
+  assert.match(html, /<button id="copy"/);
+  assert.match(html, /<button class="zoom" title="Show the full card" aria-label="Show the full card"><ha-icon icon="mdi:arrow-expand">/);
+  // No big QR, no dialog, no payee row and no hint in the compact view
+  assert.doesNotMatch(html, /<dialog/);
+  assert.doesNotMatch(html, /class="info-row"|class="hint"/);
+  // Without a payee: the title alone
+  assert.doesNotMatch(mini({ name: "" }).shadowRoot.innerHTML, /class="sub"/);
+  // A configured qr_size does not enlarge the thumbnail
+  assert.doesNotMatch(mini({ qr_size: 300 }).shadowRoot.innerHTML, /--wero-qr-size:/);
+});
+
+test("mini card: the detail button switches to the full card and back, keyboard use keeps its focus", () => {
+  const card = mini();
+  const focused = [];
+  card.shadowRoot.querySelector = (sel) => (sel === ".zoom" ? { focus: (o) => focused.push(o) } : null);
+  let stopped = 0;
+  card._zoomClick({ detail: 1, stopPropagation: () => stopped++ });
+  let html = card.shadowRoot.innerHTML;
+  assert.equal(stopped, 1);
+  assert.match(html, /<ha-card>/);
+  assert.match(html, /<div class="qr-wrap" id="qr"[^>]*title="Enlarge QR code"/);
+  assert.match(html, /<dialog id="zoom"/);
+  assert.match(html, /<div class="val">Alex<\/div>/);
+  assert.match(html, /<\/button><button class="zoom" title="Back to the compact view" aria-label="Back to the compact view"><ha-icon icon="mdi:arrow-collapse">/);
+  assert.deepEqual(focused, [], "a mouse click does not move the focus");
+  card._zoomClick({ detail: 0, stopPropagation() {} });
+  html = card.shadowRoot.innerHTML;
+  assert.match(html, /<ha-card class="mini">/);
+  assert.deepEqual(focused.map((o) => ({ ...o })), [{ preventScroll: true }]);
+});
+
+test("mini card: the QR thumbnail (click, Enter or Space) opens the full card", () => {
+  for (const act of ["click", "Enter", " "]) {
+    const card = mini();
+    const els = keepElements(card);
+    card._render();
+    let prevented = false;
+    if (act === "click") els.qr.onclick();
+    else els.qr.onkeydown({ key: act, preventDefault: () => (prevented = true) });
+    assert.equal(card._zoomed, true, act);
+    assert.equal(prevented, act !== "click", act);
+    assert.match(card.shadowRoot.innerHTML, /<dialog id="zoom"/, act);
+  }
+});
+
+test("mini card: zoom: false removes the detail button", () => {
+  const card = mini({ zoom: false });
+  assert.doesNotMatch(card.shadowRoot.innerHTML, /class="zoom"/);
+  card._setZoom(true);
+  assert.doesNotMatch(card.shadowRoot.innerHTML, /class="zoom"/);
+  // The full card never has one
+  assert.doesNotMatch(render({ zoom: true }), /class="zoom"/);
+});
+
+test("mini card: grid options and card size, compact then zoomed", () => {
+  const card = mini();
+  assert.deepEqual({ ...card.getGridOptions() }, { columns: 6, min_columns: 6 });
+  assert.equal(card.getCardSize(), 2);
+  card._setZoom(true);
+  assert.deepEqual({ ...card.getGridOptions() }, { ...new WeroCard().getGridOptions() });
+  assert.equal(card.getCardSize(), new WeroCard().getCardSize());
+});
+
+test("mini card: a click outside the card brings the compact view back, not one inside it or in a dialog", () => {
+  const listeners = [];
+  ctx.document.addEventListener = (type, fn, capture) => listeners.push({ type, fn, capture });
+  ctx.document.removeEventListener = (type, fn, capture) => {
+    const i = listeners.findIndex((l) => l.type === type && l.fn === fn && l.capture === capture);
+    if (i >= 0) listeners.splice(i, 1);
+  };
+  ctx.clearTimeout = () => {};
+  try {
+    const card = mini();
+    card.connectedCallback();
+    assert.equal(listeners.length, 1);
+    assert.equal(listeners[0].type, "click");
+    assert.equal(listeners[0].capture, true);
+    const click = (path) => listeners[0].fn({ composedPath: () => path });
+    card._setZoom(true);
+    click([{ localName: "button" }, card, { localName: "body" }]);
+    assert.equal(card._zoomed, true, "a click inside the card");
+    click([{ localName: "div" }, { localName: "ha-more-info-dialog" }, { localName: "body" }]);
+    assert.equal(card._zoomed, true, "a click in a more-info dialog");
+    click([{ localName: "div" }, { localName: "body" }]);
+    assert.equal(card._zoomed, false, "a click elsewhere");
+    assert.match(card.shadowRoot.innerHTML, /<ha-card class="mini">/);
+    trackElements(card);
+    card.disconnectedCallback();
+    assert.equal(listeners.length, 0);
+  } finally {
+    delete ctx.document.addEventListener;
+    delete ctx.document.removeEventListener;
+    delete ctx.clearTimeout;
+  }
+});
+
+test("mini card styles: only its ha-card is a size container; the narrow layout shrinks the QR and hides copy", () => {
+  const html = mini().shadowRoot.innerHTML;
+  assert.match(cssRule(html, "ha-card.mini"), /container-type: inline-size/);
+  assert.equal([...html.matchAll(/container-type/g)].length, 1);
+  assert.match(cssRule(html, ":host([mini])"), /display: block; min-width: 0/);
+  assert.match(cssRule(html, ":host([mini])::before"), /grid-template-columns: minmax\(0, 240px\); height: 0/);
+  const zoom = cssRule(html, ".zoom");
+  assert.match(zoom, /all: unset/);
+  assert.match(zoom, /width: 24px; height: 24px/);
+  assert.match(zoom, /border-radius: 50%/);
+  assert.match(zoom, /color: var\(--secondary-text-color\)/);
+  assert.match(cssRule(html, ".qr-wrap.thumb svg"), /width: 64px/);
+  const narrow = /@container \(max-width: 200px\) \{([\s\S]*?)\n {8}\}/.exec(html)[1];
+  assert.match(narrow, /\.qr-wrap\.thumb svg \{ width: 48px; \}/);
+  assert.match(narrow, /ha-card\.mini #copy \{ display: none; \}/);
+  assert.match(cssRule(html, ".sub"), /text-overflow: ellipsis/);
+  // The full card is never a size container
+  assert.match(render({}), /<ha-card>/);
+});
+
+test("editor: the detail button toggle only in the mini card's editor, true dropped from the YAML", async () => {
+  ctx.customElements.define("ha-form", {});
+  const prevCreate = ctx.document.createElement;
+  ctx.document.createElement = () => ({ addEventListener() {} });
+  try {
+    const names = async (tag) => {
+      const editor = new (ctx.customElements.get(tag))();
+      editor.appendChild = () => {};
+      editor.dispatchEvent = () => {};
+      editor.setConfig({ url: URL_ });
+      await new Promise((r) => setImmediate(r));
+      return { editor, names: Array.from(editor._form.schema, (f) => f.name) };
+    };
+    const full = await names("wero-card-editor");
+    assert.ok(!full.names.includes("zoom"));
+    assert.equal(full.editor._form.data.zoom, undefined);
+    const m = await names("wero-mini-card-editor");
+    assert.deepEqual(m.names, ["url", "title", "name", "logo", "zoom", "qr_size", "language"]);
+    assert.equal(m.editor._form.data.zoom, true);
+    assert.equal(m.editor._form.computeLabel({ name: "zoom" }), "Detail button");
+    m.editor._valueChanged({ detail: { value: { url: URL_, zoom: true } } });
+    assert.equal(m.editor._config.zoom, undefined);
+    m.editor._valueChanged({ detail: { value: { url: URL_, zoom: false } } });
+    assert.equal(m.editor._config.zoom, false);
+    assert.equal(ctx.customElements.get("wero-mini-card").getConfigElement, WeroMiniCard.getConfigElement);
+  } finally {
+    ctx.document.createElement = prevCreate;
+  }
+});
+
+test("mini card i18n: new strings in every language, and a translated picker entry", () => {
+  const i18n = ctx.WeroI18n;
+  for (const lang of ["en", ...LANGS]) {
+    for (const key of ["zoom_in", "zoom_out", "ed_zoom", "mini_name", "mini_desc"]) {
+      assert.ok(i18n[lang][key]?.trim(), `${lang}.${key}`);
+      if (lang !== "en") assert.notEqual(i18n[lang][key], i18n.en[key], `${lang}.${key} untranslated`);
+    }
+    assert.notEqual(i18n[lang].zoom_in, i18n[lang].zoom_out, lang);
+  }
+  assert.equal(i18n.en.zoom_in, "Show the full card");
+  assert.equal(i18n.en.zoom_out, "Back to the compact view");
+  assert.equal(i18n.en.ed_zoom, "Detail button");
+  const entry = ctx.customCards.find((c) => c.type === "wero-mini-card");
+  assert.equal(entry.name, i18n.en.mini_name);
+  assert.equal(entry.description, i18n.en.mini_desc);
+  assert.equal(entry.preview, true);
+  // The mini card follows the language like the full card
+  const card = mini();
+  card.hass = { language: "fr" };
+  assert.match(card.shadowRoot.innerHTML, /title="Afficher la carte complète"/);
+});

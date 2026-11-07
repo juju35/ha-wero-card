@@ -24,6 +24,11 @@ var WeroI18n = {
     ed_logo: 'Afficher le logo Wero',
     ed_qr_size: 'Taille du QR code (px)',
     ed_language: 'Langue',
+    ed_zoom: 'Bouton détail',
+    zoom_in: 'Afficher la carte complète',
+    zoom_out: 'Revenir à la vue compacte',
+    mini_name: 'Mini-carte QR Wero',
+    mini_desc: 'QR code Wero compact : logo, titre et bénéficiaire, avec un bouton pour afficher la carte complète et son QR code à scanner.',
   },
   en: {
     default_title: 'Send money',
@@ -40,6 +45,11 @@ var WeroI18n = {
     ed_logo: 'Show the Wero logo',
     ed_qr_size: 'QR code size (px)',
     ed_language: 'Language',
+    ed_zoom: 'Detail button',
+    zoom_in: 'Show the full card',
+    zoom_out: 'Back to the compact view',
+    mini_name: 'Wero QR mini card',
+    mini_desc: 'Compact Wero QR code: logo, title and payee, with a button to show the full card and its scannable QR code.',
   },
   de: {
     default_title: 'Geld senden',
@@ -56,6 +66,11 @@ var WeroI18n = {
     ed_logo: 'Wero-Logo anzeigen',
     ed_qr_size: 'Größe des QR-Codes (px)',
     ed_language: 'Sprache',
+    ed_zoom: 'Detail-Schaltfläche',
+    zoom_in: 'Vollständige Karte anzeigen',
+    zoom_out: 'Zurück zur kompakten Ansicht',
+    mini_name: 'Wero-QR-Minikarte',
+    mini_desc: 'Kompakter Wero-QR-Code: Logo, Titel und Empfänger, mit einer Schaltfläche für die vollständige Karte und ihren scannbaren QR-Code.',
   },
   es: {
     default_title: 'Enviar dinero',
@@ -72,6 +87,11 @@ var WeroI18n = {
     ed_logo: 'Mostrar el logotipo de Wero',
     ed_qr_size: 'Tamaño del código QR (px)',
     ed_language: 'Idioma',
+    ed_zoom: 'Botón de detalle',
+    zoom_in: 'Mostrar la tarjeta completa',
+    zoom_out: 'Volver a la vista compacta',
+    mini_name: 'Minitarjeta QR de Wero',
+    mini_desc: 'Código QR de Wero compacto: logotipo, título y beneficiario, con un botón para mostrar la tarjeta completa y su código QR escaneable.',
   },
   sr: {
     default_title: 'Пошаљи новац',
@@ -88,6 +108,11 @@ var WeroI18n = {
     ed_logo: 'Прикажи Wero лого',
     ed_qr_size: 'Величина QR кода (px)',
     ed_language: 'Језик',
+    ed_zoom: 'Дугме за детаље',
+    zoom_in: 'Прикажи целу картицу',
+    zoom_out: 'Назад на компактни приказ',
+    mini_name: 'Мини картица Wero QR',
+    mini_desc: 'Компактни Wero QR код: лого, наслов и прималац, са дугметом за целу картицу и њен QR код за скенирање.',
   },
   'sr-Latn': {
     default_title: 'Pošalji novac',
@@ -104,6 +129,11 @@ var WeroI18n = {
     ed_logo: 'Prikaži Wero logo',
     ed_qr_size: 'Veličina QR koda (px)',
     ed_language: 'Jezik',
+    ed_zoom: 'Dugme za detalje',
+    zoom_in: 'Prikaži celu karticu',
+    zoom_out: 'Nazad na kompaktni prikaz',
+    mini_name: 'Mini kartica Wero QR',
+    mini_desc: 'Kompaktni Wero QR kod: logo, naslov i primalac, sa dugmetom za celu karticu i njen QR kod za skeniranje.',
   },
   it: {
     default_title: 'Invia denaro',
@@ -120,6 +150,11 @@ var WeroI18n = {
     ed_logo: 'Mostra il logo Wero',
     ed_qr_size: 'Dimensione del codice QR (px)',
     ed_language: 'Lingua',
+    ed_zoom: 'Pulsante dettagli',
+    zoom_in: 'Mostra la scheda completa',
+    zoom_out: 'Torna alla vista compatta',
+    mini_name: 'Mini scheda QR Wero',
+    mini_desc: 'Codice QR Wero compatto: logo, titolo e beneficiario, con un pulsante per la scheda completa e il suo codice QR da scansionare.',
   },
   nl: {
     default_title: 'Geld versturen',
@@ -136,6 +171,11 @@ var WeroI18n = {
     ed_logo: 'Wero-logo tonen',
     ed_qr_size: 'Grootte van de QR-code (px)',
     ed_language: 'Taal',
+    ed_zoom: 'Detailknop',
+    zoom_in: 'Volledige kaart tonen',
+    zoom_out: 'Terug naar de compacte weergave',
+    mini_name: 'Wero-QR-minikaart',
+    mini_desc: 'Compacte Wero-QR-code: logo, titel en begunstigde, met een knop voor de volledige kaart en de scanbare QR-code.',
   },
   pt: {
     default_title: 'Enviar dinheiro',
@@ -152,6 +192,11 @@ var WeroI18n = {
     ed_logo: 'Mostrar o logótipo Wero',
     ed_qr_size: 'Tamanho do código QR (px)',
     ed_language: 'Idioma',
+    ed_zoom: 'Botão de detalhe',
+    zoom_in: 'Mostrar o cartão completo',
+    zoom_out: 'Voltar à vista compacta',
+    mini_name: 'Mini cartão QR Wero',
+    mini_desc: 'Código QR Wero compacto: logótipo, título e beneficiário, com um botão para o cartão completo e o seu código QR para leitura.',
   },
   pl: {
     default_title: 'Wyślij pieniądze',
@@ -168,6 +213,11 @@ var WeroI18n = {
     ed_logo: 'Pokaż logo Wero',
     ed_qr_size: 'Rozmiar kodu QR (px)',
     ed_language: 'Język',
+    ed_zoom: 'Przycisk szczegółów',
+    zoom_in: 'Pokaż pełną kartę',
+    zoom_out: 'Wróć do widoku kompaktowego',
+    mini_name: 'Mini karta QR Wero',
+    mini_desc: 'Kompaktowy kod QR Wero: logo, tytuł i odbiorca, z przyciskiem pełnej karty z kodem QR do zeskanowania.',
   },
   ro: {
     default_title: 'Trimite bani',
@@ -184,6 +234,11 @@ var WeroI18n = {
     ed_logo: 'Afișează sigla Wero',
     ed_qr_size: 'Dimensiunea codului QR (px)',
     ed_language: 'Limbă',
+    ed_zoom: 'Buton de detalii',
+    zoom_in: 'Afișează cardul complet',
+    zoom_out: 'Înapoi la vizualizarea compactă',
+    mini_name: 'Mini card QR Wero',
+    mini_desc: 'Cod QR Wero compact: siglă, titlu și beneficiar, cu un buton pentru cardul complet și codul său QR de scanat.',
   },
   da: {
     default_title: 'Send penge',
@@ -200,6 +255,11 @@ var WeroI18n = {
     ed_logo: 'Vis Wero-logoet',
     ed_qr_size: 'QR-kodens størrelse (px)',
     ed_language: 'Sprog',
+    ed_zoom: 'Detaljeknap',
+    zoom_in: 'Vis hele kortet',
+    zoom_out: 'Tilbage til kompakt visning',
+    mini_name: 'Wero-QR-minikort',
+    mini_desc: 'Kompakt Wero-QR-kode: logo, titel og modtager, med en knap til hele kortet og dets QR-kode til scanning.',
   },
   sv: {
     default_title: 'Skicka pengar',
@@ -216,6 +276,11 @@ var WeroI18n = {
     ed_logo: 'Visa Wero-logotypen',
     ed_qr_size: 'QR-kodens storlek (px)',
     ed_language: 'Språk',
+    ed_zoom: 'Detaljknapp',
+    zoom_in: 'Visa hela kortet',
+    zoom_out: 'Tillbaka till kompakt vy',
+    mini_name: 'Minikort för Wero-QR',
+    mini_desc: 'Kompakt Wero-QR-kod: logotyp, titel och mottagare, med en knapp för hela kortet och dess skanningsbara QR-kod.',
   },
   bg: {
     default_title: 'Изпрати пари',
@@ -232,6 +297,11 @@ var WeroI18n = {
     ed_logo: 'Показване на логото на Wero',
     ed_qr_size: 'Размер на QR кода (px)',
     ed_language: 'Език',
+    ed_zoom: 'Бутон за подробности',
+    zoom_in: 'Покажи цялата карта',
+    zoom_out: 'Обратно към компактния изглед',
+    mini_name: 'Мини карта Wero QR',
+    mini_desc: 'Компактен QR код на Wero: лого, заглавие и получател, с бутон за цялата карта и нейния QR код за сканиране.',
   },
   ru: {
     default_title: 'Перевод денег',
@@ -248,6 +318,11 @@ var WeroI18n = {
     ed_logo: 'Показывать логотип Wero',
     ed_qr_size: 'Размер QR-кода (px)',
     ed_language: 'Язык',
+    ed_zoom: 'Кнопка подробностей',
+    zoom_in: 'Показать полную карточку',
+    zoom_out: 'Вернуться к компактному виду',
+    mini_name: 'Мини-карточка Wero QR',
+    mini_desc: 'Компактный QR-код Wero: логотип, заголовок и получатель, с кнопкой полной карточки с QR-кодом для сканирования.',
   },
   uk: {
     default_title: 'Надіслати гроші',
@@ -264,6 +339,11 @@ var WeroI18n = {
     ed_logo: 'Показувати логотип Wero',
     ed_qr_size: 'Розмір QR-коду (px)',
     ed_language: 'Мова',
+    ed_zoom: 'Кнопка деталей',
+    zoom_in: 'Показати повну картку',
+    zoom_out: 'Повернутися до компактного вигляду',
+    mini_name: 'Міні-картка Wero QR',
+    mini_desc: 'Компактний QR-код Wero: логотип, заголовок і одержувач, з кнопкою повної картки з QR-кодом для сканування.',
   },
   hu: {
     default_title: 'Pénz küldése',
@@ -280,6 +360,11 @@ var WeroI18n = {
     ed_logo: 'Wero-logó megjelenítése',
     ed_qr_size: 'QR-kód mérete (px)',
     ed_language: 'Nyelv',
+    ed_zoom: 'Részletek gomb',
+    zoom_in: 'Teljes kártya megjelenítése',
+    zoom_out: 'Vissza a kompakt nézethez',
+    mini_name: 'Wero QR mini kártya',
+    mini_desc: 'Kompakt Wero QR-kód: logó, cím és kedvezményezett, a teljes kártya és a beolvasható QR-kód gombjával.',
   },
   sk: {
     default_title: 'Poslať peniaze',
@@ -296,6 +381,11 @@ var WeroI18n = {
     ed_logo: 'Zobraziť logo Wero',
     ed_qr_size: 'Veľkosť QR kódu (px)',
     ed_language: 'Jazyk',
+    ed_zoom: 'Tlačidlo podrobností',
+    zoom_in: 'Zobraziť celú kartu',
+    zoom_out: 'Späť na kompaktné zobrazenie',
+    mini_name: 'Mini karta Wero QR',
+    mini_desc: 'Kompaktný QR kód Wero: logo, názov a príjemca, s tlačidlom celej karty s QR kódom na naskenovanie.',
   },
   cs: {
     default_title: 'Poslat peníze',
@@ -312,6 +402,11 @@ var WeroI18n = {
     ed_logo: 'Zobrazit logo Wero',
     ed_qr_size: 'Velikost QR kódu (px)',
     ed_language: 'Jazyk',
+    ed_zoom: 'Tlačítko podrobností',
+    zoom_in: 'Zobrazit celou kartu',
+    zoom_out: 'Zpět na kompaktní zobrazení',
+    mini_name: 'Mini karta Wero QR',
+    mini_desc: 'Kompaktní QR kód Wero: logo, název a příjemce, s tlačítkem celé karty s QR kódem k naskenování.',
   },
   sl: {
     default_title: 'Pošlji denar',
@@ -328,6 +423,11 @@ var WeroI18n = {
     ed_logo: 'Prikaži logotip Wero',
     ed_qr_size: 'Velikost kode QR (px)',
     ed_language: 'Jezik',
+    ed_zoom: 'Gumb za podrobnosti',
+    zoom_in: 'Prikaži celotno kartico',
+    zoom_out: 'Nazaj na kompaktni pogled',
+    mini_name: 'Mini kartica Wero QR',
+    mini_desc: 'Kompaktna koda QR Wero: logotip, naslov in prejemnik, z gumbom za celotno kartico s kodo QR za skeniranje.',
   },
   lv: {
     default_title: 'Sūtīt naudu',
@@ -344,6 +444,11 @@ var WeroI18n = {
     ed_logo: 'Rādīt Wero logotipu',
     ed_qr_size: 'QR koda izmērs (px)',
     ed_language: 'Valoda',
+    ed_zoom: 'Detaļu poga',
+    zoom_in: 'Rādīt pilno karti',
+    zoom_out: 'Atpakaļ uz kompakto skatu',
+    mini_name: 'Wero QR mini karte',
+    mini_desc: 'Kompakts Wero QR kods: logotips, nosaukums un saņēmējs, ar pogu pilnajai kartei un tās skenējamajam QR kodam.',
   },
   el: {
     default_title: 'Στείλτε χρήματα',
@@ -360,6 +465,11 @@ var WeroI18n = {
     ed_logo: 'Εμφάνιση λογότυπου Wero',
     ed_qr_size: 'Μέγεθος κωδικού QR (px)',
     ed_language: 'Γλώσσα',
+    ed_zoom: 'Κουμπί λεπτομερειών',
+    zoom_in: 'Εμφάνιση πλήρους κάρτας',
+    zoom_out: 'Επιστροφή στη συμπαγή προβολή',
+    mini_name: 'Μίνι κάρτα Wero QR',
+    mini_desc: 'Συμπαγής κωδικός QR Wero: λογότυπο, τίτλος και δικαιούχος, με κουμπί για την πλήρη κάρτα και τον κωδικό QR της για σάρωση.',
   },
 };
 
@@ -506,10 +616,24 @@ class WeroCard extends HTMLElement {
       this._svgKey = key;
     }
     var svg = this._svg;
+    // Mini card in its compact view: one row, the QR as a thumbnail that opens the full card
+    var compact = this._compact();
     // A configured size overrides the 176 px of the stylesheet (it still shrinks to fit the card)
-    var qrStyle = c.qr_size ? ` style="--wero-qr-size:${c.qr_size}px"` : '';
+    var qrStyle = c.qr_size && !compact ? ` style="--wero-qr-size:${c.qr_size}px"` : '';
     var copy = weroEsc(this._t('copy'));
-    var zoom = weroEsc(this._t('zoom'));
+    var zoom = weroEsc(this._t(compact ? 'zoom_in' : 'zoom'));
+    var title = `<span class="name" title="${weroEsc(c.title)}">${weroEsc(c.title)}</span>`;
+    var qrEl = `<div class="qr-wrap${compact ? ' thumb' : ''}" id="qr" role="button" tabindex="0" title="${zoom}" aria-label="${zoom}"${qrStyle}>${svg}</div>`;
+    var body = compact
+      ? ''
+      : `${qrEl}
+        <dialog id="zoom" aria-label="${zoom}"></dialog>
+        ${c.name ? `<div class="info-row"><div class="lbl">${weroEsc(this._t('payee'))}</div><div class="val">${weroEsc(c.name)}</div></div>` : ''}
+        <div class="hint">${weroEsc(this._t('hint'))}</div>`;
+    if (compact) {
+      var sub = c.name ? `<span class="sub" title="${weroEsc(c.name)}">${weroEsc(c.name)}</span>` : '';
+      title = `<div class="txt">${title}${sub}</div>${qrEl}`;
+    }
     // A re-render (e.g. language change via `set hass`) replaces an open zoom
     // dialog: close it cleanly first and reopen the new one afterwards
     var prevDlg = this.shadowRoot.getElementById('zoom');
@@ -548,17 +672,45 @@ class WeroCard extends HTMLElement {
         .lbl { font-size: 11px; color: var(--secondary-text-color); margin-bottom: 0; }
         .val { font-size: 13px; font-weight: 500; word-break: break-word; color: var(--primary-text-color); }
         .hint { font-size: 11px; color: var(--secondary-text-color); text-align: center; }
+        /* Mini card. Only its ha-card is a size container (the layout follows its own width). A size container takes
+           no width from its content: in a parent sized by its content it would shrink to its padding. An empty,
+           zero-height grid before it gives the host up to 240px there, and no minimum. */
+        :host([mini]) { display: block; min-width: 0; }
+        :host([mini])::before { content: ""; display: grid; grid-template-columns: minmax(0, 240px); height: 0; }
+        ha-card.mini { container-type: inline-size; }
+        ha-card.mini .header { margin-bottom: 0; }
+        ha-card.mini .logo, ha-card.mini .badge { width: 36px; height: 36px; }
+        ha-card.mini .logo { border-radius: 9px; }
+        ha-card.mini #copy { align-self: flex-start; margin-top: -4px; }
+        .txt { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+        .txt .name { flex: none; min-width: 0; }
+        .sub { font-size: 13px; line-height: 1.25; color: var(--secondary-text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .qr-wrap.thumb { flex: none; border-radius: 8px; }
+        .qr-wrap.thumb svg { width: 64px; display: block; }
+        .zoom { all: unset; flex: none; cursor: pointer; width: 24px; height: 24px; margin: -4px -4px -4px 0; border-radius: 50%; align-self: flex-start;
+                display: grid; place-items: center; color: var(--secondary-text-color); --mdc-icon-size: 16px; }
+        .zoom ha-icon { color: inherit; --mdc-icon-size: 16px; }
+        .zoom:hover { background: color-mix(in srgb, var(--secondary-text-color) 14%, transparent); color: var(--primary-text-color); }
+        .zoom:focus-visible { outline: 2px solid var(--primary-color, #03a9f4); outline-offset: 1px; }
+        /* A very narrow mini card: a smaller thumbnail, the copy button gives way (the full card keeps it) */
+        @container (max-width: 200px) {
+          ha-card.mini { padding: 10px; }
+          ha-card.mini .header { gap: 6px; }
+          ha-card.mini .logo, ha-card.mini .badge { width: 28px; height: 28px; }
+          ha-card.mini .logo { border-radius: 7px; padding: 0 1px; }
+          ha-card.mini .name { font-size: 14px; }
+          .sub { font-size: 12px; }
+          .qr-wrap.thumb svg { width: 48px; }
+          ha-card.mini #copy { display: none; }
+        }
       </style>
-      <ha-card>
+      <ha-card${compact ? ' class="mini"' : ''}>
         <div class="header">
           ${c.logo ? `<img class="logo" src="${WERO_LOGO}" alt="Wero">` : '<div class="badge"><ha-icon icon="mdi:qrcode-scan"></ha-icon></div>'}
-          <span class="name" title="${weroEsc(c.title)}">${weroEsc(c.title)}</span>
-          <button id="copy" title="${copy}" aria-label="${copy}"><ha-icon icon="mdi:content-copy" id="ico"></ha-icon></button>
+          ${title}
+          <button id="copy" title="${copy}" aria-label="${copy}"><ha-icon icon="mdi:content-copy" id="ico"></ha-icon></button>${this._zoomButton()}
         </div>
-        <div class="qr-wrap" id="qr" role="button" tabindex="0" title="${zoom}" aria-label="${zoom}"${qrStyle}>${svg}</div>
-        <dialog id="zoom" aria-label="${zoom}"></dialog>
-        ${c.name ? `<div class="info-row"><div class="lbl">${weroEsc(this._t('payee'))}</div><div class="val">${weroEsc(c.name)}</div></div>` : ''}
-        <div class="hint">${weroEsc(this._t('hint'))}</div>
+        ${body}
         <span class="sr" id="live" aria-live="polite"></span>
       </ha-card>`;
 
@@ -570,13 +722,20 @@ class WeroCard extends HTMLElement {
       if (!dlg.firstChild) dlg.appendChild(qr.firstElementChild.cloneNode(true));
       if (!dlg.open) dlg.showModal();
     };
-    qr.onclick = open;
-    qr.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } };
+    // The compact view's thumbnail is too small to scan: it opens the full card instead
+    var activate = compact ? () => this._setZoom(true) : open;
+    qr.onclick = activate;
+    qr.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activate(); } };
     // Escape is handled natively by <dialog>; a click anywhere (QR or backdrop) closes it
-    dlg.onclick = () => dlg.close();
-    if (wasOpen) open();
+    if (dlg) dlg.onclick = () => dlg.close();
+    if (wasOpen && !compact) open();
     else if (focusId) this.shadowRoot.getElementById(focusId)?.focus?.({ preventScroll: true });
   }
+
+  // Overridden by the mini card: the full card never shows the compact view nor a detail button
+  _compact() { return false; }
+
+  _zoomButton() { return ''; }
 
   disconnectedCallback() {
     // The timer that restores the copy icon is cancelled: restore it now
@@ -590,6 +749,74 @@ class WeroCard extends HTMLElement {
 
   // 6 columns minimum: at 4 (about 160 px) the header leaves the title some 50 px, too few in any language
   getGridOptions() { return { columns: 6, min_columns: 6, rows: 'auto' }; }
+}
+
+// ── wero-mini-card ────────────────────────────────────────────────────────────
+// A click in a dialog opened from the page (a more-info, the QR fullscreen) does not fold the card back
+var weroInDialog = (ev) => ev.composedPath().some((n) => ['ha-more-info-dialog', 'ha-dialog', 'dialog'].includes(n.localName));
+
+/**
+ * Compact card: the logo, the title and the payee on one row, with a QR thumbnail.
+ * Its detail button (top right, `zoom: false` removes it) and the thumbnail switch it to the full card (big
+ * scannable QR) and back; a click outside the card brings the compact view back.
+ */
+class WeroMiniCard extends WeroCard {
+  constructor() {
+    super();
+    this._zoomed = false;
+    this._onOutside = (ev) => {
+      if (this._zoomed && !ev.composedPath().includes(this) && !weroInDialog(ev)) this._setZoom(false);
+    };
+  }
+
+  static getConfigElement() {
+    return document.createElement('wero-mini-card-editor');
+  }
+
+  setConfig(config) {
+    // The host attribute behind the mini card's styles; never set in the constructor
+    this.setAttribute?.('mini', '');
+    super.setConfig(config);
+  }
+
+  connectedCallback() {
+    document.addEventListener('click', this._onOutside, true);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    document.removeEventListener('click', this._onOutside, true);
+  }
+
+  getCardSize() { return this._zoomed ? super.getCardSize() : 2; }
+
+  getGridOptions() { return this._zoomed ? super.getGridOptions() : { columns: 6, min_columns: 6 }; }
+
+  _compact() { return !this._zoomed; }
+
+  _setZoom(zoomed) {
+    this._zoomed = zoomed;
+    this._render();
+  }
+
+  _zoomButton() {
+    if (this._configRaw.zoom === false) return '';
+    var label = weroEsc(this._t(this._zoomed ? 'zoom_out' : 'zoom_in'));
+    return `<button class="zoom" title="${label}" aria-label="${label}"><ha-icon icon="mdi:${this._zoomed ? 'arrow-collapse' : 'arrow-expand'}"></ha-icon></button>`;
+  }
+
+  _zoomClick(ev) {
+    ev.stopPropagation();
+    this._setZoom(!this._zoomed);
+    // Keyboard use (Enter / Space: no click count) keeps the focus on the button, without scrolling the page
+    if (ev.detail === 0) this.shadowRoot.querySelector?.('.zoom')?.focus?.({ preventScroll: true });
+  }
+
+  _render() {
+    super._render();
+    var btn = this.shadowRoot.querySelector?.('.zoom');
+    if (btn) btn.onclick = (ev) => this._zoomClick(ev);
+  }
 }
 
 // ── wero-card-editor (visual editor, built on HA's own ha-form) ──────────────
@@ -648,7 +875,10 @@ class WeroCardEditor extends HTMLElement {
       if (entities?.getConfigElement) await entities.getConfigElement();
     }
     var form = document.createElement('ha-form');
-    form.schema = WERO_EDITOR_SCHEMA;
+    // The mini card adds its detail button after the logo toggle
+    form.schema = this.constructor.mini
+      ? WERO_EDITOR_SCHEMA.flatMap((f) => (f.name === 'logo' ? [f, { name: 'zoom', selector: { boolean: {} } }] : [f]))
+      : WERO_EDITOR_SCHEMA;
     form.computeLabel = (s) => this._t(`ed_${s.name}`);
     form.computeHelper = (s) => (s.name === 'url' ? this._t('ed_url_help') : undefined);
     form.addEventListener('value-changed', (ev) => this._valueChanged(ev));
@@ -669,7 +899,7 @@ class WeroCardEditor extends HTMLElement {
       return;
     }
     this._form.hass = this._hass;
-    this._form.data = Object.assign({ logo: true, qr_size: WERO_QR_SIZE }, this._config);
+    this._form.data = Object.assign({ logo: true, qr_size: WERO_QR_SIZE }, this.constructor.mini ? { zoom: true } : {}, this._config);
   }
 
   _valueChanged(ev) {
@@ -679,22 +909,31 @@ class WeroCardEditor extends HTMLElement {
       if (config[k] === '' || config[k] === null || config[k] === undefined) delete config[k];
     });
     if (config.logo === true) delete config.logo;
+    if (config.zoom === true) delete config.zoom;
     if (Number(config.qr_size) === WERO_QR_SIZE) delete config.qr_size;
     this._config = config;
     this.dispatchEvent(new CustomEvent('config-changed', { detail: { config: config }, bubbles: true, composed: true }));
   }
 }
 
-if (!customElements.get('wero-card')) customElements.define('wero-card', WeroCard);
-if (!customElements.get('wero-card-editor')) customElements.define('wero-card-editor', WeroCardEditor);
+class WeroMiniCardEditor extends WeroCardEditor {
+  static get mini() { return true; }
+}
+
+var weroDefine = (name, cls) => {
+  if (!customElements.get(name)) customElements.define(name, cls);
+};
+weroDefine('wero-card', WeroCard);
+weroDefine('wero-card-editor', WeroCardEditor);
+weroDefine('wero-mini-card', WeroMiniCard);
+weroDefine('wero-mini-card-editor', WeroMiniCardEditor);
 console.info(`%c WERO-CARD %c v${WERO_CARD_VERSION} `, 'color:#1d1c1c;background:#fff48d;font-weight:700', 'color:#fff;background:#1d1c1c');
 window.customCards = window.customCards || [];
-if (!window.customCards.some((c) => c.type === 'wero-card')) {
-  window.customCards.push({
-    type: 'wero-card',
-    name: 'Wero QR Card',
-    description: 'Wero QR code, no CDN',
-    preview: true,
-    documentationURL: 'https://github.com/juju35/ha-wero-card',
-  });
-}
+var weroPicker = (type, name, description) => {
+  if (window.customCards.some((c) => c.type === type)) return;
+  window.customCards.push({ type: type, name: name, description: description, preview: true, documentationURL: 'https://github.com/juju35/ha-wero-card' });
+};
+weroPicker('wero-card', 'Wero QR Card', 'Wero QR code, no CDN');
+// The mini card's entry in the language of the page (Home Assistant sets it on <html>)
+var weroPickerI18n = WeroI18n[weroResolveLang(document.documentElement.lang)];
+weroPicker('wero-mini-card', weroPickerI18n.mini_name, weroPickerI18n.mini_desc);

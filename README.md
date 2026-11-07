@@ -20,13 +20,14 @@ Custom Lovelace card for Home Assistant that displays your [Wero](https://wero-w
 
 - QR code generated in pure JS (embedded Reed-Solomon algorithm), with a spec-compliant quiet zone
 - Wero logo in the header (can be disabled)
+- Two cards: `wero-card` and its mini version `wero-mini-card` (logo, title and payee on one row with a QR thumbnail; a detail button or a tap on the thumbnail shows the full card with the scannable QR code)
 - Copy-link button to share the payment link by message (the result is also announced to screen readers)
 - Tap the QR code to show it fullscreen (tap again or press Escape to close)
 - Visual editor: add and configure the card from the dashboard UI, no YAML needed
 - Fully compatible with Home Assistant dark mode and sections dashboards (6 columns by default and at least, so the title stays readable)
 - Keyboard friendly: visible focus on the copy button and the QR code, Enter or Space opens the QR code fullscreen
 - English, French, German, Spanish, Serbian (Cyrillic and Latin), Italian, Dutch, European Portuguese, Polish, Romanian, Danish, Swedish, Bulgarian, Russian, Ukrainian, Hungarian, Slovak, Czech, Slovenian, Latvian and Greek, auto-detected
-- Ready for the Marketplace, single file (~43 KB)
+- Ready for the Marketplace, single file (~55 KB)
 
 ## Prerequisites
 
@@ -74,7 +75,7 @@ Or manually:
 
 ### Visual editor
 
-Edit your dashboard → **Add card** → search for **Wero QR Card**. Every option below can be set from the form; switch to the code editor if you prefer YAML.
+Edit your dashboard → **Add card** → search for **Wero QR Card** (or **Wero QR mini card**). Every option below can be set from the form; switch to the code editor if you prefer YAML.
 
 ### Minimal
 
@@ -95,6 +96,17 @@ qr_size: 176
 language: en
 ```
 
+### Mini card
+
+```yaml
+type: custom:wero-mini-card
+url: https://share.weropay.eu/p/1/c/XXXXXXXXXX
+name: Alex
+zoom: true
+```
+
+The mini card takes the same options as the full card, plus `zoom`. It shows the logo, the title and the payee name on one row, with a small QR thumbnail on the right. The detail button (top right) or a tap on the thumbnail switches to the full card, with the big scannable QR code; the button, or a click anywhere outside the card, brings the compact view back. The copy button stays in the compact header; on a card 200 px wide or less the thumbnail gets smaller and the copy button gives way (the full card keeps it).
+
 ### Options reference
 
 | Option | Required | Default | Description |
@@ -104,6 +116,7 @@ language: en
 | `name` | ❌ | — | Payee name, shown under the QR code |
 | `logo` | ❌ | `true` | Show the Wero logo in the header (`false` shows a generic icon) |
 | `qr_size` | ❌ | `176` | QR code size in pixels (quiet zone included); shrinks to fit a narrower card |
+| `zoom` | ❌ | `true` | Mini card only: detail button at the top right that switches to the full card and back (a click outside the card brings the compact view back) |
 | `language` | ❌ | Auto | Force language: `en`, `fr`, `de`, `es`, `sr`, `sr-Latn`, `it`, `nl`, `pt`, `pl`, `ro`, `da`, `sv`, `bg`, `ru`, `uk`, `hu`, `sk`, `cs`, `sl`, `lv` or `el` (auto-detects from HA settings) |
 
 ## Screenshots
@@ -111,6 +124,8 @@ language: en
 | Light | Dark |
 |---|---|
 | <img src="https://raw.githubusercontent.com/juju35/ha-wero-card/main/screenshots/card.png" alt="card" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-wero-card/main/screenshots/card-dark.png" alt="card dark" width="400"> |
+| <img src="https://raw.githubusercontent.com/juju35/ha-wero-card/main/screenshots/mini-card.png" alt="mini card" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-wero-card/main/screenshots/mini-card-dark.png" alt="mini card dark" width="400"> |
+| <img src="https://raw.githubusercontent.com/juju35/ha-wero-card/main/screenshots/mini-card-narrow.png" alt="mini card narrow" width="212"> | <img src="https://raw.githubusercontent.com/juju35/ha-wero-card/main/screenshots/mini-card-narrow-dark.png" alt="mini card narrow dark" width="212"> |
 
 ## How it works
 

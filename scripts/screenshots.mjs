@@ -107,6 +107,8 @@ export async function render(shots, { icons = {}, hass = {} } = {}) {
 
 const icons = {
   "content-copy": "M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z",
+  "arrow-expand": "M10,21V19H6.41L10.91,14.5L9.5,13.09L5,17.59V14H3V21H10M14.5,10.91L19,6.41V10H21V3H14V5H17.59L13.09,9.5L14.5,10.91Z",
+  "arrow-collapse": "M19.5,3.09L15,7.59V4H13V11H20V9H16.41L20.91,4.5L19.5,3.09M4,13V15H7.59L3.09,19.5L4.5,20.91L9,16.41V20H11V13H4Z",
   "qrcode-scan": "M4,4H10V10H4V4M20,4V10H14V4H20M14,15H16V13H14V11H16V13H18V11H20V13H18V15H20V18H18V20H16V18H13V20H11V16H14V15M16,15V18H18V15H16M4,20V14H10V20H4M6,6V8H8V6H6M16,6V8H18V6H16M6,16V18H8V16H6M4,11H6V13H4V11M9,11H13V15H11V13H9V11M11,6H13V10H11V6M2,2V6H0V2A2,2 0 0,1 2,0H6V2H2M22,0A2,2 0 0,1 24,2V6H22V2H18V0H22M2,18V22H6V24H2A2,2 0 0,1 0,22V18H2M22,22V18H24V22A2,2 0 0,1 22,24H18V22H22Z",
 };
 const config = { url: "https://share.weropay.eu/p/1/c/EXAMPLE0123", name: "Alex" };
@@ -115,6 +117,11 @@ await render(
   [
     { file: "card", type: "wero-card", theme: "light", width: 460, config },
     { file: "card-dark", type: "wero-card", theme: "dark", width: 460, config: { ...config, title: "Refund" } },
+    // The mini card: one row with a QR thumbnail, then the narrowest one (a phone, a few columns)
+    { file: "mini-card", type: "wero-mini-card", theme: "light", width: 380, config },
+    { file: "mini-card-dark", type: "wero-mini-card", theme: "dark", width: 380, config: { ...config, title: "Refund" } },
+    { file: "mini-card-narrow", type: "wero-mini-card", theme: "light", width: 180, config },
+    { file: "mini-card-narrow-dark", type: "wero-mini-card", theme: "dark", width: 180, config },
   ],
   { icons }
 );
