@@ -679,8 +679,6 @@ class WeroCard extends HTMLElement {
         :host([mini])::before { content: ""; display: grid; grid-template-columns: minmax(0, 240px); height: 0; }
         ha-card.mini { container-type: inline-size; }
         ha-card.mini .header { margin-bottom: 0; }
-        ha-card.mini .logo, ha-card.mini .badge { width: 36px; height: 36px; }
-        ha-card.mini .logo { border-radius: 9px; }
         ha-card.mini #copy { align-self: flex-start; margin-top: -4px; }
         .txt { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
         .txt .name { flex: none; min-width: 0; }
@@ -696,8 +694,6 @@ class WeroCard extends HTMLElement {
         @container (max-width: 200px) {
           ha-card.mini { padding: 10px; }
           ha-card.mini .header { gap: 6px; }
-          ha-card.mini .logo, ha-card.mini .badge { width: 28px; height: 28px; }
-          ha-card.mini .logo { border-radius: 7px; padding: 0 1px; }
           ha-card.mini .name { font-size: 14px; }
           .sub { font-size: 12px; }
           .qr-wrap.thumb svg { width: 48px; }

@@ -716,6 +716,9 @@ test("mini card styles: only its ha-card is a size container; the narrow layout 
   assert.match(narrow, /\.qr-wrap\.thumb svg \{ width: 48px; \}/);
   assert.match(narrow, /ha-card\.mini #copy \{ display: none; \}/);
   assert.match(cssRule(html, ".sub"), /text-overflow: ellipsis/);
+  // The header's logo tile keeps the full card's 40 px: no mini rule resizes it
+  assert.doesNotMatch(html, /ha-card\.mini \.(logo|badge)/);
+  assert.match(cssRule(html, ".logo"), /width: 40px; height: 40px/);
   // The full card is never a size container
   assert.match(render({}), /<ha-card>/);
 });
