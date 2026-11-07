@@ -602,12 +602,12 @@ test("mini card: one compact row with the logo, title, payee, a QR thumbnail and
   assert.match(html, /<ha-card class="mini">/);
   assert.match(html, /<img class="logo"/);
   assert.match(html, /<div class="txt"><span class="name" title="Send money">Send money<\/span><span class="sub" title="Alex">Alex<\/span><\/div>/);
-  // The thumbnail opens the full card: its label says so
-  assert.match(html, /<div class="qr-wrap thumb" id="qr" role="button" tabindex="0" title="Show the full card" aria-label="Show the full card">/);
+  // The thumbnail opens the full screen QR, like the big one: its label says so
+  assert.match(html, /<div class="qr-wrap thumb" id="qr" role="button" tabindex="0" title="Enlarge QR code" aria-label="Enlarge QR code">/);
   assert.match(html, /<button id="copy"/);
   assert.match(html, /<button class="zoom" title="Show the full card" aria-label="Show the full card"><ha-icon icon="mdi:arrow-expand">/);
-  // No big QR, no dialog, no payee row and no hint in the compact view
-  assert.doesNotMatch(html, /<dialog/);
+  // No big QR, no payee row and no hint in the compact view; the full screen QR's dialog is there
+  assert.match(html, /<dialog id="zoom" aria-label="Enlarge QR code"><\/dialog>/);
   assert.doesNotMatch(html, /class="info-row"|class="hint"/);
   // Without a payee: the title alone
   assert.doesNotMatch(mini({ name: "" }).shadowRoot.innerHTML, /class="sub"/);
@@ -635,17 +635,21 @@ test("mini card: the detail button switches to the full card and back, keyboard 
   assert.deepEqual(focused.map((o) => ({ ...o })), [{ preventScroll: true }]);
 });
 
-test("mini card: the QR thumbnail (click, Enter or Space) opens the full card", () => {
+test("mini card: the QR thumbnail (click, Enter or Space) opens the full screen QR directly, the card stays compact", () => {
   for (const act of ["click", "Enter", " "]) {
     const card = mini();
     const els = keepElements(card);
+    let shown = 0;
+    els.zoom = { id: "zoom", open: false, firstChild: null, appendChild(n) { this.firstChild = n; }, showModal() { shown++; this.open = true; }, close() {} };
+    els.qr = { id: "qr", firstElementChild: { cloneNode: () => ({ svg: true }) } };
     card._render();
     let prevented = false;
     if (act === "click") els.qr.onclick();
     else els.qr.onkeydown({ key: act, preventDefault: () => (prevented = true) });
-    assert.equal(card._zoomed, true, act);
+    assert.equal(shown, 1, act);
+    assert.deepEqual({ ...els.zoom.firstChild }, { svg: true }, act);
+    assert.equal(card._zoomed, false, act);
     assert.equal(prevented, act !== "click", act);
-    assert.match(card.shadowRoot.innerHTML, /<dialog id="zoom"/, act);
   }
 });
 
