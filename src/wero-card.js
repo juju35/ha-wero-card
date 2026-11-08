@@ -737,6 +737,8 @@ class WeroCard extends HTMLElement {
         .qr-wrap { background: #fff48d; border-radius: 10px; overflow: hidden; line-height: 0; max-width: 100%; cursor: zoom-in; }
         .qr-wrap svg { max-width: 100%; height: auto; width: var(--wero-qr-size, 176px); }
         dialog { border: none; padding: 0; margin: auto; background: #fff48d; border-radius: 12px; line-height: 0; overflow: hidden; cursor: zoom-out; }
+        /* showModal() focuses the dialog itself: no focus ring around the full screen QR (Escape still closes it) */
+        dialog:focus, dialog:focus-visible { outline: none; }
         dialog::backdrop { background: rgba(0,0,0,0.85); }
         dialog svg { width: min(90vw, 90vh); height: auto; display: block; }
         .info-row { width: 100%; box-sizing: border-box; background: var(--secondary-background-color, rgba(127,127,127,.08)); border-radius: 10px; padding: 6px 10px; }

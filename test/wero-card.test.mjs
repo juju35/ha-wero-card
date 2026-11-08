@@ -239,6 +239,18 @@ test("the zoom dialog starts empty: a single QR SVG in the markup", () => {
   assert.match(html, /<div class="qr-wrap" id="qr" role="button"[^>]*><svg aria-hidden="true" [^>]*role="img"/);
 });
 
+test("the full screen QR dialog draws no focus ring, in the card and the mini card", () => {
+  // showModal() focuses the dialog: the browser's focus ring would frame the yellow QR code
+  for (const html of [render({}), new (ctx.customElements.get("wero-mini-card"))()].map((x) => {
+    if (typeof x === "string") return x;
+    x.setAttribute = () => {};
+    x.setConfig({ url: "https://share.weropay.eu/p/1/c/AbCdEfGhIj" });
+    return x.shadowRoot.innerHTML;
+  })) {
+    assert.match(html, /dialog:focus, dialog:focus-visible \{ outline: none; \}/);
+  }
+});
+
 test("a re-render closes an open zoom dialog cleanly and reopens it", () => {
   const card = new WeroCard();
   card.setConfig({ url: "https://share.weropay.eu/p/1/c/AbCdEfGhIj" });
