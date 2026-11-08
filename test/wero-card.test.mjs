@@ -633,8 +633,15 @@ test("mini card: one compact row with the logo, title, payee, a QR thumbnail and
   assert.match(html, /<div class="txt"><span class="name" title="Send money">Send money<\/span><span class="sub" title="Alex">Alex<\/span><\/div>/);
   // The thumbnail opens the full screen QR, like the big one: its label says so
   assert.match(html, /<div class="qr-wrap thumb" id="qr" role="button" tabindex="0" title="Enlarge QR code" aria-label="Enlarge QR code"><svg aria-hidden="true" /);
-  assert.match(html, /<button id="copy"/);
-  assert.match(html, /<button class="zoom" title="Show the full card" aria-label="Show the full card"><ha-icon icon="mdi:arrow-expand">/);
+  // The thumbnail ends the row, right next to a column with the detail button and the copy button under it
+  assert.match(html, /<\/svg><\/div>\s*<div class="side"><button class="zoom" title="Show the full card" aria-label="Show the full card"><ha-icon icon="mdi:arrow-expand"><\/ha-icon><\/button><button id="copy" title="Copy link" aria-label="Copy link">/);
+  assert.match(html, /<span class="sr" id="live" aria-live="polite"><\/span>/);
+  const side = cssRule(html, ".side");
+  assert.match(side, /flex-direction: column/);
+  assert.match(side, /margin: -4px -4px -4px 0/);
+  assert.match(cssRule(html, ".side .zoom"), /margin: 0/);
+  // Without the detail button, the copy button takes its place
+  assert.match(mini({ zoom: false }).shadowRoot.innerHTML, /<div class="side"><button id="copy"/);
   // No big QR, no payee row and no hint in the compact view; the full screen QR's dialog is there
   assert.match(html, /<dialog id="zoom" aria-label="Enlarge QR code"><\/dialog>/);
   assert.doesNotMatch(html, /class="info-row"|class="hint"/);
@@ -656,7 +663,9 @@ test("mini card: the detail button switches to the full card and back, keyboard 
   assert.match(html, /<div class="qr-wrap" id="qr"[^>]*title="Enlarge QR code"/);
   assert.match(html, /<dialog id="zoom"/);
   assert.match(html, /<div class="val">Alex<\/div>/);
-  assert.match(html, /<\/button><button class="zoom" title="Back to the compact view" aria-label="Back to the compact view"><ha-icon icon="mdi:arrow-collapse">/);
+  // The full view keeps the copy button in the header row, before the detail button
+  assert.doesNotMatch(html, /class="side"/);
+  assert.match(html, /<button id="copy"[^>]*><ha-icon icon="mdi:content-copy" id="ico"><\/ha-icon><\/button><button class="zoom" title="Back to the compact view" aria-label="Back to the compact view"><ha-icon icon="mdi:arrow-collapse">/);
   assert.deepEqual(focused, [], "a mouse click does not move the focus");
   card._zoomClick({ detail: 0, stopPropagation() {} });
   html = card.shadowRoot.innerHTML;

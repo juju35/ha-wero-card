@@ -105,7 +105,7 @@ name: Alex
 zoom: true
 ```
 
-The mini card takes the same options as the full card, plus `zoom`. It shows the logo, the title and the payee name on one row, with a small QR thumbnail on the right. A tap on the thumbnail opens the QR code full screen, like the big one of the full card. The detail button (top right) switches to the full card; the button, or a click anywhere outside the card, brings the compact view back. The copy button stays in the compact header; on a card 200 px wide or less the thumbnail gets smaller and the copy button gives way (the full card keeps it).
+The mini card takes the same options as the full card, plus `zoom`. It shows the logo, the title and the payee name on one row, with a small QR thumbnail on the right. A tap on the thumbnail opens the QR code full screen, like the big one of the full card. The detail button (top right) switches to the full card; the button, or a click anywhere outside the card, brings the compact view back. The copy button sits under the detail button, so the thumbnail lines up with the other mini cards; on a card 200 px wide or less the thumbnail gets smaller and the copy button gives way (the full card keeps it).
 
 ### Options reference
 

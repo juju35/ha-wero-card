@@ -698,6 +698,9 @@ class WeroCard extends HTMLElement {
         <dialog id="zoom" aria-label="${zoom}"></dialog>
         ${c.name ? `<div class="info-row"><div class="lbl">${weroEsc(this._t('payee'))}</div><div class="val">${weroEsc(c.name)}</div></div>` : ''}
         <div class="hint">${weroEsc(this._t('hint'))}</div>`;
+    var copyBtn = `<button id="copy" title="${copy}" aria-label="${copy}"><ha-icon icon="mdi:content-copy" id="ico"></ha-icon></button>`;
+    // Compact view: the copy button goes under the detail button, so the thumbnail sits right next to that column
+    var actions = compact ? `<div class="side">${this._zoomButton()}${copyBtn}</div>` : copyBtn + this._zoomButton();
     if (compact) {
       var sub = c.name ? `<span class="sub" title="${weroEsc(c.name)}">${weroEsc(c.name)}</span>` : '';
       title = `<div class="txt">${title}${sub}</div>${qrEl}`;
@@ -747,7 +750,6 @@ class WeroCard extends HTMLElement {
         :host([mini])::before { content: ""; display: grid; grid-template-columns: minmax(0, 240px); height: 0; }
         ha-card.mini { container-type: inline-size; }
         ha-card.mini .header { margin-bottom: 0; }
-        ha-card.mini #copy { align-self: flex-start; margin-top: -4px; }
         .txt { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
         .txt .name { flex: none; min-width: 0; }
         .sub { font-size: 13px; line-height: 1.25; color: var(--secondary-text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -758,6 +760,10 @@ class WeroCard extends HTMLElement {
         .zoom ha-icon { color: inherit; --mdc-icon-size: 16px; }
         .zoom:hover { background: color-mix(in srgb, var(--secondary-text-color) 14%, transparent); color: var(--primary-text-color); }
         .zoom:focus-visible { outline: 2px solid var(--primary-color, #03a9f4); outline-offset: 1px; }
+        /* The detail button with the copy button under it, in a column at the top right (the 4 px of the button's own margin) */
+        .side { flex: none; align-self: flex-start; display: flex; flex-direction: column; gap: 4px; margin: -4px -4px -4px 0; }
+        .side .zoom { margin: 0; }
+        .side #copy ha-icon { --mdc-icon-size: 16px; }
         /* A very narrow mini card: a smaller thumbnail, the copy button gives way (the full card keeps it) */
         @container (max-width: 200px) {
           ha-card.mini { padding: 10px; }
@@ -772,7 +778,7 @@ class WeroCard extends HTMLElement {
         <div class="header">
           ${c.logo ? `<img class="logo" src="${WERO_LOGO}" alt="Wero">` : '<div class="badge"><ha-icon icon="mdi:qrcode-scan"></ha-icon></div>'}
           ${title}
-          <button id="copy" title="${copy}" aria-label="${copy}"><ha-icon icon="mdi:content-copy" id="ico"></ha-icon></button>${this._zoomButton()}
+          ${actions}
         </div>
         ${body}
         <span class="sr" id="live" aria-live="polite"></span>
