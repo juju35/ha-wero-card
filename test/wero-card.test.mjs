@@ -7,7 +7,7 @@ import vm from "node:vm";
 import jsQR from "jsqr";
 
 // Evaluates src/wero-card.js with just enough browser stubs to reach its functions and classes.
-function loadCard() {
+function loadCard(lang = "en") {
   const defined = {};
   const ctx = {
     HTMLElement: class {
@@ -23,7 +23,7 @@ function loadCard() {
         defined[n] = c;
       },
     },
-    document: { documentElement: { lang: "en" }, createElement: () => ({}) },
+    document: { documentElement: { lang }, createElement: () => ({}) },
     console: { info() {} },
     escape,
     unescape,
@@ -141,7 +141,34 @@ test("grid options and picker entry", () => {
   // 6 columns minimum: at 4 (about 160 px) the header left 52 px to the title, too few for any language
   assert.deepEqual({ ...new WeroCard().getGridOptions() }, { columns: 6, min_columns: 6, rows: "auto" });
   const entry = ctx.customCards.find((c) => c.type === "wero-card");
+  assert.equal(entry.name, "Wero QR Card");
   assert.equal(entry.description, "Wero QR code, no CDN");
+});
+
+test("main card picker entry follows the page language", () => {
+  const fr = loadCard("fr").ctx.customCards;
+  const main = fr.find((c) => c.type === "wero-card");
+  assert.equal(main.name, "Carte QR Wero");
+  assert.equal(main.description, "QR code Wero, sans CDN");
+  assert.equal(fr.find((c) => c.type === "wero-mini-card").name, "Mini-carte QR Wero");
+  // An untranslated page language falls back to English
+  assert.equal(loadCard("ja").ctx.customCards.find((c) => c.type === "wero-card").name, "Wero QR Card");
+});
+
+test("QR image label is translated and follows a language change", () => {
+  const i18n = ctx.WeroI18n;
+  for (const lang of ["en", ...LANGS]) {
+    for (const key of ["qr_code", "card_name", "card_desc"]) {
+      assert.ok(i18n[lang][key]?.trim(), `${lang}.${key}`);
+      if (lang !== "en") assert.notEqual(i18n[lang][key], i18n.en[key], `${lang}.${key} untranslated`);
+    }
+  }
+  const card = new WeroCard();
+  card.setConfig({ url: "https://share.weropay.eu/p/1/c/AbCdEfGhIj" });
+  assert.match(card.shadowRoot.innerHTML, /<svg aria-hidden="true" [^>]*role="img" aria-label="Wero QR code">/);
+  card.hass = { language: "de" };
+  assert.match(card.shadowRoot.innerHTML, /role="img" aria-label="Wero-QR-Code">/);
+  assert.doesNotMatch(card.shadowRoot.innerHTML, /aria-label="QR code"/);
 });
 
 test("a negative, zero or non-numeric qr_size keeps the default 176 px", () => {
