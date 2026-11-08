@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.10.0 - 2026-11-08
+
+### What's new
+- The QR code image's screen reader label is translated in the 22 languages of the card and follows a language change.
+- The main card's name and description in the card picker are shown in the language of Home Assistant, like the mini card's.
+- Mini card: the copy button moves under the detail button in the top right corner, so the QR thumbnail sits right next to that column and lines up with the other mini cards (such as the Wi-Fi one).
+
 ## 1.9.2 - 2026-11-07
 
 ### Fixes

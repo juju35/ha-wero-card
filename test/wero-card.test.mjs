@@ -7,7 +7,7 @@ import vm from "node:vm";
 import jsQR from "jsqr";
 
 // Evaluates src/wero-card.js with just enough browser stubs to reach its functions and classes.
-function loadCard() {
+function loadCard(lang = "en") {
   const defined = {};
   const ctx = {
     HTMLElement: class {
@@ -23,7 +23,7 @@ function loadCard() {
         defined[n] = c;
       },
     },
-    document: { documentElement: { lang: "en" }, createElement: () => ({}) },
+    document: { documentElement: { lang }, createElement: () => ({}) },
     console: { info() {} },
     escape,
     unescape,
@@ -141,7 +141,34 @@ test("grid options and picker entry", () => {
   // 6 columns minimum: at 4 (about 160 px) the header left 52 px to the title, too few for any language
   assert.deepEqual({ ...new WeroCard().getGridOptions() }, { columns: 6, min_columns: 6, rows: "auto" });
   const entry = ctx.customCards.find((c) => c.type === "wero-card");
+  assert.equal(entry.name, "Wero QR Card");
   assert.equal(entry.description, "Wero QR code, no CDN");
+});
+
+test("main card picker entry follows the page language", () => {
+  const fr = loadCard("fr").ctx.customCards;
+  const main = fr.find((c) => c.type === "wero-card");
+  assert.equal(main.name, "Carte QR Wero");
+  assert.equal(main.description, "QR code Wero, sans CDN");
+  assert.equal(fr.find((c) => c.type === "wero-mini-card").name, "Mini-carte QR Wero");
+  // An untranslated page language falls back to English
+  assert.equal(loadCard("ja").ctx.customCards.find((c) => c.type === "wero-card").name, "Wero QR Card");
+});
+
+test("QR image label is translated and follows a language change", () => {
+  const i18n = ctx.WeroI18n;
+  for (const lang of ["en", ...LANGS]) {
+    for (const key of ["qr_code", "card_name", "card_desc"]) {
+      assert.ok(i18n[lang][key]?.trim(), `${lang}.${key}`);
+      if (lang !== "en") assert.notEqual(i18n[lang][key], i18n.en[key], `${lang}.${key} untranslated`);
+    }
+  }
+  const card = new WeroCard();
+  card.setConfig({ url: "https://share.weropay.eu/p/1/c/AbCdEfGhIj" });
+  assert.match(card.shadowRoot.innerHTML, /<svg aria-hidden="true" [^>]*role="img" aria-label="Wero QR code">/);
+  card.hass = { language: "de" };
+  assert.match(card.shadowRoot.innerHTML, /role="img" aria-label="Wero-QR-Code">/);
+  assert.doesNotMatch(card.shadowRoot.innerHTML, /aria-label="QR code"/);
 });
 
 test("a negative, zero or non-numeric qr_size keeps the default 176 px", () => {
@@ -606,8 +633,15 @@ test("mini card: one compact row with the logo, title, payee, a QR thumbnail and
   assert.match(html, /<div class="txt"><span class="name" title="Send money">Send money<\/span><span class="sub" title="Alex">Alex<\/span><\/div>/);
   // The thumbnail opens the full screen QR, like the big one: its label says so
   assert.match(html, /<div class="qr-wrap thumb" id="qr" role="button" tabindex="0" title="Enlarge QR code" aria-label="Enlarge QR code"><svg aria-hidden="true" /);
-  assert.match(html, /<button id="copy"/);
-  assert.match(html, /<button class="zoom" title="Show the full card" aria-label="Show the full card"><ha-icon icon="mdi:arrow-expand">/);
+  // The thumbnail ends the row, right next to a column with the detail button and the copy button under it
+  assert.match(html, /<\/svg><\/div>\s*<div class="side"><button class="zoom" title="Show the full card" aria-label="Show the full card"><ha-icon icon="mdi:arrow-expand"><\/ha-icon><\/button><button id="copy" title="Copy link" aria-label="Copy link">/);
+  assert.match(html, /<span class="sr" id="live" aria-live="polite"><\/span>/);
+  const side = cssRule(html, ".side");
+  assert.match(side, /flex-direction: column/);
+  assert.match(side, /margin: -4px -4px -4px 0/);
+  assert.match(cssRule(html, ".side .zoom"), /margin: 0/);
+  // Without the detail button, the copy button takes its place
+  assert.match(mini({ zoom: false }).shadowRoot.innerHTML, /<div class="side"><button id="copy"/);
   // No big QR, no payee row and no hint in the compact view; the full screen QR's dialog is there
   assert.match(html, /<dialog id="zoom" aria-label="Enlarge QR code"><\/dialog>/);
   assert.doesNotMatch(html, /class="info-row"|class="hint"/);
@@ -629,7 +663,9 @@ test("mini card: the detail button switches to the full card and back, keyboard 
   assert.match(html, /<div class="qr-wrap" id="qr"[^>]*title="Enlarge QR code"/);
   assert.match(html, /<dialog id="zoom"/);
   assert.match(html, /<div class="val">Alex<\/div>/);
-  assert.match(html, /<\/button><button class="zoom" title="Back to the compact view" aria-label="Back to the compact view"><ha-icon icon="mdi:arrow-collapse">/);
+  // The full view keeps the copy button in the header row, before the detail button
+  assert.doesNotMatch(html, /class="side"/);
+  assert.match(html, /<button id="copy"[^>]*><ha-icon icon="mdi:content-copy" id="ico"><\/ha-icon><\/button><button class="zoom" title="Back to the compact view" aria-label="Back to the compact view"><ha-icon icon="mdi:arrow-collapse">/);
   assert.deepEqual(focused, [], "a mouse click does not move the focus");
   card._zoomClick({ detail: 0, stopPropagation() {} });
   html = card.shadowRoot.innerHTML;
