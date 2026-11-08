@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.9.2 - 2026-11-07
+
+### Fixes
+- Accessibility: the QR code inside the clickable "Enlarge QR code" area is hidden from screen readers, so the button is announced once by its own label; the full screen QR stays an image.
+
 ## 1.9.1 - 2026-11-07
 
 ### Changes

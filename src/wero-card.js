@@ -623,7 +623,8 @@ class WeroCard extends HTMLElement {
     var copy = weroEsc(this._t('copy'));
     var zoom = weroEsc(this._t('zoom'));
     var title = `<span class="name" title="${weroEsc(c.title)}">${weroEsc(c.title)}</span>`;
-    var qrEl = `<div class="qr-wrap${compact ? ' thumb' : ''}" id="qr" role="button" tabindex="0" title="${zoom}" aria-label="${zoom}"${qrStyle}>${svg}</div>`;
+    // The SVG is aria-hidden inside the role=button wrapper: its role=img would otherwise be read as part of the button
+    var qrEl = `<div class="qr-wrap${compact ? ' thumb' : ''}" id="qr" role="button" tabindex="0" title="${zoom}" aria-label="${zoom}"${qrStyle}>${svg.replace('<svg ', '<svg aria-hidden="true" ')}</div>`;
     var body = compact
       ? `<dialog id="zoom" aria-label="${zoom}"></dialog>`
       : `${qrEl}
@@ -715,7 +716,12 @@ class WeroCard extends HTMLElement {
     var dlg = this.shadowRoot.getElementById('zoom');
     var open = () => {
       // The dialog gets its copy of the QR (a clone, the SVG path can be big) on first open only
-      if (!dlg.firstChild) dlg.appendChild(qr.firstElementChild.cloneNode(true));
+      // The button's label covers its QR (hidden from screen readers there); the full screen one is an image again
+      if (!dlg.firstChild) {
+        var big = qr.firstElementChild.cloneNode(true);
+        big.removeAttribute('aria-hidden');
+        dlg.appendChild(big);
+      }
       if (!dlg.open) dlg.showModal();
     };
     // The big QR and the compact view's thumbnail both open the full screen QR
