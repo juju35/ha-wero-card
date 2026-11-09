@@ -64,8 +64,8 @@ Or manually:
 
 ### Manual
 
-1. Download `wero-card.js` from the [latest release](https://github.com/juju35/ha-wero-card/releases/latest)
-2. Copy it to `/config/www/wero-card.js`
+1. Download `wero-card.js` and the `wero-card.i18n.*.js` translation files from the [latest release](https://github.com/juju35/ha-wero-card/releases/latest)
+2. Copy them all to `/config/www/` (without the translation files, the cards show in English)
 3. Go to **Settings → Dashboards → Resources** → Add resource:
    - URL: `/local/wero-card.js`
    - Type: **JavaScript Module**
