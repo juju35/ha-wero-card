@@ -7,6 +7,7 @@ on:
     paths:
       - "src/**"
       - "scripts/**"
+      - ".github/workflows/screenshots.yml"
       # A Playwright/Chromium bump (Dependabot npm update) can change the rendering
       - "package-lock.json"
 
