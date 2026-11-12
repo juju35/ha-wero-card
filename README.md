@@ -113,6 +113,7 @@ The mini card takes the same options as the full card, plus `zoom`. It shows the
 |---|---|---|---|
 | `url` | ✅ | — | The `https://` link encoded in your Wero QR code |
 | `title` | ❌ | Auto (i18n) | Card title |
+| `show_title` | ❌ | `true` | Show the title in the header (e.g. `false` under a section heading of your own) |
 | `name` | ❌ | — | Payee name, shown under the QR code |
 | `logo` | ❌ | `true` | Show the Wero logo in the header (`false` shows a generic icon) |
 | `qr_size` | ❌ | `176` | QR code size in pixels (quiet zone included); shrinks to fit a narrower card |
