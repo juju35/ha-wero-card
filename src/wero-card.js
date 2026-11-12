@@ -22,6 +22,7 @@ var WeroI18n = {
     ed_title: 'Titre',
     ed_name: 'Nom du bénéficiaire',
     ed_logo: 'Afficher le logo Wero',
+    ed_show_title: 'Afficher le titre',
     ed_qr_size: 'Taille du QR code (px)',
     ed_language: 'Langue',
     ed_zoom: 'Bouton détail',
@@ -46,6 +47,7 @@ var WeroI18n = {
     ed_title: 'Title',
     ed_name: 'Payee name',
     ed_logo: 'Show the Wero logo',
+    ed_show_title: 'Show title',
     ed_qr_size: 'QR code size (px)',
     ed_language: 'Language',
     ed_zoom: 'Detail button',
@@ -70,6 +72,7 @@ var WeroI18n = {
     ed_title: 'Titel',
     ed_name: 'Name des Empfängers',
     ed_logo: 'Wero-Logo anzeigen',
+    ed_show_title: 'Titel anzeigen',
     ed_qr_size: 'Größe des QR-Codes (px)',
     ed_language: 'Sprache',
     ed_zoom: 'Detail-Schaltfläche',
@@ -94,6 +97,7 @@ var WeroI18n = {
     ed_title: 'Título',
     ed_name: 'Nombre del beneficiario',
     ed_logo: 'Mostrar el logotipo de Wero',
+    ed_show_title: 'Mostrar el título',
     ed_qr_size: 'Tamaño del código QR (px)',
     ed_language: 'Idioma',
     ed_zoom: 'Botón de detalle',
@@ -118,6 +122,7 @@ var WeroI18n = {
     ed_title: 'Наслов',
     ed_name: 'Име примаоца',
     ed_logo: 'Прикажи Wero лого',
+    ed_show_title: 'Прикажи наслов',
     ed_qr_size: 'Величина QR кода (px)',
     ed_language: 'Језик',
     ed_zoom: 'Дугме за детаље',
@@ -142,6 +147,7 @@ var WeroI18n = {
     ed_title: 'Naslov',
     ed_name: 'Ime primaoca',
     ed_logo: 'Prikaži Wero logo',
+    ed_show_title: 'Prikaži naslov',
     ed_qr_size: 'Veličina QR koda (px)',
     ed_language: 'Jezik',
     ed_zoom: 'Dugme za detalje',
@@ -166,6 +172,7 @@ var WeroI18n = {
     ed_title: 'Titolo',
     ed_name: 'Nome del beneficiario',
     ed_logo: 'Mostra il logo Wero',
+    ed_show_title: 'Mostra il titolo',
     ed_qr_size: 'Dimensione del codice QR (px)',
     ed_language: 'Lingua',
     ed_zoom: 'Pulsante dettagli',
@@ -190,6 +197,7 @@ var WeroI18n = {
     ed_title: 'Titel',
     ed_name: 'Naam van de begunstigde',
     ed_logo: 'Wero-logo tonen',
+    ed_show_title: 'Titel tonen',
     ed_qr_size: 'Grootte van de QR-code (px)',
     ed_language: 'Taal',
     ed_zoom: 'Detailknop',
@@ -214,6 +222,7 @@ var WeroI18n = {
     ed_title: 'Título',
     ed_name: 'Nome do beneficiário',
     ed_logo: 'Mostrar o logótipo Wero',
+    ed_show_title: 'Mostrar o título',
     ed_qr_size: 'Tamanho do código QR (px)',
     ed_language: 'Idioma',
     ed_zoom: 'Botão de detalhe',
@@ -238,6 +247,7 @@ var WeroI18n = {
     ed_title: 'Tytuł',
     ed_name: 'Nazwa odbiorcy',
     ed_logo: 'Pokaż logo Wero',
+    ed_show_title: 'Pokaż tytuł',
     ed_qr_size: 'Rozmiar kodu QR (px)',
     ed_language: 'Język',
     ed_zoom: 'Przycisk szczegółów',
@@ -262,6 +272,7 @@ var WeroI18n = {
     ed_title: 'Titlu',
     ed_name: 'Numele beneficiarului',
     ed_logo: 'Afișează sigla Wero',
+    ed_show_title: 'Afișează titlul',
     ed_qr_size: 'Dimensiunea codului QR (px)',
     ed_language: 'Limbă',
     ed_zoom: 'Buton de detalii',
@@ -286,6 +297,7 @@ var WeroI18n = {
     ed_title: 'Titel',
     ed_name: 'Modtagerens navn',
     ed_logo: 'Vis Wero-logoet',
+    ed_show_title: 'Vis titel',
     ed_qr_size: 'QR-kodens størrelse (px)',
     ed_language: 'Sprog',
     ed_zoom: 'Detaljeknap',
@@ -310,6 +322,7 @@ var WeroI18n = {
     ed_title: 'Titel',
     ed_name: 'Mottagarens namn',
     ed_logo: 'Visa Wero-logotypen',
+    ed_show_title: 'Visa rubrik',
     ed_qr_size: 'QR-kodens storlek (px)',
     ed_language: 'Språk',
     ed_zoom: 'Detaljknapp',
@@ -334,6 +347,7 @@ var WeroI18n = {
     ed_title: 'Заглавие',
     ed_name: 'Име на получателя',
     ed_logo: 'Показване на логото на Wero',
+    ed_show_title: 'Показване на заглавието',
     ed_qr_size: 'Размер на QR кода (px)',
     ed_language: 'Език',
     ed_zoom: 'Бутон за подробности',
@@ -358,6 +372,7 @@ var WeroI18n = {
     ed_title: 'Заголовок',
     ed_name: 'Имя получателя',
     ed_logo: 'Показывать логотип Wero',
+    ed_show_title: 'Показывать заголовок',
     ed_qr_size: 'Размер QR-кода (px)',
     ed_language: 'Язык',
     ed_zoom: 'Кнопка подробностей',
@@ -382,6 +397,7 @@ var WeroI18n = {
     ed_title: 'Заголовок',
     ed_name: 'Ім’я одержувача',
     ed_logo: 'Показувати логотип Wero',
+    ed_show_title: 'Показувати заголовок',
     ed_qr_size: 'Розмір QR-коду (px)',
     ed_language: 'Мова',
     ed_zoom: 'Кнопка деталей',
@@ -406,6 +422,7 @@ var WeroI18n = {
     ed_title: 'Cím',
     ed_name: 'Kedvezményezett neve',
     ed_logo: 'Wero-logó megjelenítése',
+    ed_show_title: 'Cím megjelenítése',
     ed_qr_size: 'QR-kód mérete (px)',
     ed_language: 'Nyelv',
     ed_zoom: 'Részletek gomb',
@@ -430,6 +447,7 @@ var WeroI18n = {
     ed_title: 'Názov',
     ed_name: 'Meno príjemcu',
     ed_logo: 'Zobraziť logo Wero',
+    ed_show_title: 'Zobraziť názov',
     ed_qr_size: 'Veľkosť QR kódu (px)',
     ed_language: 'Jazyk',
     ed_zoom: 'Tlačidlo podrobností',
@@ -454,6 +472,7 @@ var WeroI18n = {
     ed_title: 'Název',
     ed_name: 'Jméno příjemce',
     ed_logo: 'Zobrazit logo Wero',
+    ed_show_title: 'Zobrazit název',
     ed_qr_size: 'Velikost QR kódu (px)',
     ed_language: 'Jazyk',
     ed_zoom: 'Tlačítko podrobností',
@@ -478,6 +497,7 @@ var WeroI18n = {
     ed_title: 'Naslov',
     ed_name: 'Ime prejemnika',
     ed_logo: 'Prikaži logotip Wero',
+    ed_show_title: 'Prikaži naslov',
     ed_qr_size: 'Velikost kode QR (px)',
     ed_language: 'Jezik',
     ed_zoom: 'Gumb za podrobnosti',
@@ -502,6 +522,7 @@ var WeroI18n = {
     ed_title: 'Nosaukums',
     ed_name: 'Saņēmēja vārds',
     ed_logo: 'Rādīt Wero logotipu',
+    ed_show_title: 'Rādīt virsrakstu',
     ed_qr_size: 'QR koda izmērs (px)',
     ed_language: 'Valoda',
     ed_zoom: 'Detaļu poga',
@@ -526,6 +547,7 @@ var WeroI18n = {
     ed_title: 'Τίτλος',
     ed_name: 'Όνομα δικαιούχου',
     ed_logo: 'Εμφάνιση λογότυπου Wero',
+    ed_show_title: 'Εμφάνιση τίτλου',
     ed_qr_size: 'Μέγεθος κωδικού QR (px)',
     ed_language: 'Γλώσσα',
     ed_zoom: 'Κουμπί λεπτομερειών',
@@ -599,6 +621,7 @@ class WeroCard extends HTMLElement {
       name: config.name || '',
       title: config.title || this._t('default_title'),
       logo: config.logo !== false,
+      show_title: config.show_title !== false,
       // Displayed size in px; unset or not a positive number keeps the default
       // 176 px from the stylesheet
       qr_size: Number(config.qr_size) > 0 ? Number(config.qr_size) : null,
@@ -689,7 +712,8 @@ class WeroCard extends HTMLElement {
     var qrStyle = c.qr_size && !compact ? ` style="--wero-qr-size:${c.qr_size}px"` : '';
     var copy = weroEsc(this._t('copy'));
     var zoom = weroEsc(this._t('zoom'));
-    var title = `<span class="name" title="${weroEsc(c.title)}">${weroEsc(c.title)}</span>`;
+    // show_title: false keeps the (empty) name, which pushes the buttons to the right
+    var title = c.show_title ? `<span class="name" title="${weroEsc(c.title)}">${weroEsc(c.title)}</span>` : '<span class="name"></span>';
     // The SVG is aria-hidden inside the role=button wrapper: its role=img would otherwise be read as part of the button
     var qrEl = `<div class="qr-wrap${compact ? ' thumb' : ''}" id="qr" role="button" tabindex="0" title="${zoom}" aria-label="${zoom}"${qrStyle}>${svg.replace('<svg ', '<svg aria-hidden="true" ')}</div>`;
     var body = compact
@@ -900,6 +924,7 @@ var WERO_EDITOR_SCHEMA = [
   { name: 'url', required: true, selector: { text: { type: 'url' } } },
   { name: 'title', selector: { text: {} } },
   { name: 'name', selector: { text: {} } },
+  { name: 'show_title', selector: { boolean: {} } },
   { name: 'logo', selector: { boolean: {} } },
   { name: 'qr_size', selector: { number: { min: 100, max: 600, step: 10, mode: 'slider', unit_of_measurement: 'px' } } },
   { name: 'language', selector: { select: { mode: 'dropdown', options: [
@@ -975,7 +1000,7 @@ class WeroCardEditor extends HTMLElement {
       return;
     }
     this._form.hass = this._hass;
-    this._form.data = Object.assign({ logo: true, qr_size: WERO_QR_SIZE }, this.constructor.mini ? { zoom: true } : {}, this._config);
+    this._form.data = Object.assign({ show_title: true, logo: true, qr_size: WERO_QR_SIZE }, this.constructor.mini ? { zoom: true } : {}, this._config);
   }
 
   _valueChanged(ev) {
@@ -984,6 +1009,7 @@ class WeroCardEditor extends HTMLElement {
     Object.keys(config).forEach((k) => {
       if (config[k] === '' || config[k] === null || config[k] === undefined) delete config[k];
     });
+    if (config.show_title === true) delete config.show_title;
     if (config.logo === true) delete config.logo;
     if (config.zoom === true) delete config.zoom;
     if (Number(config.qr_size) === WERO_QR_SIZE) delete config.qr_size;

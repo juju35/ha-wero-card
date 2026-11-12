@@ -797,7 +797,7 @@ test("editor: the detail button toggle only in the mini card's editor, true drop
     assert.ok(!full.names.includes("zoom"));
     assert.equal(full.editor._form.data.zoom, undefined);
     const m = await names("wero-mini-card-editor");
-    assert.deepEqual(m.names, ["url", "title", "name", "logo", "zoom", "qr_size", "language"]);
+    assert.deepEqual(m.names, ["url", "title", "name", "show_title", "logo", "zoom", "qr_size", "language"]);
     assert.equal(m.editor._form.data.zoom, true);
     assert.equal(m.editor._form.computeLabel({ name: "zoom" }), "Detail button");
     m.editor._valueChanged({ detail: { value: { url: URL_, zoom: true } } });
