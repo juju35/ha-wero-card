@@ -810,6 +810,34 @@ test("editor: the detail button toggle only in the mini card's editor, true drop
   }
 });
 
+test("editor: the language choice starts with Automatic (no language in the YAML), in the editor's language", async () => {
+  if (!ctx.customElements.get("ha-form")) ctx.customElements.define("ha-form", {});
+  const prevCreate = ctx.document.createElement;
+  ctx.document.createElement = () => ({ addEventListener() {} });
+  try {
+    for (const tag of ["wero-card-editor", "wero-mini-card-editor"]) {
+      const editor = new (ctx.customElements.get(tag))();
+      editor.appendChild = () => {};
+      editor.dispatchEvent = () => {};
+      editor.setConfig({ url: URL_ });
+      await new Promise((r) => setImmediate(r));
+      const options = (ed) => Array.from(ed._form.schema.find((f) => f.name === "language").selector.select.options);
+      assert.deepEqual({ ...options(editor)[0] }, { value: "", label: "Automatic" });
+      assert.equal(options(editor).length, Object.keys(ctx.WeroI18n).length + 1);
+      editor.hass = { language: "fr" };
+      assert.deepEqual({ ...options(editor)[0] }, { value: "", label: "Automatique" });
+      editor._valueChanged({ detail: { value: { url: URL_, language: "de" } } });
+      assert.equal(editor._config.language, "de");
+      editor._valueChanged({ detail: { value: { url: URL_, language: "" } } });
+      assert.equal(editor._config.language, undefined);
+    }
+    // The shared schema itself is left untouched
+    assert.ok(!ctx.WERO_EDITOR_SCHEMA.find((f) => f.name === "language").selector.select.options.some((o) => o.value === ""));
+  } finally {
+    ctx.document.createElement = prevCreate;
+  }
+});
+
 test("mini card i18n: new strings in every language, and a translated picker entry", () => {
   const i18n = ctx.WeroI18n;
   for (const lang of ["en", ...LANGS]) {

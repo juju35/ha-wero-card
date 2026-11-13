@@ -120,7 +120,7 @@ The mini card takes the same options as the full card, plus `zoom`. It shows the
 | `logo` | ❌ | `true` | Show the Wero logo in the header (`false` shows a generic icon) |
 | `qr_size` | ❌ | `176` | QR code size in pixels (quiet zone included); shrinks to fit a narrower card |
 | `zoom` | ❌ | `true` | Mini card only: detail button at the top right that switches to the full card and back (a click outside the card brings the compact view back) |
-| `language` | ❌ | Auto | Force language: `en`, `fr`, `de`, `es`, `sr`, `sr-Latn`, `it`, `nl`, `pt`, `pl`, `ro`, `da`, `sv`, `bg`, `ru`, `uk`, `hu`, `sk`, `cs`, `sl`, `lv` or `el` (auto-detects from HA settings) |
+| `language` | ❌ | Auto | Force language: `en`, `fr`, `de`, `es`, `sr`, `sr-Latn`, `it`, `nl`, `pt`, `pl`, `ro`, `da`, `sv`, `bg`, `ru`, `uk`, `hu`, `sk`, `cs`, `sl`, `lv` or `el` (auto-detects from HA settings; « Automatic » in the visual editor) |
 
 ## Screenshots
 

@@ -25,6 +25,7 @@ var WeroI18n = {
     ed_show_title: 'Afficher le titre',
     ed_qr_size: 'Taille du QR code (px)',
     ed_language: 'Langue',
+    ed_language_auto: 'Automatique',
     ed_zoom: 'Bouton détail',
     zoom_in: 'Afficher la carte complète',
     zoom_out: 'Revenir à la vue compacte',
@@ -50,6 +51,7 @@ var WeroI18n = {
     ed_show_title: 'Show title',
     ed_qr_size: 'QR code size (px)',
     ed_language: 'Language',
+    ed_language_auto: 'Automatic',
     ed_zoom: 'Detail button',
     zoom_in: 'Show the full card',
     zoom_out: 'Back to the compact view',
@@ -75,6 +77,7 @@ var WeroI18n = {
     ed_show_title: 'Titel anzeigen',
     ed_qr_size: 'Größe des QR-Codes (px)',
     ed_language: 'Sprache',
+    ed_language_auto: 'Automatisch',
     ed_zoom: 'Detail-Schaltfläche',
     zoom_in: 'Vollständige Karte anzeigen',
     zoom_out: 'Zurück zur kompakten Ansicht',
@@ -100,6 +103,7 @@ var WeroI18n = {
     ed_show_title: 'Mostrar el título',
     ed_qr_size: 'Tamaño del código QR (px)',
     ed_language: 'Idioma',
+    ed_language_auto: 'Automático',
     ed_zoom: 'Botón de detalle',
     zoom_in: 'Mostrar la tarjeta completa',
     zoom_out: 'Volver a la vista compacta',
@@ -125,6 +129,7 @@ var WeroI18n = {
     ed_show_title: 'Прикажи наслов',
     ed_qr_size: 'Величина QR кода (px)',
     ed_language: 'Језик',
+    ed_language_auto: 'Аутоматски',
     ed_zoom: 'Дугме за детаље',
     zoom_in: 'Прикажи целу картицу',
     zoom_out: 'Назад на компактни приказ',
@@ -150,6 +155,7 @@ var WeroI18n = {
     ed_show_title: 'Prikaži naslov',
     ed_qr_size: 'Veličina QR koda (px)',
     ed_language: 'Jezik',
+    ed_language_auto: 'Automatski',
     ed_zoom: 'Dugme za detalje',
     zoom_in: 'Prikaži celu karticu',
     zoom_out: 'Nazad na kompaktni prikaz',
@@ -175,6 +181,7 @@ var WeroI18n = {
     ed_show_title: 'Mostra il titolo',
     ed_qr_size: 'Dimensione del codice QR (px)',
     ed_language: 'Lingua',
+    ed_language_auto: 'Automatico',
     ed_zoom: 'Pulsante dettagli',
     zoom_in: 'Mostra la scheda completa',
     zoom_out: 'Torna alla vista compatta',
@@ -200,6 +207,7 @@ var WeroI18n = {
     ed_show_title: 'Titel tonen',
     ed_qr_size: 'Grootte van de QR-code (px)',
     ed_language: 'Taal',
+    ed_language_auto: 'Automatisch',
     ed_zoom: 'Detailknop',
     zoom_in: 'Volledige kaart tonen',
     zoom_out: 'Terug naar de compacte weergave',
@@ -225,6 +233,7 @@ var WeroI18n = {
     ed_show_title: 'Mostrar o título',
     ed_qr_size: 'Tamanho do código QR (px)',
     ed_language: 'Idioma',
+    ed_language_auto: 'Automático',
     ed_zoom: 'Botão de detalhe',
     zoom_in: 'Mostrar o cartão completo',
     zoom_out: 'Voltar à vista compacta',
@@ -250,6 +259,7 @@ var WeroI18n = {
     ed_show_title: 'Pokaż tytuł',
     ed_qr_size: 'Rozmiar kodu QR (px)',
     ed_language: 'Język',
+    ed_language_auto: 'Automatycznie',
     ed_zoom: 'Przycisk szczegółów',
     zoom_in: 'Pokaż pełną kartę',
     zoom_out: 'Wróć do widoku kompaktowego',
@@ -275,6 +285,7 @@ var WeroI18n = {
     ed_show_title: 'Afișează titlul',
     ed_qr_size: 'Dimensiunea codului QR (px)',
     ed_language: 'Limbă',
+    ed_language_auto: 'Automat',
     ed_zoom: 'Buton de detalii',
     zoom_in: 'Afișează cardul complet',
     zoom_out: 'Înapoi la vizualizarea compactă',
@@ -300,6 +311,7 @@ var WeroI18n = {
     ed_show_title: 'Vis titel',
     ed_qr_size: 'QR-kodens størrelse (px)',
     ed_language: 'Sprog',
+    ed_language_auto: 'Automatisk',
     ed_zoom: 'Detaljeknap',
     zoom_in: 'Vis hele kortet',
     zoom_out: 'Tilbage til kompakt visning',
@@ -325,6 +337,7 @@ var WeroI18n = {
     ed_show_title: 'Visa rubrik',
     ed_qr_size: 'QR-kodens storlek (px)',
     ed_language: 'Språk',
+    ed_language_auto: 'Automatiskt',
     ed_zoom: 'Detaljknapp',
     zoom_in: 'Visa hela kortet',
     zoom_out: 'Tillbaka till kompakt vy',
@@ -350,6 +363,7 @@ var WeroI18n = {
     ed_show_title: 'Показване на заглавието',
     ed_qr_size: 'Размер на QR кода (px)',
     ed_language: 'Език',
+    ed_language_auto: 'Автоматично',
     ed_zoom: 'Бутон за подробности',
     zoom_in: 'Покажи цялата карта',
     zoom_out: 'Обратно към компактния изглед',
@@ -375,6 +389,7 @@ var WeroI18n = {
     ed_show_title: 'Показывать заголовок',
     ed_qr_size: 'Размер QR-кода (px)',
     ed_language: 'Язык',
+    ed_language_auto: 'Автоматически',
     ed_zoom: 'Кнопка подробностей',
     zoom_in: 'Показать полную карточку',
     zoom_out: 'Вернуться к компактному виду',
@@ -400,6 +415,7 @@ var WeroI18n = {
     ed_show_title: 'Показувати заголовок',
     ed_qr_size: 'Розмір QR-коду (px)',
     ed_language: 'Мова',
+    ed_language_auto: 'Автоматично',
     ed_zoom: 'Кнопка деталей',
     zoom_in: 'Показати повну картку',
     zoom_out: 'Повернутися до компактного вигляду',
@@ -425,6 +441,7 @@ var WeroI18n = {
     ed_show_title: 'Cím megjelenítése',
     ed_qr_size: 'QR-kód mérete (px)',
     ed_language: 'Nyelv',
+    ed_language_auto: 'Automatikus',
     ed_zoom: 'Részletek gomb',
     zoom_in: 'Teljes kártya megjelenítése',
     zoom_out: 'Vissza a kompakt nézethez',
@@ -450,6 +467,7 @@ var WeroI18n = {
     ed_show_title: 'Zobraziť názov',
     ed_qr_size: 'Veľkosť QR kódu (px)',
     ed_language: 'Jazyk',
+    ed_language_auto: 'Automaticky',
     ed_zoom: 'Tlačidlo podrobností',
     zoom_in: 'Zobraziť celú kartu',
     zoom_out: 'Späť na kompaktné zobrazenie',
@@ -475,6 +493,7 @@ var WeroI18n = {
     ed_show_title: 'Zobrazit název',
     ed_qr_size: 'Velikost QR kódu (px)',
     ed_language: 'Jazyk',
+    ed_language_auto: 'Automaticky',
     ed_zoom: 'Tlačítko podrobností',
     zoom_in: 'Zobrazit celou kartu',
     zoom_out: 'Zpět na kompaktní zobrazení',
@@ -500,6 +519,7 @@ var WeroI18n = {
     ed_show_title: 'Prikaži naslov',
     ed_qr_size: 'Velikost kode QR (px)',
     ed_language: 'Jezik',
+    ed_language_auto: 'Samodejno',
     ed_zoom: 'Gumb za podrobnosti',
     zoom_in: 'Prikaži celotno kartico',
     zoom_out: 'Nazaj na kompaktni pogled',
@@ -525,6 +545,7 @@ var WeroI18n = {
     ed_show_title: 'Rādīt virsrakstu',
     ed_qr_size: 'QR koda izmērs (px)',
     ed_language: 'Valoda',
+    ed_language_auto: 'Automātiski',
     ed_zoom: 'Detaļu poga',
     zoom_in: 'Rādīt pilno karti',
     zoom_out: 'Atpakaļ uz kompakto skatu',
@@ -550,6 +571,7 @@ var WeroI18n = {
     ed_show_title: 'Εμφάνιση τίτλου',
     ed_qr_size: 'Μέγεθος κωδικού QR (px)',
     ed_language: 'Γλώσσα',
+    ed_language_auto: 'Αυτόματα',
     ed_zoom: 'Κουμπί λεπτομερειών',
     zoom_in: 'Εμφάνιση πλήρους κάρτας',
     zoom_out: 'Επιστροφή στη συμπαγή προβολή',
@@ -961,7 +983,29 @@ class WeroCardEditor extends HTMLElement {
 
   set hass(hass) {
     this._hass = hass;
-    if (this._form) this._form.hass = hass;
+    if (this._form) {
+      this._form.hass = hass;
+      this._syncSchema();
+    }
+  }
+
+  // The schema of this editor: the mini card adds its detail button after the logo toggle, and the language
+  // choice starts with "Automatic" (no `language`: the language of Home Assistant), in the editor's language.
+  _schema() {
+    return WERO_EDITOR_SCHEMA.flatMap((f) => {
+      if (f.name === 'logo' && this.constructor.mini) return [f, { name: 'zoom', selector: { boolean: {} } }];
+      if (f.name !== 'language') return [f];
+      var options = [{ value: '', label: this._t('ed_language_auto') }].concat(f.selector.select.options);
+      return [{ name: f.name, selector: { select: Object.assign({}, f.selector.select, { options: options }) } }];
+    });
+  }
+
+  // Rebuilt only when the editor's language changes
+  _syncSchema() {
+    var lang = weroResolveLang(this._hass?.language);
+    if (this._schemaLang === lang) return;
+    this._schemaLang = lang;
+    this._form.schema = this._schema();
   }
 
   _t(key) {
@@ -977,9 +1021,6 @@ class WeroCardEditor extends HTMLElement {
     }
     var form = document.createElement('ha-form');
     // The mini card adds its detail button after the logo toggle
-    form.schema = this.constructor.mini
-      ? WERO_EDITOR_SCHEMA.flatMap((f) => (f.name === 'logo' ? [f, { name: 'zoom', selector: { boolean: {} } }] : [f]))
-      : WERO_EDITOR_SCHEMA;
     form.computeLabel = (s) => this._t(`ed_${s.name}`);
     form.computeHelper = (s) => (s.name === 'url' ? this._t('ed_url_help') : undefined);
     form.addEventListener('value-changed', (ev) => this._valueChanged(ev));
@@ -1000,6 +1041,7 @@ class WeroCardEditor extends HTMLElement {
       return;
     }
     this._form.hass = this._hass;
+    this._syncSchema();
     this._form.data = Object.assign({ show_title: true, logo: true, qr_size: WERO_QR_SIZE }, this.constructor.mini ? { zoom: true } : {}, this._config);
   }
 
