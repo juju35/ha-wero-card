@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.12.1 - 2026-11-14
+
+### Fixes
+- **Visual editor**: the language choice now starts with « Automatic » (translated in every language), as in the other cards' editors: it removes `language` from the YAML, so the card follows the language of Home Assistant again.
+
 ## 1.12.0 - 2026-11-12
 
 ### Features
