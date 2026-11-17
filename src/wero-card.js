@@ -1059,13 +1059,14 @@ class WeroCard extends HTMLElement {
     return WERO_RECEIVED.includes(v) ? 'received' : 'waiting';
   }
 
-  // Night picture: forced by illustration_theme, else the sun below the horizon, else Home Assistant's dark mode
+  // Night picture: forced by illustration_theme, else the sun below the horizon or Home Assistant's dark theme (even
+  // with the sun up)
   _isNight() {
     var theme = this._configRaw.illustration_theme;
     if (theme === 'night') return true;
     if (theme === 'day') return false;
     var sun = this._hass?.states?.['sun.sun'];
-    if (sun && sun.state !== 'unavailable' && sun.state !== 'unknown') return sun.state === 'below_horizon';
+    if (sun && sun.state !== 'unavailable' && sun.state !== 'unknown' && sun.state === 'below_horizon') return true;
     return !!this._hass?.themes?.darkMode;
   }
 

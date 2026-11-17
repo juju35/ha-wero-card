@@ -21,7 +21,7 @@ Custom Lovelace card for Home Assistant that displays your [Wero](https://wero-w
 ## Features
 
 - QR code generated in pure JS (embedded Reed-Solomon algorithm), with a spec-compliant quiet zone
-- Illustrated header: a shop counter with its payment terminal, a phone that taps it and the Wero logo on the counter, over a Wero-yellow strip; day and night pictures (following the sun or the dark theme), animated (respects reduced motion), `illustration: false` for the classic header
+- Illustrated header: a shop counter with its payment terminal, a phone that taps it and the Wero logo on the counter, over a Wero-yellow strip; day and night pictures (night after sunset or with the dark theme), animated (respects reduced motion), `illustration: false` for the classic header
 - Status pill on the title row (Ready, Waiting, Received or Unavailable, in the colour of the QR icon); optional payment status `entity` (green tick, the QR icon and the pill turn green once paid)
 - Wero logo in the header (can be disabled)
 - Two cards: `wero-card` and its mini version `wero-mini-card` (the illustrated header alone, with the scannable QR code standing on the counter; a tap on it opens the QR code full screen, a detail button shows the full card)
@@ -133,7 +133,7 @@ The mini card takes the same options as the full card, plus `zoom`. With the ill
 | `entity` | ❌ | — | Payment status entity (e.g. an `input_boolean` or a `binary_sensor` set by an automation). `on`, `true`, `received`, `paid`, `completed`, `done` or `success` mean « Received », any other state « Waiting », `unavailable` / `unknown` greys the icon and the pill (« Unavailable »). Without it the pill shows « Ready » |
 | `logo` | ❌ | `true` | Show the Wero logo (on the illustration's counter; in the classic header, `false` shows a generic icon) |
 | `illustration` | ❌ | `true` | Illustrated 90 px header (shop counter, payment terminal); `false` keeps the classic header |
-| `illustration_theme` | ❌ | `auto` | `auto` (night when `sun.sun` is below the horizon, else with the dark theme), `day` or `night` |
+| `illustration_theme` | ❌ | `auto` | `auto` (night when `sun.sun` is below the horizon or the theme is dark), `day` or `night` |
 | `qr_size` | ❌ | `176` | QR code size in pixels (quiet zone included); shrinks to fit a narrower card |
 | `zoom` | ❌ | `true` | Mini card only: detail button at the top right that switches to the full card and back (a click outside the card brings the compact view back) |
 | `language` | ❌ | Auto | Force language: `en`, `fr`, `de`, `es`, `sr`, `sr-Latn`, `it`, `nl`, `pt`, `pl`, `ro`, `da`, `sv`, `bg`, `ru`, `uk`, `hu`, `sk`, `cs`, `sl`, `lv` or `el` (auto-detects from HA settings; « Automatic » in the visual editor) |

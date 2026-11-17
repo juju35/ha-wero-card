@@ -922,10 +922,14 @@ test("illustrated header: the payment status drives the picture, the icon colour
   assert.match(classic, /<div class="badge" style="--c:var\(--success-color, #43a047\)">/);
 });
 
-test("illustrated header: night from illustration_theme, else sun.sun, else the dark theme", () => {
+test("illustrated header: night from illustration_theme, else sun.sun below the horizon or the dark theme", () => {
   const night = (config, hass) => banner(ill(config, hass).shadowRoot.innerHTML)[1].includes("night");
+  const up = (dark) => ({ states: { "sun.sun": { state: "above_horizon" } }, themes: { darkMode: dark } });
   assert.equal(night({}, { states: { "sun.sun": { state: "below_horizon" } } }), true);
-  assert.equal(night({}, { states: { "sun.sun": { state: "above_horizon" } }, themes: { darkMode: true } }), false);
+  assert.equal(night({}, up(true)), true, "dark theme while the sun is up: night");
+  assert.equal(night({}, up(false)), false, "light theme while the sun is up: day");
+  assert.equal(night({ illustration_theme: "day" }, up(true)), false, "forced day wins over the dark theme");
+  assert.equal(night({ illustration_theme: "night" }, up(false)), true, "forced night wins over the sun");
   assert.equal(night({}, { states: {}, themes: { darkMode: true } }), true);
   assert.equal(night({ illustration_theme: "day" }, { states: { "sun.sun": { state: "below_horizon" } } }), false);
   assert.equal(night({ illustration_theme: "night" }, { states: {} }), true);
