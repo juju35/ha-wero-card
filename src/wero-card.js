@@ -777,6 +777,15 @@ var WERO_RECEIVED = ['on', 'true', 'received', 'paid', 'completed', 'done', 'suc
 // Each card instance gets its own SVG ids (several cards on one page)
 var weroUid = 0;
 
+// The payment terminal's 3 × 3 keypad (around the terminal's own origin)
+function weroKeys() {
+  var keys = '';
+  for (var r = 0; r < 3; r++) {
+    for (var c = 0; c < 3; c++) keys += `<rect x="${-6 + c * 4.4}" y="${-9 + r * 3}" width="3" height="2" rx=".5"/>`;
+  }
+  return keys;
+}
+
 // The header's illustration: a shop counter at the right of a 200 × 80 picture (striped awning, pendant lamp,
 // payment terminal, a phone that taps it, the Wero logo on the counter front). The counter starts at x 84: the
 // card's text sits on the plain background at its left.
@@ -785,10 +794,7 @@ function weroScene(uid, logo) {
   for (var i = 0; i < 10; i++) {
     scallops += `<path class="wc-aw${i % 2 ? ' alt' : ''}" d="M${i * 20} 2h20v6q-5 5-10 0q-5 5-10 0z"/>`;
   }
-  var keys = '';
-  for (var r = 0; r < 3; r++) {
-    for (var c = 0; c < 3; c++) keys += `<rect x="${-6 + c * 4.4}" y="${-9 + r * 3}" width="3" height="2" rx=".5"/>`;
-  }
+  var keys = weroKeys();
   return `<svg class="wc-scene" viewBox="0 0 200 80" preserveAspectRatio="xMaxYMax meet" aria-hidden="true" focusable="false">
     <defs><radialGradient id="wc-glow-${uid}"><stop offset="0" stop-color="#ffd27a" stop-opacity=".8"/><stop offset="1" stop-color="#ffd27a" stop-opacity="0"/></radialGradient></defs>
     <g class="wc-awning">${scallops}<rect class="wc-awbar" x="0" y="0" width="200" height="2.4"/></g>
@@ -802,6 +808,24 @@ function weroScene(uid, logo) {
     <g class="wc-tap"><g transform="translate(150 50)"><rect class="wc-phone" x="-7" y="-26" width="14" height="26" rx="2.5"/><rect class="wc-pscr" x="-5.5" y="-23" width="11" height="20" rx="1"/>
       <g class="wc-phone"><rect x="-3" y="-19" width="6" height="6"/><rect class="wc-pscr" x="-1.4" y="-17.4" width="2.8" height="2.8"/></g></g></g>
     <g class="wc-ok"><circle cx="128" cy="21" r="6"/><path d="M125 21l2.2 2.2 4-4.4"/></g>
+  </svg>`;
+}
+
+// The mini card's picture: the same counter, 130 × 80 at the right of the banner, drawn 1:1. The QR code stands on
+// the counter as a shop's payment sign (x 38 to 98, the card puts its own scannable QR there), the terminal and its
+// lamp at its left, the buttons' column above the empty counter end at its right.
+function weroMiniScene(uid) {
+  var keys = weroKeys();
+  return `<svg class="wc-scene mini" viewBox="0 0 130 80" aria-hidden="true" focusable="false">
+    <defs><radialGradient id="wc-glow-${uid}"><stop offset="0" stop-color="#ffd27a" stop-opacity=".8"/><stop offset="1" stop-color="#ffd27a" stop-opacity="0"/></radialGradient></defs>
+    <g class="wc-lamp"><circle class="wc-halo" cx="20" cy="16" r="12" fill="url(#wc-glow-${uid})"/><path class="wc-cord" d="M20 0v11"/><path class="wc-shade" d="M15 16a5 4.5 0 0 1 10 0Z"/><circle class="wc-bulb" cx="20" cy="16.5" r="1.4"/></g>
+    <rect class="wc-cf" x="4" y="71.4" width="126" height="8.6"/>
+    <rect class="wc-ct" x="0" y="68" width="130" height="3.6" rx="1.2"/>
+    <rect class="wc-stand" x="62" y="66" width="12" height="2.4" rx=".8"/>
+    <g transform="translate(20 68)"><rect class="wc-term" x="-9" y="-22" width="18" height="22" rx="3"/><rect class="wc-scr" x="-6" y="-19" width="12" height="8" rx="1"/>
+      <g class="wc-dots"><circle cx="-3" cy="-15" r=".9"/><circle cx="0" cy="-15" r=".9"/><circle cx="3" cy="-15" r=".9"/></g>
+      <g class="wc-keys">${keys}</g></g>
+    <g class="wc-ok"><circle cx="20" cy="33" r="5.5"/><path d="M17.2 33l2 2 3.8-4.2"/></g>
   </svg>`;
 }
 
@@ -860,6 +884,26 @@ var WERO_BANNER_STYLE = `
         .st-off .wc-tap { opacity: .6; }
         /* Narrow card: a smaller counter, so that the title keeps its room */
         @container (max-width: 300px) { .wc-scene, .htext { --sw: 50cqw; } .wc-awning, .wc-lamp { display: none; } }
+        /* Mini card: its QR code on the counter at the right, big enough to be scanned from the card (a white frame
+           around its own Wero-yellow quiet zone), the detail / copy column at its right, the text up to the terminal */
+        .wc-scene.mini { width: 130px; -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 8%); mask-image: linear-gradient(90deg, transparent 0, #000 8%); }
+        .wc-stand { fill: #8a7a3a; } .night .wc-stand { fill: #23222b; }
+        .banner .htext.mini { right: 120px; }
+        .banner .qr-wrap.thumb { position: absolute; z-index: 1; right: 32px; bottom: 24px; border-radius: 6px;
+                                 box-shadow: 0 0 0 2px #fff, 0 1px 4px 2px rgba(0,0,0,.18); }
+        .banner.night .qr-wrap.thumb { box-shadow: 0 0 0 2px #e6e6e6, 0 1px 4px 2px rgba(0,0,0,.45); }
+        .banner .qr-wrap.thumb svg { width: 60px; }
+        .banner .qr-wrap.thumb:focus-visible { outline: 2px solid var(--primary-color, #03a9f4); outline-offset: 4px; }
+        @container (max-width: 300px) { .wc-scene.mini .wc-lamp, .wc-scene.mini .wc-ok, .wc-scene.mini g[transform] { display: none; } .banner .htext.mini { right: 92px; gap: 8px; } .banner .qr-wrap.thumb svg { width: 56px; } .banner .htext.mini .hicon { width: 36px; height: 36px; } }
+        /* Very narrow mini card (copy button hidden): the QR under the detail button, at the right edge */
+        @container (max-width: 200px) {
+          .wc-scene.mini { display: none; }
+          .banner .qr-wrap.thumb { right: 8px; bottom: 14px; }
+          .banner .qr-wrap.thumb svg { width: 46px; }
+          .banner .htext.mini { left: 8px; right: 60px; gap: 6px; }
+          .banner .htext.mini .hname { font-size: 14px; }
+          .banner .htext.mini .hicon { width: 32px; height: 32px; }
+        }
         @keyframes wc-tap { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-26px); } }
         @keyframes wc-ok { 0%, 45% { opacity: 0; } 55%, 100% { opacity: 1; } }
         @keyframes wc-blink { 50% { opacity: .25; } }
@@ -1061,19 +1105,16 @@ class WeroCard extends HTMLElement {
     var header;
     if (c.illustration) {
       // Illustrated header: the round QR icon (in the status colour) and the title / status on the background at
-      // the left, the shop counter at the right, a 10 px Wero-yellow strip edge to edge at the bottom. In the
-      // compact mini card the icon is the button that opens the full screen QR (no room for a thumbnail).
+      // the left, the shop counter at the right, a 10 px Wero-yellow strip edge to edge at the bottom. The compact
+      // mini card shows its QR code itself on the counter (it opens the full screen QR, like the big one).
       var subText = status === 'received' ? this._t('received') : status === 'waiting' ? this._t('waiting') : c.name || 'Wero';
       var hsub = `<span class="hsub" title="${weroEsc(subText)}">${weroEsc(subText)}</span>`;
       var htitle = c.show_title ? `<span class="hname" title="${weroEsc(c.title)}">${weroEsc(c.title)}</span>` : '';
       var icon = '<ha-icon icon="mdi:qrcode"></ha-icon>';
-      var hicon = compact
-        ? `<div class="hicon" id="qr" role="button" tabindex="0" title="${zoom}" aria-label="${zoom}">${icon}</div>`
-        : `<div class="hicon">${icon}</div>`;
       header = `<div class="banner st-${status}${night ? ' night' : ''}" style="--wc-st:${stColor}">
-          ${weroScene(this._uid, c.logo)}<div class="wc-ground"></div>
-          <div class="htext">${hicon}<div class="htitles">${htitle}${hsub}</div></div>
-          <div class="hact">${actions}</div>
+          ${compact ? weroMiniScene(this._uid) : weroScene(this._uid, c.logo)}<div class="wc-ground"></div>
+          <div class="htext${compact ? ' mini' : ''}"><div class="hicon">${icon}</div><div class="htitles">${htitle}${hsub}</div></div>
+          ${compact ? qrEl : ''}<div class="hact">${actions}</div>
         </div>`;
     } else {
       if (compact) {
@@ -1170,14 +1211,10 @@ ${c.illustration ? WERO_BANNER_STYLE : ''}
     var open = () => {
       // The dialog gets its copy of the QR (a clone, the SVG path can be big) on first open only
       // The button's label covers its QR (hidden from screen readers there); the full screen one is an image again
-      // The illustrated mini card's icon holds no QR: the dialog gets it from the markup
       if (!dlg.firstChild) {
-        if (qr.classList?.contains('hicon')) dlg.innerHTML = svg;
-        else {
-          var big = qr.firstElementChild.cloneNode(true);
-          big.removeAttribute('aria-hidden');
-          dlg.appendChild(big);
-        }
+        var big = qr.firstElementChild.cloneNode(true);
+        big.removeAttribute('aria-hidden');
+        dlg.appendChild(big);
       }
       if (!dlg.open) dlg.showModal();
     };

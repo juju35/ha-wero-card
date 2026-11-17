@@ -938,21 +938,29 @@ test("illustrated header: hass re-renders only when the status or day / night ch
   assert.notEqual(a, b);
 });
 
-test("illustrated mini card: the 90 px banner alone, its QR icon opens the full screen QR", () => {
+test("illustrated mini card: the 90 px banner shows the scannable QR code itself, which opens the full screen QR", () => {
   const card = new WeroMiniCard();
   card.setAttribute = () => {};
   card.setConfig({ url: URL_, name: "Alex" });
   const html = card.shadowRoot.innerHTML;
   assert.match(html, /<ha-card class="mini" data-ill>/);
-  assert.match(html, /<div class="hicon" id="qr" role="button" tabindex="0" title="Enlarge QR code" aria-label="Enlarge QR code"><ha-icon icon="mdi:qrcode">/);
-  assert.match(html, /<div class="hact"><div class="side"><button class="zoom"/);
-  assert.doesNotMatch(html, /class="qr-wrap/);
+  // The mini picture (counter and terminal), the plain status icon, then the QR on the counter next to the buttons
+  assert.match(html, /<svg class="wc-scene mini" viewBox="0 0 130 80"/);
+  assert.match(html, /<div class="htext mini"><div class="hicon"><ha-icon icon="mdi:qrcode">/);
+  assert.match(html, /<div class="qr-wrap thumb" id="qr" role="button" tabindex="0" title="Enlarge QR code" aria-label="Enlarge QR code"><svg aria-hidden="true" [^>]*><rect [^>]*fill="#fff48d"\/>/);
+  assert.match(html, /<\/div><div class="hact"><div class="side"><button class="zoom"/);
+  // Big enough to be scanned from the card, framed in white (light grey at night) around its own quiet zone
+  assert.match(cssRule(html, ".banner .qr-wrap.thumb svg"), /width: 60px/);
+  assert.match(cssRule(html, ".banner .qr-wrap.thumb"), /box-shadow: 0 0 0 2px #fff/);
+  assert.match(cssRule(html, ".banner.night .qr-wrap.thumb"), /box-shadow: 0 0 0 2px #e6e6e6/);
   const els = keepElements(card);
   let shown = 0;
-  els.zoom = { id: "zoom", open: false, firstChild: null, innerHTML: "", showModal() { shown++; this.open = true; }, close() {} };
-  els.qr = { id: "qr", classList: { contains: (c) => c === "hicon" } };
+  const big = { removed: [], removeAttribute(a) { this.removed.push(a); } };
+  els.zoom = { id: "zoom", open: false, firstChild: null, appendChild(n) { this.firstChild = n; }, showModal() { shown++; this.open = true; }, close() {} };
+  els.qr = { id: "qr", firstElementChild: { cloneNode: () => big } };
   card._render();
   els.qr.onclick();
   assert.equal(shown, 1);
-  assert.match(els.zoom.innerHTML, /^<svg [^>]*role="img" aria-label="Wero QR code"/);
+  assert.equal(els.zoom.firstChild, big);
+  assert.deepEqual(big.removed, ["aria-hidden"]);
 });

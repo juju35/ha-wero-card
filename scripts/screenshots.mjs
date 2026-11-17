@@ -1,7 +1,10 @@
-// Renders the card with mock data and saves the README screenshots.
-// Usage: npm run build && npm run screenshots
+// Renders the card with mock data and saves the README screenshots: stills (PNG) and the header animations (GIF).
+// Usage: npm run build && npm run screenshots (the GIFs need ffmpeg)
 import { chromium } from "playwright";
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { execFileSync } from "node:child_process";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { samePixels } from "./png-pixels.mjs";
 
@@ -64,26 +67,32 @@ const pageHtml = (theme, width) => `<!doctype html><html><head><meta charset="ut
          font-family: Roboto, "Segoe UI", Helvetica, Arial, sans-serif; width: ${width}px; }
 </style></head><body><div id="root"></div></body></html>`;
 
+// Opens a new page with the card of shot s mounted on it ({ file, type, theme, width, config, hass? }).
+async function mount(browser, s, icons, hass) {
+  const page = await browser.newPage({ deviceScaleFactor: 2, viewport: { width: 1000, height: 2000 } });
+  page.on("pageerror", (err) => console.error(`${s.file}: ${err.message}`));
+  await page.setContent(pageHtml(s.theme, s.width));
+  await page.addScriptTag({ content: haElements(icons) });
+  await page.addScriptTag({ content: cardJs });
+  await page.evaluate(
+    ({ type, config, hass, dark }) => {
+      const el = document.createElement(type);
+      el.setConfig({ type: `custom:${type}`, ...config });
+      el.hass = { states: {}, entities: {}, devices: {}, language: "en", locale: { language: "en" },
+                  themes: { darkMode: dark }, callService: async () => {}, callWS: async () => ({}), ...hass };
+      document.getElementById("root").appendChild(el);
+    },
+    { type: s.type, config: s.config || {}, hass: { ...hass, ...(s.hass || {}) }, dark: s.theme === "dark" }
+  );
+  return page;
+}
+
 // Renders each shot { file, type, theme, width, config, hass?, after? } into screenshots/<file>.png.
 export async function render(shots, { icons = {}, hass = {} } = {}) {
   const browser = await chromium.launch(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {});
   for (const s of shots) {
     // A fresh page per shot: the scripts declare top-level constants
-    const page = await browser.newPage({ deviceScaleFactor: 2, viewport: { width: 1000, height: 2000 } });
-    page.on("pageerror", (err) => console.error(`${s.file}: ${err.message}`));
-    await page.setContent(pageHtml(s.theme, s.width));
-    await page.addScriptTag({ content: haElements(icons) });
-    await page.addScriptTag({ content: cardJs });
-    await page.evaluate(
-      ({ type, config, hass, dark }) => {
-        const el = document.createElement(type);
-        el.setConfig({ type: `custom:${type}`, ...config });
-        el.hass = { states: {}, entities: {}, devices: {}, language: "en", locale: { language: "en" },
-                    themes: { darkMode: dark }, callService: async () => {}, callWS: async () => ({}), ...hass };
-        document.getElementById("root").appendChild(el);
-      },
-      { type: s.type, config: s.config || {}, hass: { ...hass, ...(s.hass || {}) }, dark: s.theme === "dark" }
-    );
+    const page = await mount(browser, s, icons, hass);
     if (s.after) await s.after(page);
     await page.waitForTimeout(400);
     // The card with the 16 px page padding around it, on the theme background.
@@ -101,6 +110,72 @@ export async function render(shots, { icons = {}, hass = {} } = {}) {
       console.log(`screenshots/${s.file}.png`);
     }
     await page.close();
+  }
+  await browser.close();
+}
+
+
+// ── Animated captures ────────────────────────────────────────────────────────
+// The header's CSS animations, paused and stepped frame by frame over PERIOD (every animation of the banner lasts a
+// divisor of it), so each GIF loops cleanly at its real speed whatever the machine's speed. Needs ffmpeg.
+const PERIOD = 6000;
+const FPS = 15;
+
+// Every decoded frame (RGBA) as ffmpeg's per-frame MD5 list: equal lists, same animation.
+const decodedFrames = (file) =>
+  execFileSync("ffmpeg", ["-loglevel", "error", "-i", file, "-pix_fmt", "rgba", "-f", "framemd5", "-"], { encoding: "utf8" })
+    .split("\n")
+    .filter((line) => line && !line.startsWith("#"))
+    .join("\n");
+
+// Pauses every animation of the page (shadow trees included) at `frac` of the period.
+const freeze = (page, frac) =>
+  page.evaluate(
+    ({ f, period }) => {
+      const walk = (node, out) => {
+        for (const el of node.querySelectorAll("*")) {
+          out.push(...el.getAnimations());
+          if (el.shadowRoot) walk(el.shadowRoot, out);
+        }
+        return out;
+      };
+      for (const a of walk(document, [])) {
+        a.pause();
+        a.currentTime = 3 * period + f * period;
+      }
+    },
+    { f: frac, period: PERIOD }
+  );
+
+// Records each gif { file, type, theme, width, config, hass? } into screenshots/<file>.gif: the banner alone with 8 px
+// of the page around it, at 1x, a palette computed from its frames (deterministic). The file in place is only
+// replaced when its decoded frames differ.
+export async function record(gifs, { icons = {}, hass = {} } = {}) {
+  const browser = await chromium.launch(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {});
+  for (const g of gifs) {
+    const page = await mount(browser, g, icons, hass);
+    await page.waitForTimeout(400);
+    const box = await page.locator(".banner").first().boundingBox();
+    const clip = { x: Math.floor(box.x) - 8, y: Math.floor(box.y) - 8, width: Math.ceil(box.width) + 16, height: Math.ceil(box.height) + 16 };
+    const dir = mkdtempSync(join(tmpdir(), "gif-frames-"));
+    const frames = Math.round((FPS * PERIOD) / 1000);
+    for (let i = 0; i < frames; i++) {
+      await freeze(page, i / frames);
+      // Frames go to a temporary folder, never to screenshots/
+      writeFileSync(join(dir, `f${String(i).padStart(3, "0")}.png`), await page.screenshot({ clip, animations: "allow" }));
+    }
+    await page.close();
+    const gif = join(dir, "out.gif");
+    execFileSync("ffmpeg", [
+      "-y", "-loglevel", "error", "-framerate", String(FPS), "-i", join(dir, "f%03d.png"),
+      "-vf", `scale=${clip.width}:-1:flags=lanczos,split[a][b];[a]palettegen=max_colors=128[p];[b][p]paletteuse=dither=bayer:bayer_scale=4`,
+      "-fflags", "+bitexact", "-flags", "+bitexact", "-loop", "0", gif,
+    ]);
+    const path = `${root}screenshots/${g.file}.gif`;
+    const same = existsSync(path) && decodedFrames(path) === decodedFrames(gif);
+    if (!same) writeFileSync(path, readFileSync(gif));
+    console.log(`screenshots/${g.file}.gif${same ? " (unchanged)" : ""}`);
+    rmSync(dir, { recursive: true });
   }
   await browser.close();
 }
@@ -128,6 +203,24 @@ await render(
     // The illustrated header once the payment entity reports it received
     { file: "mini-card-received", type: "wero-mini-card", theme: "light", width: 380, config: received, hass: paid },
     { file: "mini-card-received-dark", type: "wero-mini-card", theme: "dark", width: 380, config: received, hass: paid },
+  ],
+  { icons }
+);
+
+// The header's animations, one GIF per state, light and dark (the dark one gets the night picture)
+const waiting = { ...config, entity: "input_boolean.wero_paid" };
+const unpaid = { states: { "input_boolean.wero_paid": { state: "off" } } };
+await record(
+  [
+    // Ready (no payment entity): the phone taps the terminal, the green tick comes up
+    { file: "header-ready", type: "wero-card", theme: "light", width: 460, config },
+    { file: "header-ready-dark", type: "wero-card", theme: "dark", width: 460, config },
+    // Waiting for the payment: the phone taps, the terminal's dots blink
+    { file: "header-waiting", type: "wero-card", theme: "light", width: 460, config: waiting, hass: unpaid },
+    { file: "header-waiting-dark", type: "wero-card", theme: "dark", width: 460, config: waiting, hass: unpaid },
+    // The mini card: its QR code on the counter, the tick next to the terminal
+    { file: "mini-card-header", type: "wero-mini-card", theme: "light", width: 380, config },
+    { file: "mini-card-header-dark", type: "wero-mini-card", theme: "dark", width: 380, config },
   ],
   { icons }
 );

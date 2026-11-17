@@ -24,7 +24,7 @@ Custom Lovelace card for Home Assistant that displays your [Wero](https://wero-w
 - Illustrated header: a shop counter with its payment terminal, a phone that taps it and the Wero logo on the counter, over a Wero-yellow strip; day and night pictures (following the sun or the dark theme), animated (respects reduced motion), `illustration: false` for the classic header
 - Optional payment status `entity`: the header shows « Waiting for payment » or « Payment received » (green tick, the QR icon turns green)
 - Wero logo in the header (can be disabled)
-- Two cards: `wero-card` and its mini version `wero-mini-card` (the illustrated header alone, its QR icon opens the full screen QR code; a detail button shows the full card)
+- Two cards: `wero-card` and its mini version `wero-mini-card` (the illustrated header alone, with the scannable QR code standing on the counter; a tap on it opens the QR code full screen, a detail button shows the full card)
 - Copy-link button to share the payment link by message (the result is also announced to screen readers)
 - Tap the QR code to show it fullscreen (tap again or press Escape to close)
 - Visual editor: add and configure the card from the dashboard UI, no YAML needed
@@ -120,7 +120,7 @@ name: Alex
 zoom: true
 ```
 
-The mini card takes the same options as the full card, plus `zoom`. With the illustrated header (default), it is the 90 px header alone: the QR icon at its left opens the QR code full screen, the detail button and the copy button sit at the top right. With `illustration: false`, it shows the logo, the title and the payee name on one row, with a small QR thumbnail on the right. A tap on the thumbnail opens the QR code full screen, like the big one of the full card. The detail button (top right) switches to the full card; the button, or a click anywhere outside the card, brings the compact view back. The copy button sits under the detail button, so the thumbnail lines up with the other mini cards; on a card 200 px wide or less the thumbnail gets smaller and the copy button gives way (the full card keeps it).
+The mini card takes the same options as the full card, plus `zoom`. With the illustrated header (default), it is the 90 px header alone: the QR code itself stands on the shop counter at the right, big enough to be scanned straight from the card (white frame around its quiet zone, day and night), next to the detail button and the copy button; a tap on it opens it full screen. On a card 200 px wide or less it moves under the detail button, at the right edge. With `illustration: false`, it shows the logo, the title and the payee name on one row, with a small QR thumbnail on the right. A tap on the thumbnail opens the QR code full screen, like the big one of the full card. The detail button (top right) switches to the full card; the button, or a click anywhere outside the card, brings the compact view back. The copy button sits under the detail button, so the thumbnail lines up with the other mini cards; on a card 200 px wide or less the thumbnail gets smaller and the copy button gives way (the full card keeps it).
 
 ### Options reference
 
@@ -147,6 +147,28 @@ The mini card takes the same options as the full card, plus `zoom`. With the ill
 | <img src="https://raw.githubusercontent.com/juju35/ha-wero-card/main/screenshots/mini-card-received.png" alt="mini card payment received" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-wero-card/main/screenshots/mini-card-received-dark.png" alt="mini card payment received dark" width="400"> |
 | <img src="https://raw.githubusercontent.com/juju35/ha-wero-card/main/screenshots/mini-card-narrow.png" alt="mini card narrow" width="212"> | <img src="https://raw.githubusercontent.com/juju35/ha-wero-card/main/screenshots/mini-card-narrow-dark.png" alt="mini card narrow dark" width="212"> |
 
+### Animations
+
+The phone taps the payment terminal and the green tick comes up, in a loop; while a payment is expected (`entity`), the terminal's dots blink too. At night the lamp glows over the counter. With `prefers-reduced-motion`, everything stays still.
+
+Ready (no payment entity):
+
+| Light | Dark |
+|---|---|
+| <img src="https://raw.githubusercontent.com/juju35/ha-wero-card/main/screenshots/header-ready.gif" alt="ready animation" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-wero-card/main/screenshots/header-ready-dark.gif" alt="ready animation, dark theme" width="400"> |
+
+Waiting for the payment:
+
+| Light | Dark |
+|---|---|
+| <img src="https://raw.githubusercontent.com/juju35/ha-wero-card/main/screenshots/header-waiting.gif" alt="waiting for payment animation" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-wero-card/main/screenshots/header-waiting-dark.gif" alt="waiting for payment animation, dark theme" width="400"> |
+
+Mini card:
+
+| Light | Dark |
+|---|---|
+| <img src="https://raw.githubusercontent.com/juju35/ha-wero-card/main/screenshots/mini-card-header.gif" alt="mini card animation" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-wero-card/main/screenshots/mini-card-header-dark.gif" alt="mini card animation, dark theme" width="400"> |
+
 ## How it works
 
 The card encodes `url` as-is into a QR code (error correction level M). Scanning it with a Wero-enabled banking app, or with the phone camera, opens the Wero payment flow for the payee behind the link.
@@ -159,7 +181,7 @@ The logo is kept out of the QR code on purpose: overlaying a logo on the modules
 npm install
 npm run build        # stamps the version of package.json into dist/wero-card.js
 npm run check        # builds and checks the card (run in CI)
-npm run screenshots  # renders the card into screenshots/ (a file is rewritten only when its pixels change)
+npm run screenshots  # renders the stills (PNG) and the header animations (GIF, needs ffmpeg) into screenshots/ (a file is rewritten only when its pixels change)
 ```
 
 `dist/` is not committed: `npm run build` creates it locally, CI builds it on every push, and the release workflow attaches the built file to the release, which is where the Marketplace installs it from.
