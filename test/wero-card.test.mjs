@@ -83,9 +83,10 @@ test("QR round trip keeps multi-byte text", () => {
   assert.equal(roundTrip(url), url);
 });
 
+// The classic header (illustration: false) unless the test asks for the illustrated one
 function render(config) {
   const card = new WeroCard();
-  card.setConfig({ url: "https://share.weropay.eu/p/1/c/AbCdEfGhIj", ...config });
+  card.setConfig({ url: "https://share.weropay.eu/p/1/c/AbCdEfGhIj", illustration: false, ...config });
   return card.shadowRoot.innerHTML;
 }
 
@@ -624,7 +625,7 @@ function mini(config = {}) {
   const card = new WeroMiniCard();
   const attrs = {};
   card.setAttribute = (k, v) => (attrs[k] = v);
-  card.setConfig({ url: URL_, name: "Alex", ...config });
+  card.setConfig({ url: URL_, name: "Alex", illustration: false, ...config });
   card.attrs = attrs;
   return card;
 }
@@ -642,18 +643,16 @@ test("mini card: one compact row with the logo, title, payee, a QR thumbnail and
   assert.equal(card.attrs.mini, "");
   assert.match(html, /<ha-card class="mini">/);
   assert.match(html, /<img class="logo"/);
-  assert.match(html, /<div class="txt"><span class="name" title="Send money">Send money<\/span><span class="sub" title="Alex">Alex<\/span><\/div>/);
+  assert.match(html, /<div class="txt"><div class="trow"><span class="name" title="Send money">Send money<\/span><span class="chip" style="--c:var\(--primary-color, #03a9f4\)" title="Ready" aria-label="Ready"><span class="dot"><\/span><span class="ptxt">Ready<\/span><\/span><\/div><span class="sub" title="Alex">Alex<\/span><\/div>/);
   // The thumbnail opens the full screen QR, like the big one: its label says so
   assert.match(html, /<div class="qr-wrap thumb" id="qr" role="button" tabindex="0" title="Enlarge QR code" aria-label="Enlarge QR code"><svg aria-hidden="true" /);
-  // The thumbnail ends the row, right next to a column with the detail button and the copy button under it
-  assert.match(html, /<\/svg><\/div>\s*<div class="side"><button class="zoom" title="Show the full card" aria-label="Show the full card"><ha-icon icon="mdi:arrow-expand"><\/ha-icon><\/button><button id="copy" title="Copy link" aria-label="Copy link">/);
+  // The thumbnail, then the copy button at the left of the detail button, both on its top line
+  assert.match(html, /<\/svg><\/div>\s*<button id="copy" title="Copy link" aria-label="Copy link"><ha-icon icon="mdi:content-copy" id="ico"><\/ha-icon><\/button><button class="zoom" title="Show the full card" aria-label="Show the full card"><ha-icon icon="mdi:arrow-expand"><\/ha-icon><\/button>/);
   assert.match(html, /<span class="sr" id="live" aria-live="polite"><\/span>/);
-  const side = cssRule(html, ".side");
-  assert.match(side, /flex-direction: column/);
-  assert.match(side, /margin: -4px -4px -4px 0/);
-  assert.match(cssRule(html, ".side .zoom"), /margin: 0/);
-  // Without the detail button, the copy button takes its place
-  assert.match(mini({ zoom: false }).shadowRoot.innerHTML, /<div class="side"><button id="copy"/);
+  assert.match(cssRule(html, "ha-card.mini .header > #copy"), /align-self: flex-start/);
+  assert.doesNotMatch(html, /class="side"/);
+  // Without the detail button, the copy button ends the row
+  assert.match(mini({ zoom: false }).shadowRoot.innerHTML, /<\/svg><\/div>\s*<button id="copy"[\s\S]*?<\/button>\s*<\/div>/);
   // No big QR, no payee row and no hint in the compact view; the full screen QR's dialog is there
   assert.match(html, /<dialog id="zoom" aria-label="Enlarge QR code"><\/dialog>/);
   assert.doesNotMatch(html, /class="info-row"|class="hint"/);
@@ -797,8 +796,16 @@ test("editor: the detail button toggle only in the mini card's editor, true drop
     assert.ok(!full.names.includes("zoom"));
     assert.equal(full.editor._form.data.zoom, undefined);
     const m = await names("wero-mini-card-editor");
-    assert.deepEqual(m.names, ["url", "title", "name", "show_title", "logo", "zoom", "qr_size", "language"]);
+    assert.deepEqual(m.names, ["url", "title", "name", "entity", "show_title", "logo", "zoom", "illustration", "illustration_theme", "qr_size", "language"]);
     assert.equal(m.editor._form.data.zoom, true);
+    // The illustration options, with their defaults shown and dropped from the YAML
+    assert.equal(m.editor._form.data.illustration, true);
+    assert.equal(m.editor._form.data.illustration_theme, "auto");
+    const theme = m.editor._form.schema.find((f) => f.name === "illustration_theme");
+    assert.deepEqual(Array.from(theme.selector.select.options, (o) => o.label), ["Automatic (sun or dark theme)", "Day", "Night"]);
+    m.editor._valueChanged({ detail: { value: { url: URL_, illustration: true, illustration_theme: "auto" } } });
+    assert.equal(m.editor._config.illustration, undefined);
+    assert.equal(m.editor._config.illustration_theme, undefined);
     assert.equal(m.editor._form.computeLabel({ name: "zoom" }), "Detail button");
     m.editor._valueChanged({ detail: { value: { url: URL_, zoom: true } } });
     assert.equal(m.editor._config.zoom, undefined);
@@ -858,4 +865,161 @@ test("mini card i18n: new strings in every language, and a translated picker ent
   const card = mini();
   card.hass = { language: "fr" };
   assert.match(card.shadowRoot.innerHTML, /title="Afficher la carte complète"/);
+});
+
+// ── illustrated header ───────────────────────────────────────────────────────
+const ill = (config = {}, hass) => {
+  const card = new WeroCard();
+  card.setConfig({ url: URL_, ...config });
+  if (hass) card.hass = { language: "en", ...hass };
+  return card;
+};
+const banner = (html) => /<div class="banner ([^"]*)" style="--wc-st:([^"]*)"/.exec(html);
+
+test("illustrated header: by default, 90 px, the QR icon, the scene, the Wero-yellow strip and the logo on the counter", () => {
+  const html = ill().shadowRoot.innerHTML;
+  assert.match(html, /<ha-card data-ill>/);
+  assert.match(cssRule(html, ".banner"), /height: 90px/);
+  assert.match(cssRule(html, ".wc-ground"), /height: 10px/);
+  assert.match(html, /<div class="hicon"><ha-icon icon="mdi:qrcode"><\/ha-icon><\/div>/);
+  assert.match(html, /<svg class="wc-scene" viewBox="0 0 200 80"/);
+  assert.match(html, /<image class="wc-logo" href="data:image\/svg\+xml;base64,/);
+  assert.doesNotMatch(ill({ logo: false }).shadowRoot.innerHTML, /class="wc-logo"/);
+  assert.match(html, /prefers-reduced-motion: reduce/);
+  // No entity: ready, the primary colour, the payee (or Wero) under the title
+  assert.deepEqual(banner(html).slice(1), ["st-ready", "var(--primary-color, #03a9f4)"]);
+  assert.match(ill({ name: "Alex" }).shadowRoot.innerHTML, /<span class="hsub" title="Alex">Alex<\/span>/);
+  assert.match(html, /<span class="hsub" title="Wero">Wero<\/span>/);
+  // illustration: false keeps the classic header
+  assert.doesNotMatch(render({}), /class="banner/);
+});
+
+test("illustrated header: the payment status drives the picture, the icon colour and the status pill", () => {
+  const e = "input_boolean.paid";
+  const st = (state) => ill({ entity: e, name: "Alex" }, { states: state === undefined ? {} : { [e]: { state } } }).shadowRoot.innerHTML;
+  const pill = (html) => /<span class="chip" style="--c:([^"]+)" title="([^"]+)" aria-label="[^"]+"><span class="dot"><\/span><span class="ptxt">([^<]+)<\/span><\/span>/.exec(html).slice(1);
+  assert.deepEqual(banner(st("off")).slice(1), ["st-waiting", "var(--primary-color, #03a9f4)"]);
+  assert.deepEqual(pill(st("off")), ["var(--primary-color, #03a9f4)", "Waiting", "Waiting"]);
+  // The pill on the title row, the payee under it (the status is not repeated in the subtitle)
+  assert.match(st("off"), /<div class="hrow"><span class="hname" title="Send money">Send money<\/span><span class="chip"[\s\S]*?<\/div><span class="hsub" title="Alex">Alex<\/span>/);
+  for (const v of ["on", "received", "paid"]) {
+    assert.deepEqual(banner(st(v)).slice(1), ["st-received", "var(--success-color, #43a047)"], v);
+    assert.deepEqual(pill(st(v)), ["var(--success-color, #43a047)", "Received", "Received"], v);
+  }
+  assert.deepEqual(pill(st("unavailable")), ["var(--disabled-text-color, #9e9e9e)", "Unavailable", "Unavailable"]);
+  assert.deepEqual(pill(ill({}).shadowRoot.innerHTML), ["var(--primary-color, #03a9f4)", "Ready", "Ready"]);
+  // The pill's place is measured (weroPlacePill): data-wrap puts it on its own line under the subtitle, data-dot and a
+  // card of 200 px or less keep its dot alone; no width tier moves it. Banner pill colours as on the sky
+  const html = st("on");
+  assert.doesNotMatch(html, /@container \(max-width: 260px\)/);
+  assert.match(cssRule(html, ".banner[data-wrap] .hrow"), /display: contents/);
+  assert.match(cssRule(html, ".banner[data-wrap] .htitles .chip"), /order: 3;/);
+  assert.match(cssRule(html, "[data-dot] .chip .ptxt"), /position: absolute;/);
+  assert.match(html, /@container \(max-width: 200px\) \{[^\n]*\.htitles \.chip \.ptxt \{ position: absolute;/);
+  assert.match(cssRule(html, ".banner .chip"), /^ background: color-mix\(in srgb, var\(--c\) 18%, rgba\(255,255,255,\.78\)\)/);
+  assert.match(cssRule(html, ".banner.night .chip"), /color-mix\(in srgb, var\(--c\) 35%, #ffffff\)/);
+  assert.match(cssRule(html, ".hname"), /min-width: 0/);
+  for (const v of ["unavailable", "unknown", undefined]) assert.equal(banner(st(v))[1], "st-off", String(v));
+  assert.equal(banner(st("unavailable"))[2], "var(--disabled-text-color, #9e9e9e)");
+  // The classic header's icon follows the status too
+  const classic = ill({ entity: e, illustration: false, logo: false }, { states: { [e]: { state: "on" } } }).shadowRoot.innerHTML;
+  assert.match(classic, /<div class="badge" style="--c:var\(--success-color, #43a047\)">/);
+});
+
+test("illustrated header: night from illustration_theme, else sun.sun below the horizon or the dark theme", () => {
+  const night = (config, hass) => banner(ill(config, hass).shadowRoot.innerHTML)[1].includes("night");
+  const up = (dark) => ({ states: { "sun.sun": { state: "above_horizon" } }, themes: { darkMode: dark } });
+  assert.equal(night({}, { states: { "sun.sun": { state: "below_horizon" } } }), true);
+  assert.equal(night({}, up(true)), true, "dark theme while the sun is up: night");
+  assert.equal(night({}, up(false)), false, "light theme while the sun is up: day");
+  assert.equal(night({ illustration_theme: "day" }, up(true)), false, "forced day wins over the dark theme");
+  assert.equal(night({ illustration_theme: "night" }, up(false)), true, "forced night wins over the sun");
+  assert.equal(night({}, { states: {}, themes: { darkMode: true } }), true);
+  assert.equal(night({ illustration_theme: "day" }, { states: { "sun.sun": { state: "below_horizon" } } }), false);
+  assert.equal(night({ illustration_theme: "night" }, { states: {} }), true);
+});
+
+test("illustrated header: hass re-renders only when the status or day / night changes; ids are unique per card", () => {
+  const e = "input_boolean.paid";
+  const card = ill({ entity: e }, { states: { [e]: { state: "off" } } });
+  let renders = 0;
+  const r = card._render.bind(card);
+  card._render = () => (renders++, r());
+  card.hass = { language: "en", states: { [e]: { state: "off" }, "sensor.x": { state: "1" } } };
+  assert.equal(renders, 0);
+  card.hass = { language: "en", states: { [e]: { state: "on" } } };
+  assert.equal(renders, 1);
+  card.hass = { language: "en", states: { [e]: { state: "on" }, "sun.sun": { state: "below_horizon" } } };
+  assert.equal(renders, 2);
+  const a = /id="(wc-glow-\d+)"/.exec(ill().shadowRoot.innerHTML)[1];
+  const b = /id="(wc-glow-\d+)"/.exec(ill().shadowRoot.innerHTML)[1];
+  assert.notEqual(a, b);
+});
+
+test("illustrated mini card: the 90 px banner shows the scannable QR code itself, which opens the full screen QR", () => {
+  const card = new WeroMiniCard();
+  card.setAttribute = () => {};
+  card.setConfig({ url: URL_, name: "Alex" });
+  const html = card.shadowRoot.innerHTML;
+  assert.match(html, /<ha-card class="mini" data-ill>/);
+  // The mini picture (counter and terminal), the plain status icon, then the QR on the counter next to the buttons
+  assert.match(html, /<svg class="wc-scene mini" viewBox="0 0 130 80"/);
+  assert.match(html, /<div class="htext mini"><div class="hicon"><ha-icon icon="mdi:qrcode">/);
+  assert.match(html, /<div class="qr-wrap thumb" id="qr" role="button" tabindex="0" title="Enlarge QR code" aria-label="Enlarge QR code"><svg aria-hidden="true" [^>]*><rect [^>]*fill="#fff48d"\/>/);
+  // The buttons on one line in the top right corner (the detail button at the corner), the QR under them
+  assert.match(html, /<\/div><div class="hact"><button id="copy"[\s\S]*?<\/button><button class="zoom"/);
+  const hact = cssRule(html, ".hact");
+  assert.match(hact, /top: 5px; right: 5px; display: flex; gap: 4px/);
+  assert.match(cssRule(html, ".hact #copy, .hact .zoom"), /width: 24px; height: 24px; border-radius: 50%/);
+  assert.match(cssRule(html, ".banner .qr-wrap.thumb"), /right: 8px; top: 32px/);
+  // Framed in white (light grey at night) around its own quiet zone
+  assert.match(cssRule(html, ".banner .qr-wrap.thumb svg"), /width: 46px/);
+  assert.match(cssRule(html, ".banner .qr-wrap.thumb"), /box-shadow: 0 0 0 2px #fff/);
+  assert.match(cssRule(html, ".banner.night .qr-wrap.thumb"), /box-shadow: 0 0 0 2px #e6e6e6/);
+  const els = keepElements(card);
+  let shown = 0;
+  const big = { removed: [], removeAttribute(a) { this.removed.push(a); } };
+  els.zoom = { id: "zoom", open: false, firstChild: null, appendChild(n) { this.firstChild = n; }, showModal() { shown++; this.open = true; }, close() {} };
+  els.qr = { id: "qr", firstElementChild: { cloneNode: () => big } };
+  card._render();
+  els.qr.onclick();
+  assert.equal(shown, 1);
+  assert.equal(els.zoom.firstChild, big);
+  assert.deepEqual(big.removed, ["aria-hidden"]);
+});
+
+// A stub of the header for weroPlacePill: widths in px (the title's whole text, the pill, the row), the text block's
+// bottom and the ground strip's top, the label cut or not once on its own line.
+function placed({ title, pill, row, cut = false, bottom = 60, ground = 80, card = 400 }) {
+  const attrs = new Set();
+  const rect = (o) => ({ getBoundingClientRect: () => ({ top: 0, bottom: 0, width: 0, ...o }) });
+  const text = { ...rect({ width: pill - 20 }), get scrollWidth() { return cut && attrs.has("data-wrap") ? 100 : 50; }, clientWidth: 50 };
+  const chip = { ...rect({ width: pill }), querySelector: () => text };
+  const name = { ...rect({ width: Math.min(title, row - pill) }), textContent: "Title", scrollWidth: title, clientWidth: Math.min(title, row - pill) };
+  const head = {
+    ...rect({ top: 0 }),
+    setAttribute: (a) => attrs.add(a),
+    removeAttribute: (a) => attrs.delete(a),
+    closest: () => rect({ width: card }),
+    querySelector: () => ({ getBoundingClientRect: () => ({ top: 10, bottom: attrs.has("data-wrap") ? bottom : 40 }) }),
+  };
+  const rowEl = { ...rect({ width: row }), querySelector: (s) => (s.includes("chip") ? chip : name) };
+  ctx.getComputedStyle = () => ({ columnGap: "8px" });
+  ctx.weroPlacePill(head, rowEl, ground == null ? null : rect({ top: ground }));
+  return [...attrs].sort().join(" ");
+}
+
+test("status pill place: beside the whole title, else under the subtitle, else its dot alone", () => {
+  // Whole title (100) + gap (8) + whole pill (60) fit a 200 px row: on the title row
+  assert.equal(placed({ title: 100, pill: 60, row: 200 }), "");
+  // One pixel short: on its own line, whatever the language's label length
+  assert.equal(placed({ title: 133, pill: 60, row: 200 }), "data-wrap");
+  // On its own line its label is still cut: the dot alone, back on the title row
+  assert.equal(placed({ title: 300, pill: 60, row: 200, cut: true }), "data-dot");
+  // On its own line the text block runs over the ground strip: the dot alone
+  assert.equal(placed({ title: 300, pill: 60, row: 200, bottom: 85, ground: 80 }), "data-dot");
+  // The classic header (no ground strip) keeps it on its own line
+  assert.equal(placed({ title: 300, pill: 60, row: 200, bottom: 85, ground: null }), "data-wrap");
+  // A card of 200 px or less: the dot alone
+  assert.equal(placed({ title: 50, pill: 60, row: 180, card: 190 }), "data-dot");
 });
