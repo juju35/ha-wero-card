@@ -944,12 +944,15 @@ var WERO_BANNER_STYLE = `
         .htitles { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
         /* Title row: the title (ellipsis, at least 4 characters) then the status pill, 8 px apart, centred on the title */
         .hrow { display: flex; align-items: center; gap: 8px; min-width: 0; }
-        .hname { flex: 0 1 auto; min-width: 4ch; font-size: 16px; font-weight: 500; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .banner .chip { max-width: 51%; background: color-mix(in srgb, var(--c) 18%, rgba(255,255,255,.78)); color: color-mix(in srgb, var(--c) 45%, #0d2a45); }
+        .hname { flex: 0 1 auto; min-width: 0; font-size: 16px; font-weight: 500; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .banner .chip { background: color-mix(in srgb, var(--c) 18%, rgba(255,255,255,.78)); color: color-mix(in srgb, var(--c) 45%, #0d2a45); }
         .banner.night .chip { background: color-mix(in srgb, var(--c) 30%, rgba(8,18,38,.55)); color: color-mix(in srgb, var(--c) 35%, #ffffff); }
-        /* Narrow card: the pill on its own line under the subtitle; very narrow: the dot alone (the label in its tooltip
-           and for screen readers) */
-        @container (max-width: 260px) { .hrow { display: contents; } .htitles .hsub { order: 2; } .htitles .chip { order: 3; align-self: flex-start; max-width: 100%; } }
+        /* The pill right after the title only when the whole title and its whole label fit there (measured by the card,
+           see weroPlacePill); otherwise on its own line under the subtitle; when even that cuts it or leaves the banner,
+           and on a card of 200 px or less, the dot alone (the label in its tooltip and for screen readers) */
+        .banner[data-wrap] .hrow { display: contents; }
+        .banner[data-wrap] .htitles .hsub { order: 2; }
+        .banner[data-wrap] .htitles .chip { order: 3; align-self: flex-start; max-width: 100%; }
         @container (max-width: 200px) { .htitles .chip { padding: 3px; } .htitles .chip .ptxt { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; } }
         .hsub { font-size: 13px; line-height: 1.25; color: #6b5d1f; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .night .hsub { color: rgba(255,255,255,.8); }
@@ -1009,6 +1012,35 @@ var WERO_BANNER_STYLE = `
         @media (prefers-reduced-motion: reduce) {
           .wc-tap, .wc-ok, .wc-dots { animation: none !important; }
         }`;
+
+// The status pill's place, decided by measurement after each render and each new width (the same rule on every
+// card): on the title row, right after the title, only when the whole title and the pill's whole label fit there;
+// otherwise on its own line under the subtitle (one line), the title whole on its row (cut only when it does not fit
+// alone). When the label is still cut there, or the text block leaves the banner or runs over its ground strip, the
+// pill keeps its dot alone, on the title row (its label stays in title and aria-label). A card of 200 px or less
+// shows the dot alone anyway (CSS), beside the title.
+function weroPlacePill(head, row, ground) {
+  if (!head) return;
+  head.removeAttribute('data-wrap');
+  head.removeAttribute('data-dot');
+  var pill = row.querySelector(':scope > .chip');
+  var text = pill?.querySelector('.ptxt');
+  if (!text?.getBoundingClientRect || text.getBoundingClientRect().width <= 1) return;
+  // The full card is no size container: at 200 px or less it keeps the dot alone too
+  if (head.closest('ha-card').getBoundingClientRect().width <= 200) return head.setAttribute('data-dot', '');
+  var name = row.querySelector(':scope > .hname, :scope > .name');
+  var gap = parseFloat(getComputedStyle(row).columnGap) || 0;
+  var title = name && name.textContent ? (name.scrollWidth > name.clientWidth ? name.scrollWidth : name.getBoundingClientRect().width) + gap : 0;
+  if (title + pill.getBoundingClientRect().width <= row.getBoundingClientRect().width + 0.5) return;
+  head.setAttribute('data-wrap', '');
+  var box = (head.querySelector('.htitles, .txt') || row).getBoundingClientRect();
+  var frame = head.getBoundingClientRect();
+  var out = ground && (box.bottom > ground.getBoundingClientRect().top + 0.5 || box.top < frame.top - 0.5);
+  if (text.scrollWidth > text.clientWidth + 0.5 || out) {
+    head.removeAttribute('data-wrap');
+    head.setAttribute('data-dot', '');
+  }
+}
 
 function weroEsc(s) {
   return String(s).replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
@@ -1192,7 +1224,7 @@ class WeroCard extends HTMLElement {
     // The status pill (same colour as the icon): a dot and a short label; the label stays in its tooltip and for
     // screen readers when a very narrow card shows the dot alone
     var stLabel = weroEsc(this._t(`st_${status}`));
-    var chip = `<span class="chip" style="--c:${stColor}" title="${stLabel}"><span class="dot"></span><span class="ptxt">${stLabel}</span></span>`;
+    var chip = `<span class="chip" style="--c:${stColor}" title="${stLabel}" aria-label="${stLabel}"><span class="dot"></span><span class="ptxt">${stLabel}</span></span>`;
     // show_title: false keeps the (empty) name, which pushes the buttons to the right
     var title = c.show_title ? `<span class="name" title="${weroEsc(c.title)}">${weroEsc(c.title)}</span>` : '<span class="name"></span>';
     title = `<div class="trow">${title}${chip}</div>`;
@@ -1285,9 +1317,18 @@ class WeroCard extends HTMLElement {
         ha-card.mini .header { margin-bottom: 0; }
         .txt { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
         .txt .name { flex: none; min-width: 0; }
-        /* The title and the status pill on one row; the pill goes to its own line when the title would lose its 4 characters */
-        .trow { display: flex; flex-wrap: wrap; align-items: center; column-gap: 8px; row-gap: 2px; min-width: 0; }
-        .trow .name { flex: 0 1 auto; min-width: 4ch; }
+        /* The title and the status pill on one row when the whole title and the whole label fit there (measured by the
+           card, see weroPlacePill); otherwise the pill on its own line under the title (and the payee), its dot alone when
+           even that cuts its label */
+        .trow { display: flex; align-items: center; gap: 8px; min-width: 0; }
+        .trow .name { flex: 0 1 auto; min-width: 0; }
+        .header[data-wrap] .txt { gap: 2px; }
+        .header[data-wrap] .txt > .trow { display: contents; }
+        .header[data-wrap] .txt>.sub { order: 2; }
+        .header[data-wrap] .chip { order: 3; align-self: flex-start; }
+        .header[data-wrap] .name { max-width: 100%; }
+        [data-dot] .chip { padding: 3px; }
+        [data-dot] .chip .ptxt { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
         .chip { --c: var(--primary-color, #03a9f4); display: inline-flex; align-items: center; gap: 4px; flex: none; max-width: 100%; box-sizing: border-box;
                 padding: 1px 8px; border-radius: 12px; font-size: 11px; font-weight: 500; line-height: 16px; white-space: nowrap; overflow: hidden;
                 background: color-mix(in srgb, var(--c) 15%, transparent); color: color-mix(in srgb, var(--c) 40%, var(--primary-text-color, #212121)); }
@@ -1340,6 +1381,30 @@ ${c.illustration ? WERO_BANNER_STYLE : ''}
     if (dlg) dlg.onclick = () => dlg.close();
     if (wasOpen) open();
     else if (focusId) this.shadowRoot.getElementById(focusId)?.focus?.({ preventScroll: true });
+    this._fitPill();
+  }
+
+  // The status pill's place, on the banner and on the classic header (see weroPlacePill)
+  _fitPill() {
+    var row = this.shadowRoot?.querySelector?.('.hrow, .header .trow');
+    if (!row) return;
+    var banner = row.closest('.banner');
+    weroPlacePill(banner || row.closest('.header'), row, banner?.querySelector('.wc-ground'));
+  }
+
+  // A new width (or the web font loaded): the status pill is fitted again, in the next frame
+  connectedCallback() {
+    if (typeof ResizeObserver === 'function') {
+      this._resize ??= new ResizeObserver((entries) => {
+        var w = Math.round(entries[entries.length - 1].contentRect.width);
+        if (w === this._fitWidth) return;
+        this._fitWidth = w;
+        cancelAnimationFrame(this._fitFrame);
+        this._fitFrame = requestAnimationFrame(() => this._fitPill());
+      });
+      this._resize.observe(this);
+    }
+    document.fonts?.ready?.then(() => this._fitPill());
   }
 
   // Overridden by the mini card: the full card never shows the compact view nor a detail button
@@ -1348,6 +1413,8 @@ ${c.illustration ? WERO_BANNER_STYLE : ''}
   _zoomButton() { return ''; }
 
   disconnectedCallback() {
+    this._resize?.disconnect();
+    this._fitWidth = null;
     // The timer that restores the copy icon is cancelled: restore it now
     clearTimeout(this._copyTimer);
     this.shadowRoot?.getElementById('ico')?.setAttribute('icon', 'mdi:content-copy');
@@ -1390,6 +1457,7 @@ class WeroMiniCard extends WeroCard {
   }
 
   connectedCallback() {
+    super.connectedCallback();
     document.addEventListener('click', this._onOutside, true);
   }
 

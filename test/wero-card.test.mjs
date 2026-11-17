@@ -643,7 +643,7 @@ test("mini card: one compact row with the logo, title, payee, a QR thumbnail and
   assert.equal(card.attrs.mini, "");
   assert.match(html, /<ha-card class="mini">/);
   assert.match(html, /<img class="logo"/);
-  assert.match(html, /<div class="txt"><div class="trow"><span class="name" title="Send money">Send money<\/span><span class="chip" style="--c:var\(--primary-color, #03a9f4\)" title="Ready"><span class="dot"><\/span><span class="ptxt">Ready<\/span><\/span><\/div><span class="sub" title="Alex">Alex<\/span><\/div>/);
+  assert.match(html, /<div class="txt"><div class="trow"><span class="name" title="Send money">Send money<\/span><span class="chip" style="--c:var\(--primary-color, #03a9f4\)" title="Ready" aria-label="Ready"><span class="dot"><\/span><span class="ptxt">Ready<\/span><\/span><\/div><span class="sub" title="Alex">Alex<\/span><\/div>/);
   // The thumbnail opens the full screen QR, like the big one: its label says so
   assert.match(html, /<div class="qr-wrap thumb" id="qr" role="button" tabindex="0" title="Enlarge QR code" aria-label="Enlarge QR code"><svg aria-hidden="true" /);
   // The thumbnail, then the copy button at the left of the detail button, both on its top line
@@ -897,7 +897,7 @@ test("illustrated header: by default, 90 px, the QR icon, the scene, the Wero-ye
 test("illustrated header: the payment status drives the picture, the icon colour and the status pill", () => {
   const e = "input_boolean.paid";
   const st = (state) => ill({ entity: e, name: "Alex" }, { states: state === undefined ? {} : { [e]: { state } } }).shadowRoot.innerHTML;
-  const pill = (html) => /<span class="chip" style="--c:([^"]+)" title="([^"]+)"><span class="dot"><\/span><span class="ptxt">([^<]+)<\/span><\/span>/.exec(html).slice(1);
+  const pill = (html) => /<span class="chip" style="--c:([^"]+)" title="([^"]+)" aria-label="[^"]+"><span class="dot"><\/span><span class="ptxt">([^<]+)<\/span><\/span>/.exec(html).slice(1);
   assert.deepEqual(banner(st("off")).slice(1), ["st-waiting", "var(--primary-color, #03a9f4)"]);
   assert.deepEqual(pill(st("off")), ["var(--primary-color, #03a9f4)", "Waiting", "Waiting"]);
   // The pill on the title row, the payee under it (the status is not repeated in the subtitle)
@@ -908,13 +908,17 @@ test("illustrated header: the payment status drives the picture, the icon colour
   }
   assert.deepEqual(pill(st("unavailable")), ["var(--disabled-text-color, #9e9e9e)", "Unavailable", "Unavailable"]);
   assert.deepEqual(pill(ill({}).shadowRoot.innerHTML), ["var(--primary-color, #03a9f4)", "Ready", "Ready"]);
-  // Narrow card: the pill on its own line under the subtitle, then the dot alone; banner pill colours as on the sky
+  // The pill's place is measured (weroPlacePill): data-wrap puts it on its own line under the subtitle, data-dot and a
+  // card of 200 px or less keep its dot alone; no width tier moves it. Banner pill colours as on the sky
   const html = st("on");
-  assert.match(html, /@container \(max-width: 260px\) \{ \.hrow \{ display: contents; \}[^\n]*\.htitles \.chip \{ order: 3;/);
+  assert.doesNotMatch(html, /@container \(max-width: 260px\)/);
+  assert.match(cssRule(html, ".banner[data-wrap] .hrow"), /display: contents/);
+  assert.match(cssRule(html, ".banner[data-wrap] .htitles .chip"), /order: 3;/);
+  assert.match(cssRule(html, "[data-dot] .chip .ptxt"), /position: absolute;/);
   assert.match(html, /@container \(max-width: 200px\) \{[^\n]*\.htitles \.chip \.ptxt \{ position: absolute;/);
-  assert.match(cssRule(html, ".banner .chip"), /max-width: 51%; background: color-mix\(in srgb, var\(--c\) 18%, rgba\(255,255,255,\.78\)\)/);
+  assert.match(cssRule(html, ".banner .chip"), /^ background: color-mix\(in srgb, var\(--c\) 18%, rgba\(255,255,255,\.78\)\)/);
   assert.match(cssRule(html, ".banner.night .chip"), /color-mix\(in srgb, var\(--c\) 35%, #ffffff\)/);
-  assert.match(cssRule(html, ".hname"), /min-width: 4ch/);
+  assert.match(cssRule(html, ".hname"), /min-width: 0/);
   for (const v of ["unavailable", "unknown", undefined]) assert.equal(banner(st(v))[1], "st-off", String(v));
   assert.equal(banner(st("unavailable"))[2], "var(--disabled-text-color, #9e9e9e)");
   // The classic header's icon follows the status too
@@ -982,4 +986,40 @@ test("illustrated mini card: the 90 px banner shows the scannable QR code itself
   assert.equal(shown, 1);
   assert.equal(els.zoom.firstChild, big);
   assert.deepEqual(big.removed, ["aria-hidden"]);
+});
+
+// A stub of the header for weroPlacePill: widths in px (the title's whole text, the pill, the row), the text block's
+// bottom and the ground strip's top, the label cut or not once on its own line.
+function placed({ title, pill, row, cut = false, bottom = 60, ground = 80, card = 400 }) {
+  const attrs = new Set();
+  const rect = (o) => ({ getBoundingClientRect: () => ({ top: 0, bottom: 0, width: 0, ...o }) });
+  const text = { ...rect({ width: pill - 20 }), get scrollWidth() { return cut && attrs.has("data-wrap") ? 100 : 50; }, clientWidth: 50 };
+  const chip = { ...rect({ width: pill }), querySelector: () => text };
+  const name = { ...rect({ width: Math.min(title, row - pill) }), textContent: "Title", scrollWidth: title, clientWidth: Math.min(title, row - pill) };
+  const head = {
+    ...rect({ top: 0 }),
+    setAttribute: (a) => attrs.add(a),
+    removeAttribute: (a) => attrs.delete(a),
+    closest: () => rect({ width: card }),
+    querySelector: () => ({ getBoundingClientRect: () => ({ top: 10, bottom: attrs.has("data-wrap") ? bottom : 40 }) }),
+  };
+  const rowEl = { ...rect({ width: row }), querySelector: (s) => (s.includes("chip") ? chip : name) };
+  ctx.getComputedStyle = () => ({ columnGap: "8px" });
+  ctx.weroPlacePill(head, rowEl, ground == null ? null : rect({ top: ground }));
+  return [...attrs].sort().join(" ");
+}
+
+test("status pill place: beside the whole title, else under the subtitle, else its dot alone", () => {
+  // Whole title (100) + gap (8) + whole pill (60) fit a 200 px row: on the title row
+  assert.equal(placed({ title: 100, pill: 60, row: 200 }), "");
+  // One pixel short: on its own line, whatever the language's label length
+  assert.equal(placed({ title: 133, pill: 60, row: 200 }), "data-wrap");
+  // On its own line its label is still cut: the dot alone, back on the title row
+  assert.equal(placed({ title: 300, pill: 60, row: 200, cut: true }), "data-dot");
+  // On its own line the text block runs over the ground strip: the dot alone
+  assert.equal(placed({ title: 300, pill: 60, row: 200, bottom: 85, ground: 80 }), "data-dot");
+  // The classic header (no ground strip) keeps it on its own line
+  assert.equal(placed({ title: 300, pill: 60, row: 200, bottom: 85, ground: null }), "data-wrap");
+  // A card of 200 px or less: the dot alone
+  assert.equal(placed({ title: 50, pill: 60, row: 180, card: 190 }), "data-dot");
 });
