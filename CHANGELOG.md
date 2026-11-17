@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.14.0 - 2026-11-18
+
+### Features
+- Mini card laid out like the WiFi card's: the detail and copy buttons in a column in the banner's top right corner (detail at the corner, copy under it), the scannable QR code (56 px) standing on the counter at their left, the terminal and its lamp at its left. From 300 px down the buttons go back on one line with the QR under them.
+- The Wero logo as a small badge on the header icon (full and mini card), like the WiFi logo on the WiFi card; `logo: false` removes it.
+
 ## 1.13.0 - 2026-11-17
 
 ### Features

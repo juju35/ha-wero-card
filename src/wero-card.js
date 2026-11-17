@@ -900,8 +900,8 @@ function weroScene(uid, logo) {
 }
 
 // The mini card's picture: the same counter, 130 × 80 at the right of the banner, drawn 1:1. The QR code stands on
-// the counter as a shop's payment sign (x 38 to 98, the card puts its own scannable QR there), the terminal and its
-// lamp at its left, the buttons' column above the empty counter end at its right.
+// the counter as a shop's payment sign (x 38 to 94, the card puts its own scannable QR there), the terminal and its
+// lamp at its left, the buttons' column above the empty counter end at its right (same layout as the WiFi card).
 function weroMiniScene(uid) {
   var keys = weroKeys();
   return `<svg class="wc-scene mini" viewBox="0 0 130 80" aria-hidden="true" focusable="false">
@@ -909,7 +909,7 @@ function weroMiniScene(uid) {
     <g class="wc-lamp"><circle class="wc-halo" cx="20" cy="16" r="12" fill="url(#wc-glow-${uid})"/><path class="wc-cord" d="M20 0v11"/><path class="wc-shade" d="M15 16a5 4.5 0 0 1 10 0Z"/><circle class="wc-bulb" cx="20" cy="16.5" r="1.4"/></g>
     <rect class="wc-cf" x="4" y="71.4" width="126" height="8.6"/>
     <rect class="wc-ct" x="0" y="68" width="130" height="3.6" rx="1.2"/>
-    <rect class="wc-stand" x="93" y="66" width="12" height="2.4" rx=".8"/>
+    <rect class="wc-stand" x="60" y="66" width="12" height="2.4" rx=".8"/>
     <g transform="translate(20 68)"><rect class="wc-term" x="-9" y="-22" width="18" height="22" rx="3"/><rect class="wc-scr" x="-6" y="-19" width="12" height="8" rx="1"/>
       <g class="wc-dots"><circle cx="-3" cy="-15" r=".9"/><circle cx="0" cy="-15" r=".9"/><circle cx="3" cy="-15" r=".9"/></g>
       <g class="wc-keys">${keys}</g></g>
@@ -940,6 +940,10 @@ var WERO_BANNER_STYLE = `
         .night .hicon { color: color-mix(in srgb, var(--wc-st) 72%, #fff); background: rgba(255,255,255,.12); box-shadow: inset 0 0 0 1px rgba(255,255,255,.16); }
         .hicon ha-icon { color: inherit; --mdc-icon-size: 24px; }
         .hicon[role="button"] { cursor: zoom-in; }
+        /* The Wero wordmark as a badge on the header icon, like the WiFi logo on the WiFi card's icon */
+        .hbrand { position: absolute; right: -6px; bottom: -3px; width: 26px; height: 11px; border-radius: 3px; background: #fff48d;
+                  box-shadow: 0 0 0 1.5px #fff; display: block; }
+        .night .hbrand { box-shadow: 0 0 0 1.5px #2b2a33; }
         .hicon:focus-visible { outline: 2px solid var(--primary-color, #03a9f4); outline-offset: 2px; }
         .htitles { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
         /* Title row: the title (ellipsis, at least 4 characters) then the status pill, 8 px apart, centred on the title */
@@ -956,8 +960,9 @@ var WERO_BANNER_STYLE = `
         @container (max-width: 200px) { .htitles .chip { padding: 3px; } .htitles .chip .ptxt { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; } }
         .hsub { font-size: 13px; line-height: 1.25; color: #6b5d1f; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .night .hsub { color: rgba(255,255,255,.8); }
-        /* The header's buttons on one line in the top right corner: the detail button at the corner, the copy button at its left */
-        .hact { position: absolute; z-index: 2; top: 5px; right: 5px; display: flex; gap: 4px; }
+        /* The header's buttons in a column in the top right corner, like the WiFi card: the detail button at the corner,
+           the copy button under it */
+        .hact { position: absolute; z-index: 2; top: 5px; right: 5px; display: flex; flex-direction: column-reverse; justify-content: flex-end; gap: 4px; }
         .hact #copy, .hact .zoom { all: unset; position: relative; flex: none; cursor: pointer; width: 24px; height: 24px; border-radius: 50%; margin: 0;
                                    display: grid; place-items: center; color: #33506b; background: rgba(255,255,255,.55);
                                    box-shadow: inset 0 0 0 1px rgba(255,255,255,.7); backdrop-filter: blur(4px); }
@@ -994,13 +999,15 @@ var WERO_BANNER_STYLE = `
         .wc-scene.mini { width: 130px; -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 8%); mask-image: linear-gradient(90deg, transparent 0, #000 8%); }
         .wc-stand { fill: #8a7a3a; } .night .wc-stand { fill: #23222b; }
         .banner .htext.mini { right: 120px; }
-        /* The QR under the buttons' line, centred under the detail and copy buttons */
-        .banner .qr-wrap.thumb { position: absolute; z-index: 1; right: 8px; top: 32px; border-radius: 6px;
+        /* The QR standing on the counter, at the left of the buttons' column (same place and size as the WiFi card's) */
+        .banner .qr-wrap.thumb { position: absolute; z-index: 1; right: 36px; top: 12px; border-radius: 6px;
                                  box-shadow: 0 0 0 2px #fff, 0 1px 4px 2px rgba(0,0,0,.18); }
         .banner.night .qr-wrap.thumb { box-shadow: 0 0 0 2px #e6e6e6, 0 1px 4px 2px rgba(0,0,0,.45); }
-        .banner .qr-wrap.thumb svg { width: 46px; }
+        .banner .qr-wrap.thumb svg { width: 56px; }
         .banner .qr-wrap.thumb:focus-visible { outline: 2px solid var(--primary-color, #03a9f4); outline-offset: 4px; }
-        @container (max-width: 300px) { .wc-scene.mini .wc-lamp, .wc-scene.mini .wc-ok, .wc-scene.mini g[transform] { display: none; } .banner .htext.mini { right: 62px; gap: 8px; } .banner .htext.mini .hicon { width: 36px; height: 36px; } }
+        /* Narrow mini card: the buttons back on one line, the QR under them at the right edge */
+        @container (max-width: 300px) { .wc-scene.mini .wc-lamp, .wc-scene.mini .wc-ok, .wc-scene.mini g[transform] { display: none; } .banner .htext.mini { right: 62px; gap: 8px; } .banner .htext.mini .hicon { width: 36px; height: 36px; }
+          ha-card.mini .hact { flex-direction: row; } .banner .qr-wrap.thumb { right: 8px; top: 32px; } .banner .qr-wrap.thumb svg { width: 46px; } }
         /* Very narrow mini card (copy button hidden): the QR under the detail button, at the right edge */
         @container (max-width: 200px) {
           .wc-scene.mini { display: none; }
@@ -1252,7 +1259,7 @@ class WeroCard extends HTMLElement {
       var subText = c.name || 'Wero';
       var hsub = `<span class="hsub" title="${weroEsc(subText)}">${weroEsc(subText)}</span>`;
       var htitle = c.show_title ? `<span class="hname" title="${weroEsc(c.title)}">${weroEsc(c.title)}</span>` : '';
-      var icon = '<ha-icon icon="mdi:qrcode"></ha-icon>';
+      var icon = `<ha-icon icon="mdi:qrcode"></ha-icon>${c.logo ? `<img class="hbrand" src="${WERO_LOGO}" alt="">` : ''}`;
       header = `<div class="banner st-${status}${night ? ' night' : ''}" style="--wc-st:${stColor}">
           ${compact ? weroMiniScene(this._uid) : weroScene(this._uid, c.logo)}<div class="wc-ground"></div>
           <div class="htext${compact ? ' mini' : ''}"><div class="hicon">${icon}</div><div class="htitles"><div class="hrow">${htitle}${chip}</div>${hsub}</div></div>
