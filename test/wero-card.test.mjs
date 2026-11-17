@@ -802,7 +802,7 @@ test("editor: the detail button toggle only in the mini card's editor, true drop
     assert.equal(m.editor._form.data.illustration, true);
     assert.equal(m.editor._form.data.illustration_theme, "auto");
     const theme = m.editor._form.schema.find((f) => f.name === "illustration_theme");
-    assert.deepEqual(Array.from(theme.selector.select.options, (o) => o.label), ["Automatic (sun or dark theme)", "Day", "Night"]);
+    assert.deepEqual(Array.from(theme.selector.select.options, (o) => o.label), ["Automatic (follows the theme)", "Day", "Night"]);
     m.editor._valueChanged({ detail: { value: { url: URL_, illustration: true, illustration_theme: "auto" } } });
     assert.equal(m.editor._config.illustration, undefined);
     assert.equal(m.editor._config.illustration_theme, undefined);
@@ -927,14 +927,15 @@ test("illustrated header: the payment status drives the picture, the icon colour
   assert.match(classic, /<div class="badge" style="--c:var\(--success-color, #43a047\)">/);
 });
 
-test("illustrated header: night from illustration_theme, else sun.sun below the horizon or the dark theme", () => {
+test("illustrated header: night from illustration_theme, else the dark theme alone", () => {
   const night = (config, hass) => banner(ill(config, hass).shadowRoot.innerHTML)[1].includes("night");
   const up = (dark) => ({ states: { "sun.sun": { state: "above_horizon" } }, themes: { darkMode: dark } });
-  assert.equal(night({}, { states: { "sun.sun": { state: "below_horizon" } } }), true);
+  assert.equal(night({}, { states: { "sun.sun": { state: "below_horizon" } } }), false, "light theme after sunset: day");
+  assert.equal(night({}, { states: { "sun.sun": { state: "below_horizon" } }, themes: { darkMode: true } }), true, "dark theme after sunset: night");
   assert.equal(night({}, up(true)), true, "dark theme while the sun is up: night");
   assert.equal(night({}, up(false)), false, "light theme while the sun is up: day");
   assert.equal(night({ illustration_theme: "day" }, up(true)), false, "forced day wins over the dark theme");
-  assert.equal(night({ illustration_theme: "night" }, up(false)), true, "forced night wins over the sun");
+  assert.equal(night({ illustration_theme: "night" }, up(false)), true, "forced night wins over the light theme");
   assert.equal(night({}, { states: {}, themes: { darkMode: true } }), true);
   assert.equal(night({ illustration_theme: "day" }, { states: { "sun.sun": { state: "below_horizon" } } }), false);
   assert.equal(night({ illustration_theme: "night" }, { states: {} }), true);
@@ -950,7 +951,7 @@ test("illustrated header: hass re-renders only when the status or day / night ch
   assert.equal(renders, 0);
   card.hass = { language: "en", states: { [e]: { state: "on" } } };
   assert.equal(renders, 1);
-  card.hass = { language: "en", states: { [e]: { state: "on" }, "sun.sun": { state: "below_horizon" } } };
+  card.hass = { language: "en", states: { [e]: { state: "on" } }, themes: { darkMode: true } };
   assert.equal(renders, 2);
   const a = /id="(wc-glow-\d+)"/.exec(ill().shadowRoot.innerHTML)[1];
   const b = /id="(wc-glow-\d+)"/.exec(ill().shadowRoot.innerHTML)[1];
