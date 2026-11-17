@@ -83,9 +83,10 @@ test("QR round trip keeps multi-byte text", () => {
   assert.equal(roundTrip(url), url);
 });
 
+// The classic header (illustration: false) unless the test asks for the illustrated one
 function render(config) {
   const card = new WeroCard();
-  card.setConfig({ url: "https://share.weropay.eu/p/1/c/AbCdEfGhIj", ...config });
+  card.setConfig({ url: "https://share.weropay.eu/p/1/c/AbCdEfGhIj", illustration: false, ...config });
   return card.shadowRoot.innerHTML;
 }
 
@@ -624,7 +625,7 @@ function mini(config = {}) {
   const card = new WeroMiniCard();
   const attrs = {};
   card.setAttribute = (k, v) => (attrs[k] = v);
-  card.setConfig({ url: URL_, name: "Alex", ...config });
+  card.setConfig({ url: URL_, name: "Alex", illustration: false, ...config });
   card.attrs = attrs;
   return card;
 }
@@ -797,8 +798,16 @@ test("editor: the detail button toggle only in the mini card's editor, true drop
     assert.ok(!full.names.includes("zoom"));
     assert.equal(full.editor._form.data.zoom, undefined);
     const m = await names("wero-mini-card-editor");
-    assert.deepEqual(m.names, ["url", "title", "name", "show_title", "logo", "zoom", "qr_size", "language"]);
+    assert.deepEqual(m.names, ["url", "title", "name", "entity", "show_title", "logo", "zoom", "illustration", "illustration_theme", "qr_size", "language"]);
     assert.equal(m.editor._form.data.zoom, true);
+    // The illustration options, with their defaults shown and dropped from the YAML
+    assert.equal(m.editor._form.data.illustration, true);
+    assert.equal(m.editor._form.data.illustration_theme, "auto");
+    const theme = m.editor._form.schema.find((f) => f.name === "illustration_theme");
+    assert.deepEqual(Array.from(theme.selector.select.options, (o) => o.label), ["Automatic (sun / dark mode)", "Day", "Night"]);
+    m.editor._valueChanged({ detail: { value: { url: URL_, illustration: true, illustration_theme: "auto" } } });
+    assert.equal(m.editor._config.illustration, undefined);
+    assert.equal(m.editor._config.illustration_theme, undefined);
     assert.equal(m.editor._form.computeLabel({ name: "zoom" }), "Detail button");
     m.editor._valueChanged({ detail: { value: { url: URL_, zoom: true } } });
     assert.equal(m.editor._config.zoom, undefined);
@@ -858,4 +867,92 @@ test("mini card i18n: new strings in every language, and a translated picker ent
   const card = mini();
   card.hass = { language: "fr" };
   assert.match(card.shadowRoot.innerHTML, /title="Afficher la carte complète"/);
+});
+
+// ── illustrated header ───────────────────────────────────────────────────────
+const ill = (config = {}, hass) => {
+  const card = new WeroCard();
+  card.setConfig({ url: URL_, ...config });
+  if (hass) card.hass = { language: "en", ...hass };
+  return card;
+};
+const banner = (html) => /<div class="banner ([^"]*)" style="--wc-st:([^"]*)"/.exec(html);
+
+test("illustrated header: by default, 90 px, the QR icon, the scene, the Wero-yellow strip and the logo on the counter", () => {
+  const html = ill().shadowRoot.innerHTML;
+  assert.match(html, /<ha-card data-ill>/);
+  assert.match(cssRule(html, ".banner"), /height: 90px/);
+  assert.match(cssRule(html, ".wc-ground"), /height: 10px/);
+  assert.match(html, /<div class="hicon"><ha-icon icon="mdi:qrcode"><\/ha-icon><\/div>/);
+  assert.match(html, /<svg class="wc-scene" viewBox="0 0 200 80"/);
+  assert.match(html, /<image class="wc-logo" href="data:image\/svg\+xml;base64,/);
+  assert.doesNotMatch(ill({ logo: false }).shadowRoot.innerHTML, /class="wc-logo"/);
+  assert.match(html, /prefers-reduced-motion: reduce/);
+  // No entity: ready, the primary colour, the payee (or Wero) under the title
+  assert.deepEqual(banner(html).slice(1), ["st-ready", "var(--primary-color, #03a9f4)"]);
+  assert.match(ill({ name: "Alex" }).shadowRoot.innerHTML, /<span class="hsub" title="Alex">Alex<\/span>/);
+  assert.match(html, /<span class="hsub" title="Wero">Wero<\/span>/);
+  // illustration: false keeps the classic header
+  assert.doesNotMatch(render({}), /class="banner/);
+});
+
+test("illustrated header: the payment status drives the picture, the icon colour and the subtitle", () => {
+  const e = "input_boolean.paid";
+  const st = (state) => ill({ entity: e }, { states: state === undefined ? {} : { [e]: { state } } }).shadowRoot.innerHTML;
+  assert.deepEqual(banner(st("off")).slice(1), ["st-waiting", "var(--primary-color, #03a9f4)"]);
+  assert.match(st("off"), /Waiting for payment/);
+  for (const v of ["on", "received", "paid"]) {
+    assert.deepEqual(banner(st(v)).slice(1), ["st-received", "var(--success-color, #43a047)"], v);
+    assert.match(st(v), /Payment received/);
+  }
+  for (const v of ["unavailable", "unknown", undefined]) assert.equal(banner(st(v))[1], "st-off", String(v));
+  assert.equal(banner(st("unavailable"))[2], "var(--disabled-text-color, #9e9e9e)");
+  // The classic header's icon follows the status too
+  const classic = ill({ entity: e, illustration: false, logo: false }, { states: { [e]: { state: "on" } } }).shadowRoot.innerHTML;
+  assert.match(classic, /<div class="badge" style="--c:var\(--success-color, #43a047\)">/);
+});
+
+test("illustrated header: night from illustration_theme, else sun.sun, else the dark theme", () => {
+  const night = (config, hass) => banner(ill(config, hass).shadowRoot.innerHTML)[1].includes("night");
+  assert.equal(night({}, { states: { "sun.sun": { state: "below_horizon" } } }), true);
+  assert.equal(night({}, { states: { "sun.sun": { state: "above_horizon" } }, themes: { darkMode: true } }), false);
+  assert.equal(night({}, { states: {}, themes: { darkMode: true } }), true);
+  assert.equal(night({ illustration_theme: "day" }, { states: { "sun.sun": { state: "below_horizon" } } }), false);
+  assert.equal(night({ illustration_theme: "night" }, { states: {} }), true);
+});
+
+test("illustrated header: hass re-renders only when the status or day / night changes; ids are unique per card", () => {
+  const e = "input_boolean.paid";
+  const card = ill({ entity: e }, { states: { [e]: { state: "off" } } });
+  let renders = 0;
+  const r = card._render.bind(card);
+  card._render = () => (renders++, r());
+  card.hass = { language: "en", states: { [e]: { state: "off" }, "sensor.x": { state: "1" } } };
+  assert.equal(renders, 0);
+  card.hass = { language: "en", states: { [e]: { state: "on" } } };
+  assert.equal(renders, 1);
+  card.hass = { language: "en", states: { [e]: { state: "on" }, "sun.sun": { state: "below_horizon" } } };
+  assert.equal(renders, 2);
+  const a = /id="(wc-glow-\d+)"/.exec(ill().shadowRoot.innerHTML)[1];
+  const b = /id="(wc-glow-\d+)"/.exec(ill().shadowRoot.innerHTML)[1];
+  assert.notEqual(a, b);
+});
+
+test("illustrated mini card: the 90 px banner alone, its QR icon opens the full screen QR", () => {
+  const card = new WeroMiniCard();
+  card.setAttribute = () => {};
+  card.setConfig({ url: URL_, name: "Alex" });
+  const html = card.shadowRoot.innerHTML;
+  assert.match(html, /<ha-card class="mini" data-ill>/);
+  assert.match(html, /<div class="hicon" id="qr" role="button" tabindex="0" title="Enlarge QR code" aria-label="Enlarge QR code"><ha-icon icon="mdi:qrcode">/);
+  assert.match(html, /<div class="hact"><div class="side"><button class="zoom"/);
+  assert.doesNotMatch(html, /class="qr-wrap/);
+  const els = keepElements(card);
+  let shown = 0;
+  els.zoom = { id: "zoom", open: false, firstChild: null, innerHTML: "", showModal() { shown++; this.open = true; }, close() {} };
+  els.qr = { id: "qr", classList: { contains: (c) => c === "hicon" } };
+  card._render();
+  els.qr.onclick();
+  assert.equal(shown, 1);
+  assert.match(els.zoom.innerHTML, /^<svg [^>]*role="img" aria-label="Wero QR code"/);
 });

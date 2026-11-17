@@ -21,8 +21,10 @@ Custom Lovelace card for Home Assistant that displays your [Wero](https://wero-w
 ## Features
 
 - QR code generated in pure JS (embedded Reed-Solomon algorithm), with a spec-compliant quiet zone
+- Illustrated header: a shop counter with its payment terminal, a phone that taps it and the Wero logo on the counter, over a Wero-yellow strip; day and night pictures (following the sun or the dark theme), animated (respects reduced motion), `illustration: false` for the classic header
+- Optional payment status `entity`: the header shows « Waiting for payment » or « Payment received » (green tick, the QR icon turns green)
 - Wero logo in the header (can be disabled)
-- Two cards: `wero-card` and its mini version `wero-mini-card` (logo, title and payee on one row with a QR thumbnail that opens the full screen QR code; a detail button shows the full card)
+- Two cards: `wero-card` and its mini version `wero-mini-card` (the illustrated header alone, its QR icon opens the full screen QR code; a detail button shows the full card)
 - Copy-link button to share the payment link by message (the result is also announced to screen readers)
 - Tap the QR code to show it fullscreen (tap again or press Escape to close)
 - Visual editor: add and configure the card from the dashboard UI, no YAML needed
@@ -46,6 +48,14 @@ There is no public format to build a Wero QR code from a phone number or an IBAN
 3. The link looks like `https://share.weropay.eu/p/1/c/XXXXXXXXXX`.
 
 > Check that the link is still valid after a few days before printing it or relying on it: its lifetime depends on how your bank generated it.
+
+## Supported integrations
+
+The card needs no integration. The optional payment status `entity` can come from any of these:
+
+- [Input boolean](https://www.home-assistant.io/integrations/input_boolean/) — a helper switched on by you or an automation (e.g. on your bank's notification)
+- [Template](https://www.home-assistant.io/integrations/template/) — a `binary_sensor` built from your own sensors
+- [Sun](https://www.home-assistant.io/integrations/sun/) — `sun.sun` switches the illustration to night (`illustration_theme: auto`)
 
 ## Installation
 
@@ -93,7 +103,10 @@ type: custom:wero-card
 url: https://share.weropay.eu/p/1/c/XXXXXXXXXX
 title: Refund
 name: Alex
+entity: input_boolean.wero_paid
 logo: true
+illustration: true
+illustration_theme: auto
 qr_size: 176
 language: en
 ```
@@ -107,7 +120,7 @@ name: Alex
 zoom: true
 ```
 
-The mini card takes the same options as the full card, plus `zoom`. It shows the logo, the title and the payee name on one row, with a small QR thumbnail on the right. A tap on the thumbnail opens the QR code full screen, like the big one of the full card. The detail button (top right) switches to the full card; the button, or a click anywhere outside the card, brings the compact view back. The copy button sits under the detail button, so the thumbnail lines up with the other mini cards; on a card 200 px wide or less the thumbnail gets smaller and the copy button gives way (the full card keeps it).
+The mini card takes the same options as the full card, plus `zoom`. With the illustrated header (default), it is the 90 px header alone: the QR icon at its left opens the QR code full screen, the detail button and the copy button sit at the top right. With `illustration: false`, it shows the logo, the title and the payee name on one row, with a small QR thumbnail on the right. A tap on the thumbnail opens the QR code full screen, like the big one of the full card. The detail button (top right) switches to the full card; the button, or a click anywhere outside the card, brings the compact view back. The copy button sits under the detail button, so the thumbnail lines up with the other mini cards; on a card 200 px wide or less the thumbnail gets smaller and the copy button gives way (the full card keeps it).
 
 ### Options reference
 
@@ -117,7 +130,10 @@ The mini card takes the same options as the full card, plus `zoom`. It shows the
 | `title` | ❌ | Auto (i18n) | Card title |
 | `show_title` | ❌ | `true` | Show the title in the header (e.g. `false` under a section heading of your own) |
 | `name` | ❌ | — | Payee name, shown under the QR code |
-| `logo` | ❌ | `true` | Show the Wero logo in the header (`false` shows a generic icon) |
+| `entity` | ❌ | — | Payment status entity (e.g. an `input_boolean` or a `binary_sensor` set by an automation). `on`, `true`, `received`, `paid`, `completed`, `done` or `success` mean « Payment received », any other state « Waiting for payment », `unavailable` / `unknown` greys the icon. Without it the header shows the payee |
+| `logo` | ❌ | `true` | Show the Wero logo (on the illustration's counter; in the classic header, `false` shows a generic icon) |
+| `illustration` | ❌ | `true` | Illustrated 90 px header (shop counter, payment terminal); `false` keeps the classic header |
+| `illustration_theme` | ❌ | `auto` | `auto` (night when `sun.sun` is below the horizon, else with the dark theme), `day` or `night` |
 | `qr_size` | ❌ | `176` | QR code size in pixels (quiet zone included); shrinks to fit a narrower card |
 | `zoom` | ❌ | `true` | Mini card only: detail button at the top right that switches to the full card and back (a click outside the card brings the compact view back) |
 | `language` | ❌ | Auto | Force language: `en`, `fr`, `de`, `es`, `sr`, `sr-Latn`, `it`, `nl`, `pt`, `pl`, `ro`, `da`, `sv`, `bg`, `ru`, `uk`, `hu`, `sk`, `cs`, `sl`, `lv` or `el` (auto-detects from HA settings; « Automatic » in the visual editor) |
@@ -128,6 +144,7 @@ The mini card takes the same options as the full card, plus `zoom`. It shows the
 |---|---|
 | <img src="https://raw.githubusercontent.com/juju35/ha-wero-card/main/screenshots/card.png" alt="card" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-wero-card/main/screenshots/card-dark.png" alt="card dark" width="400"> |
 | <img src="https://raw.githubusercontent.com/juju35/ha-wero-card/main/screenshots/mini-card.png" alt="mini card" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-wero-card/main/screenshots/mini-card-dark.png" alt="mini card dark" width="400"> |
+| <img src="https://raw.githubusercontent.com/juju35/ha-wero-card/main/screenshots/mini-card-received.png" alt="mini card payment received" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-wero-card/main/screenshots/mini-card-received-dark.png" alt="mini card payment received dark" width="400"> |
 | <img src="https://raw.githubusercontent.com/juju35/ha-wero-card/main/screenshots/mini-card-narrow.png" alt="mini card narrow" width="212"> | <img src="https://raw.githubusercontent.com/juju35/ha-wero-card/main/screenshots/mini-card-narrow-dark.png" alt="mini card narrow dark" width="212"> |
 
 ## How it works

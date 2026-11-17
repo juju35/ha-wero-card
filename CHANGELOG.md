@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.13.0 - 2026-11-17
+
+### Features
+- **Illustrated header** on the full and mini cards (90 px): a shop counter with its payment terminal, a phone tapping it and the Wero logo on the counter front, over a 10 px Wero-yellow strip edge to edge. Round `mdi:qrcode` icon whose colour follows the payment status; day and night pictures (`sun.sun`, else the dark theme; `illustration_theme: day | night` forces one), animations off with reduced motion. `illustration: false` keeps the classic header.
+- Optional `entity` for the payment status: « Waiting for payment » (the phone taps the terminal), « Payment received » (green tick and screen, green icon) or unavailable (grey icon).
+- The compact mini card is the illustrated header alone; its QR icon opens the full screen QR code.
+- Visual editor: `entity`, `illustration` and `illustration_theme` (in the mini card's editor too); new strings in every language.
+
 ## 1.12.1 - 2026-11-14
 
 ### Fixes
