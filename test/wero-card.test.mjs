@@ -881,7 +881,8 @@ test("illustrated header: by default, 90 px, the QR icon, the scene, the Wero-ye
   assert.match(html, /<ha-card data-ill>/);
   assert.match(cssRule(html, ".banner"), /height: 90px/);
   assert.match(cssRule(html, ".wc-ground"), /height: 10px/);
-  assert.match(html, /<div class="hicon"><ha-icon icon="mdi:qrcode"><\/ha-icon><\/div>/);
+  assert.match(html, /<div class="hicon"><ha-icon icon="mdi:qrcode"><\/ha-icon><img class="hbrand" src="data:image\/svg\+xml;base64,[^"]*" alt=""><\/div>/);
+  assert.match(ill({ logo: false }).shadowRoot.innerHTML, /<div class="hicon"><ha-icon icon="mdi:qrcode"><\/ha-icon><\/div>/);
   assert.match(html, /<svg class="wc-scene" viewBox="0 0 200 80"/);
   assert.match(html, /<image class="wc-logo" href="data:image\/svg\+xml;base64,/);
   assert.doesNotMatch(ill({ logo: false }).shadowRoot.innerHTML, /class="wc-logo"/);
@@ -966,14 +967,14 @@ test("illustrated mini card: the 90 px banner shows the scannable QR code itself
   assert.match(html, /<svg class="wc-scene mini" viewBox="0 0 130 80"/);
   assert.match(html, /<div class="htext mini"><div class="hicon"><ha-icon icon="mdi:qrcode">/);
   assert.match(html, /<div class="qr-wrap thumb" id="qr" role="button" tabindex="0" title="Enlarge QR code" aria-label="Enlarge QR code"><svg aria-hidden="true" [^>]*><rect [^>]*fill="#fff48d"\/>/);
-  // The buttons on one line in the top right corner (the detail button at the corner), the QR under them
+  // The buttons in a column in the top right corner (the detail button at the corner), the QR at their left
   assert.match(html, /<\/div><div class="hact"><button id="copy"[\s\S]*?<\/button><button class="zoom"/);
   const hact = cssRule(html, ".hact");
-  assert.match(hact, /top: 5px; right: 5px; display: flex; gap: 4px/);
+  assert.match(hact, /top: 5px; right: 5px; display: flex; flex-direction: column-reverse; justify-content: flex-end; gap: 4px/);
   assert.match(cssRule(html, ".hact #copy, .hact .zoom"), /width: 24px; height: 24px; border-radius: 50%/);
-  assert.match(cssRule(html, ".banner .qr-wrap.thumb"), /right: 8px; top: 32px/);
-  // Framed in white (light grey at night) around its own quiet zone
-  assert.match(cssRule(html, ".banner .qr-wrap.thumb svg"), /width: 46px/);
+  assert.match(cssRule(html, ".banner .qr-wrap.thumb"), /right: 36px; top: 12px/);
+  // Framed in white (light grey at night) around its own quiet zone, 56 px like the WiFi card's
+  assert.match(cssRule(html, ".banner .qr-wrap.thumb svg"), /width: 56px/);
   assert.match(cssRule(html, ".banner .qr-wrap.thumb"), /box-shadow: 0 0 0 2px #fff/);
   assert.match(cssRule(html, ".banner.night .qr-wrap.thumb"), /box-shadow: 0 0 0 2px #e6e6e6/);
   const els = keepElements(card);
