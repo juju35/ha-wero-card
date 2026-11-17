@@ -190,6 +190,11 @@ const icons = {
 const config = { url: "https://share.weropay.eu/p/1/c/EXAMPLE0123", name: "Alex" };
 const received = { ...config, entity: "input_boolean.wero_paid" };
 const paid = { states: { "input_boolean.wero_paid": { state: "on" } } };
+// Presses the mini card's expand button (a pointer click: no focus ring left on it)
+const zoomIn = (page) =>
+  page.evaluate(() =>
+    document.querySelector("wero-mini-card").shadowRoot.querySelector(".zoom").dispatchEvent(new MouseEvent("click", { bubbles: true, composed: true, detail: 1 }))
+  );
 
 await render(
   [
@@ -203,6 +208,9 @@ await render(
     // The illustrated header once the payment entity reports it received
     { file: "mini-card-received", type: "wero-mini-card", theme: "light", width: 380, config: received, hass: paid },
     { file: "mini-card-received-dark", type: "wero-mini-card", theme: "dark", width: 380, config: received, hass: paid },
+    // The mini card expanded with its top right button: the full card, at the full card's width
+    { file: "mini-card-zoom", type: "wero-mini-card", theme: "light", width: 460, config, after: zoomIn },
+    { file: "mini-card-zoom-dark", type: "wero-mini-card", theme: "dark", width: 460, config, after: zoomIn },
   ],
   { icons }
 );

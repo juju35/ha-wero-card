@@ -145,6 +145,7 @@ The mini card takes the same options as the full card, plus `zoom`. With the ill
 | <img src="https://raw.githubusercontent.com/juju35/ha-wero-card/main/screenshots/card.png" alt="card" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-wero-card/main/screenshots/card-dark.png" alt="card dark" width="400"> |
 | <img src="https://raw.githubusercontent.com/juju35/ha-wero-card/main/screenshots/mini-card.png" alt="mini card" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-wero-card/main/screenshots/mini-card-dark.png" alt="mini card dark" width="400"> |
 | <img src="https://raw.githubusercontent.com/juju35/ha-wero-card/main/screenshots/mini-card-received.png" alt="mini card payment received" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-wero-card/main/screenshots/mini-card-received-dark.png" alt="mini card payment received dark" width="400"> |
+| <img src="https://raw.githubusercontent.com/juju35/ha-wero-card/main/screenshots/mini-card-zoom.png" alt="mini card expanded to the full card" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-wero-card/main/screenshots/mini-card-zoom-dark.png" alt="mini card expanded to the full card, dark" width="400"> |
 | <img src="https://raw.githubusercontent.com/juju35/ha-wero-card/main/screenshots/mini-card-narrow.png" alt="mini card narrow" width="212"> | <img src="https://raw.githubusercontent.com/juju35/ha-wero-card/main/screenshots/mini-card-narrow-dark.png" alt="mini card narrow dark" width="212"> |
 
 ### Animations
