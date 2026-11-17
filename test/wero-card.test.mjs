@@ -643,18 +643,16 @@ test("mini card: one compact row with the logo, title, payee, a QR thumbnail and
   assert.equal(card.attrs.mini, "");
   assert.match(html, /<ha-card class="mini">/);
   assert.match(html, /<img class="logo"/);
-  assert.match(html, /<div class="txt"><span class="name" title="Send money">Send money<\/span><span class="sub" title="Alex">Alex<\/span><\/div>/);
+  assert.match(html, /<div class="txt"><div class="trow"><span class="name" title="Send money">Send money<\/span><span class="chip" style="--c:var\(--primary-color, #03a9f4\)" title="Ready"><span class="dot"><\/span><span class="ptxt">Ready<\/span><\/span><\/div><span class="sub" title="Alex">Alex<\/span><\/div>/);
   // The thumbnail opens the full screen QR, like the big one: its label says so
   assert.match(html, /<div class="qr-wrap thumb" id="qr" role="button" tabindex="0" title="Enlarge QR code" aria-label="Enlarge QR code"><svg aria-hidden="true" /);
-  // The thumbnail ends the row, right next to a column with the detail button and the copy button under it
-  assert.match(html, /<\/svg><\/div>\s*<div class="side"><button class="zoom" title="Show the full card" aria-label="Show the full card"><ha-icon icon="mdi:arrow-expand"><\/ha-icon><\/button><button id="copy" title="Copy link" aria-label="Copy link">/);
+  // The thumbnail, then the copy button at the left of the detail button, both on its top line
+  assert.match(html, /<\/svg><\/div>\s*<button id="copy" title="Copy link" aria-label="Copy link"><ha-icon icon="mdi:content-copy" id="ico"><\/ha-icon><\/button><button class="zoom" title="Show the full card" aria-label="Show the full card"><ha-icon icon="mdi:arrow-expand"><\/ha-icon><\/button>/);
   assert.match(html, /<span class="sr" id="live" aria-live="polite"><\/span>/);
-  const side = cssRule(html, ".side");
-  assert.match(side, /flex-direction: column/);
-  assert.match(side, /margin: -4px -4px -4px 0/);
-  assert.match(cssRule(html, ".side .zoom"), /margin: 0/);
-  // Without the detail button, the copy button takes its place
-  assert.match(mini({ zoom: false }).shadowRoot.innerHTML, /<div class="side"><button id="copy"/);
+  assert.match(cssRule(html, "ha-card.mini .header > #copy"), /align-self: flex-start/);
+  assert.doesNotMatch(html, /class="side"/);
+  // Without the detail button, the copy button ends the row
+  assert.match(mini({ zoom: false }).shadowRoot.innerHTML, /<\/svg><\/div>\s*<button id="copy"[\s\S]*?<\/button>\s*<\/div>/);
   // No big QR, no payee row and no hint in the compact view; the full screen QR's dialog is there
   assert.match(html, /<dialog id="zoom" aria-label="Enlarge QR code"><\/dialog>/);
   assert.doesNotMatch(html, /class="info-row"|class="hint"/);
@@ -896,15 +894,27 @@ test("illustrated header: by default, 90 px, the QR icon, the scene, the Wero-ye
   assert.doesNotMatch(render({}), /class="banner/);
 });
 
-test("illustrated header: the payment status drives the picture, the icon colour and the subtitle", () => {
+test("illustrated header: the payment status drives the picture, the icon colour and the status pill", () => {
   const e = "input_boolean.paid";
-  const st = (state) => ill({ entity: e }, { states: state === undefined ? {} : { [e]: { state } } }).shadowRoot.innerHTML;
+  const st = (state) => ill({ entity: e, name: "Alex" }, { states: state === undefined ? {} : { [e]: { state } } }).shadowRoot.innerHTML;
+  const pill = (html) => /<span class="chip" style="--c:([^"]+)" title="([^"]+)"><span class="dot"><\/span><span class="ptxt">([^<]+)<\/span><\/span>/.exec(html).slice(1);
   assert.deepEqual(banner(st("off")).slice(1), ["st-waiting", "var(--primary-color, #03a9f4)"]);
-  assert.match(st("off"), /Waiting for payment/);
+  assert.deepEqual(pill(st("off")), ["var(--primary-color, #03a9f4)", "Waiting", "Waiting"]);
+  // The pill on the title row, the payee under it (the status is not repeated in the subtitle)
+  assert.match(st("off"), /<div class="hrow"><span class="hname" title="Send money">Send money<\/span><span class="chip"[\s\S]*?<\/div><span class="hsub" title="Alex">Alex<\/span>/);
   for (const v of ["on", "received", "paid"]) {
     assert.deepEqual(banner(st(v)).slice(1), ["st-received", "var(--success-color, #43a047)"], v);
-    assert.match(st(v), /Payment received/);
+    assert.deepEqual(pill(st(v)), ["var(--success-color, #43a047)", "Received", "Received"], v);
   }
+  assert.deepEqual(pill(st("unavailable")), ["var(--disabled-text-color, #9e9e9e)", "Unavailable", "Unavailable"]);
+  assert.deepEqual(pill(ill({}).shadowRoot.innerHTML), ["var(--primary-color, #03a9f4)", "Ready", "Ready"]);
+  // Narrow card: the pill on its own line under the subtitle, then the dot alone; banner pill colours as on the sky
+  const html = st("on");
+  assert.match(html, /@container \(max-width: 260px\) \{ \.hrow \{ display: contents; \}[^\n]*\.htitles \.chip \{ order: 3;/);
+  assert.match(html, /@container \(max-width: 200px\) \{[^\n]*\.htitles \.chip \.ptxt \{ position: absolute;/);
+  assert.match(cssRule(html, ".banner .chip"), /max-width: 51%; background: color-mix\(in srgb, var\(--c\) 18%, rgba\(255,255,255,\.78\)\)/);
+  assert.match(cssRule(html, ".banner.night .chip"), /color-mix\(in srgb, var\(--c\) 35%, #ffffff\)/);
+  assert.match(cssRule(html, ".hname"), /min-width: 4ch/);
   for (const v of ["unavailable", "unknown", undefined]) assert.equal(banner(st(v))[1], "st-off", String(v));
   assert.equal(banner(st("unavailable"))[2], "var(--disabled-text-color, #9e9e9e)");
   // The classic header's icon follows the status too
@@ -948,9 +958,14 @@ test("illustrated mini card: the 90 px banner shows the scannable QR code itself
   assert.match(html, /<svg class="wc-scene mini" viewBox="0 0 130 80"/);
   assert.match(html, /<div class="htext mini"><div class="hicon"><ha-icon icon="mdi:qrcode">/);
   assert.match(html, /<div class="qr-wrap thumb" id="qr" role="button" tabindex="0" title="Enlarge QR code" aria-label="Enlarge QR code"><svg aria-hidden="true" [^>]*><rect [^>]*fill="#fff48d"\/>/);
-  assert.match(html, /<\/div><div class="hact"><div class="side"><button class="zoom"/);
-  // Big enough to be scanned from the card, framed in white (light grey at night) around its own quiet zone
-  assert.match(cssRule(html, ".banner .qr-wrap.thumb svg"), /width: 60px/);
+  // The buttons on one line in the top right corner (the detail button at the corner), the QR under them
+  assert.match(html, /<\/div><div class="hact"><button id="copy"[\s\S]*?<\/button><button class="zoom"/);
+  const hact = cssRule(html, ".hact");
+  assert.match(hact, /top: 5px; right: 5px; display: flex; gap: 4px/);
+  assert.match(cssRule(html, ".hact #copy, .hact .zoom"), /width: 24px; height: 24px; border-radius: 50%/);
+  assert.match(cssRule(html, ".banner .qr-wrap.thumb"), /right: 8px; top: 32px/);
+  // Framed in white (light grey at night) around its own quiet zone
+  assert.match(cssRule(html, ".banner .qr-wrap.thumb svg"), /width: 46px/);
   assert.match(cssRule(html, ".banner .qr-wrap.thumb"), /box-shadow: 0 0 0 2px #fff/);
   assert.match(cssRule(html, ".banner.night .qr-wrap.thumb"), /box-shadow: 0 0 0 2px #e6e6e6/);
   const els = keepElements(card);

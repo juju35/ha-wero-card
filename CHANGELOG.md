@@ -5,7 +5,9 @@
 ### Features
 - **Illustrated header** on the full and mini cards (90 px): a shop counter with its payment terminal, a phone tapping it and the Wero logo on the counter front, over a 10 px Wero-yellow strip edge to edge. Round `mdi:qrcode` icon whose colour follows the payment status; day and night pictures (`sun.sun`, else the dark theme; `illustration_theme: day | night` forces one), animations off with reduced motion. `illustration: false` keeps the classic header.
 - Optional `entity` for the payment status: « Waiting for payment » (the phone taps the terminal), « Payment received » (green tick and screen, green icon) or unavailable (grey icon).
-- The compact mini card is the illustrated header alone, with the scannable QR code standing on the counter (60 px in a white frame, day and night; under the detail button on a very narrow card); a tap on it opens the full screen QR code.
+- The compact mini card is the illustrated header alone, with the scannable QR code standing on the counter (in a white frame, day and night, under the copy and detail buttons); a tap on it opens the full screen QR code.
+- **Status pill** back on the title row of every header (full and mini card, illustrated or classic): a dot and Ready, Waiting, Received or Unavailable, in the colour of the icon; on its own line under the payee on a narrow card, the dot alone at 200 px or less. The subtitle keeps the payee.
+- Mini card: the detail button sits in the banner's top right corner (24 px, frosted), the copy button at its left on the same line, never stacked.
 - README: animated captures (GIF) of the header, ready, waiting and mini card, light and dark.
 - Visual editor: `entity`, `illustration` and `illustration_theme` (in the mini card's editor too); new strings in every language.
 

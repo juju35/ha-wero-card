@@ -22,7 +22,7 @@ Custom Lovelace card for Home Assistant that displays your [Wero](https://wero-w
 
 - QR code generated in pure JS (embedded Reed-Solomon algorithm), with a spec-compliant quiet zone
 - Illustrated header: a shop counter with its payment terminal, a phone that taps it and the Wero logo on the counter, over a Wero-yellow strip; day and night pictures (following the sun or the dark theme), animated (respects reduced motion), `illustration: false` for the classic header
-- Optional payment status `entity`: the header shows « Waiting for payment » or « Payment received » (green tick, the QR icon turns green)
+- Status pill on the title row (Ready, Waiting, Received or Unavailable, in the colour of the QR icon); optional payment status `entity` (green tick, the QR icon and the pill turn green once paid)
 - Wero logo in the header (can be disabled)
 - Two cards: `wero-card` and its mini version `wero-mini-card` (the illustrated header alone, with the scannable QR code standing on the counter; a tap on it opens the QR code full screen, a detail button shows the full card)
 - Copy-link button to share the payment link by message (the result is also announced to screen readers)
@@ -120,7 +120,7 @@ name: Alex
 zoom: true
 ```
 
-The mini card takes the same options as the full card, plus `zoom`. With the illustrated header (default), it is the 90 px header alone: the QR code itself stands on the shop counter at the right, big enough to be scanned straight from the card (white frame around its quiet zone, day and night), next to the detail button and the copy button; a tap on it opens it full screen. On a card 200 px wide or less it moves under the detail button, at the right edge. With `illustration: false`, it shows the logo, the title and the payee name on one row, with a small QR thumbnail on the right. A tap on the thumbnail opens the QR code full screen, like the big one of the full card. The detail button (top right) switches to the full card; the button, or a click anywhere outside the card, brings the compact view back. The copy button sits under the detail button, so the thumbnail lines up with the other mini cards; on a card 200 px wide or less the thumbnail gets smaller and the copy button gives way (the full card keeps it).
+The mini card takes the same options as the full card, plus `zoom`. With the illustrated header (default), it is the 90 px header alone: the QR code itself stands on the shop counter at the right, framed in white around its quiet zone (day and night), under the copy and detail buttons of the top right corner; a tap on it opens it full screen. With `illustration: false`, it shows the logo, the title and the payee name on one row, with a small QR thumbnail on the right. A tap on the thumbnail opens the QR code full screen, like the big one of the full card. The detail button (top right) switches to the full card; the button, or a click anywhere outside the card, brings the compact view back. The copy button sits at the left of the detail button, on its line; on a card 200 px wide or less the thumbnail gets smaller and the copy button gives way (the full card keeps it).
 
 ### Options reference
 
@@ -130,7 +130,7 @@ The mini card takes the same options as the full card, plus `zoom`. With the ill
 | `title` | ❌ | Auto (i18n) | Card title |
 | `show_title` | ❌ | `true` | Show the title in the header (e.g. `false` under a section heading of your own) |
 | `name` | ❌ | — | Payee name, shown under the QR code |
-| `entity` | ❌ | — | Payment status entity (e.g. an `input_boolean` or a `binary_sensor` set by an automation). `on`, `true`, `received`, `paid`, `completed`, `done` or `success` mean « Payment received », any other state « Waiting for payment », `unavailable` / `unknown` greys the icon. Without it the header shows the payee |
+| `entity` | ❌ | — | Payment status entity (e.g. an `input_boolean` or a `binary_sensor` set by an automation). `on`, `true`, `received`, `paid`, `completed`, `done` or `success` mean « Received », any other state « Waiting », `unavailable` / `unknown` greys the icon and the pill (« Unavailable »). Without it the pill shows « Ready » |
 | `logo` | ❌ | `true` | Show the Wero logo (on the illustration's counter; in the classic header, `false` shows a generic icon) |
 | `illustration` | ❌ | `true` | Illustrated 90 px header (shop counter, payment terminal); `false` keeps the classic header |
 | `illustration_theme` | ❌ | `auto` | `auto` (night when `sun.sun` is below the horizon, else with the dark theme), `day` or `night` |

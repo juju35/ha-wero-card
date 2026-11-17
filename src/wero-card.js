@@ -36,6 +36,10 @@ var WeroI18n = {
     card_desc: 'QR code Wero, sans CDN',
     waiting: 'En attente de paiement',
     received: 'Paiement reçu',
+    st_ready: 'Prêt',
+    st_waiting: 'En attente',
+    st_received: 'Reçu',
+    st_off: 'Indisponible',
     ed_entity: "Entité d'état du paiement (facultatif)",
     ed_illustration: 'En-tête illustré',
     ed_illustration_theme: "Thème de l'illustration",
@@ -70,6 +74,10 @@ var WeroI18n = {
     card_desc: 'Wero QR code, no CDN',
     waiting: 'Waiting for payment',
     received: 'Payment received',
+    st_ready: 'Ready',
+    st_waiting: 'Waiting',
+    st_received: 'Received',
+    st_off: 'Unavailable',
     ed_entity: 'Payment status entity (optional)',
     ed_illustration: 'Illustrated header',
     ed_illustration_theme: 'Illustration theme',
@@ -104,6 +112,10 @@ var WeroI18n = {
     card_desc: 'Wero-QR-Code, ohne CDN',
     waiting: 'Warte auf Zahlung',
     received: 'Zahlung erhalten',
+    st_ready: 'Bereit',
+    st_waiting: 'Ausstehend',
+    st_received: 'Erhalten',
+    st_off: 'Nicht verfügbar',
     ed_entity: 'Entität für den Zahlungsstatus (optional)',
     ed_illustration: 'Illustrierte Kopfzeile',
     ed_illustration_theme: 'Illustrationsthema',
@@ -138,6 +150,10 @@ var WeroI18n = {
     card_desc: 'Código QR de Wero, sin CDN',
     waiting: 'Esperando el pago',
     received: 'Pago recibido',
+    st_ready: 'Listo',
+    st_waiting: 'En espera',
+    st_received: 'Recibido',
+    st_off: 'No disponible',
     ed_entity: 'Entidad de estado del pago (opcional)',
     ed_illustration: 'Encabezado ilustrado',
     ed_illustration_theme: 'Tema de la ilustración',
@@ -172,6 +188,10 @@ var WeroI18n = {
     card_desc: 'Wero QR код, без спољних ресурса',
     waiting: 'Чека се уплата',
     received: 'Уплата примљена',
+    st_ready: 'Спремно',
+    st_waiting: 'На чекању',
+    st_received: 'Примљено',
+    st_off: 'Недоступно',
     ed_entity: 'Ентитет статуса уплате (опционо)',
     ed_illustration: 'Илустровано заглавље',
     ed_illustration_theme: 'Тема илустрације',
@@ -206,6 +226,10 @@ var WeroI18n = {
     card_desc: 'Wero QR kod, bez spoljnih resursa',
     waiting: 'Čeka se uplata',
     received: 'Uplata primljena',
+    st_ready: 'Spremno',
+    st_waiting: 'Na čekanju',
+    st_received: 'Primljeno',
+    st_off: 'Nedostupno',
     ed_entity: 'Entitet statusa uplate (opciono)',
     ed_illustration: 'Ilustrovano zaglavlje',
     ed_illustration_theme: 'Tema ilustracije',
@@ -240,6 +264,10 @@ var WeroI18n = {
     card_desc: 'Codice QR Wero, senza CDN',
     waiting: 'In attesa di pagamento',
     received: 'Pagamento ricevuto',
+    st_ready: 'Pronto',
+    st_waiting: 'In attesa',
+    st_received: 'Ricevuto',
+    st_off: 'Non disponibile',
     ed_entity: 'Entità di stato del pagamento (facoltativa)',
     ed_illustration: 'Intestazione illustrata',
     ed_illustration_theme: "Tema dell'illustrazione",
@@ -274,6 +302,10 @@ var WeroI18n = {
     card_desc: 'Wero-QR-code, zonder CDN',
     waiting: 'Wachten op betaling',
     received: 'Betaling ontvangen',
+    st_ready: 'Gereed',
+    st_waiting: 'In afwachting',
+    st_received: 'Ontvangen',
+    st_off: 'Niet beschikbaar',
     ed_entity: 'Entiteit voor betaalstatus (optioneel)',
     ed_illustration: 'Geïllustreerde koptekst',
     ed_illustration_theme: 'Illustratiethema',
@@ -308,6 +340,10 @@ var WeroI18n = {
     card_desc: 'Código QR Wero, sem CDN',
     waiting: 'A aguardar pagamento',
     received: 'Pagamento recebido',
+    st_ready: 'Pronto',
+    st_waiting: 'Em espera',
+    st_received: 'Recebido',
+    st_off: 'Indisponível',
     ed_entity: 'Entidade de estado do pagamento (opcional)',
     ed_illustration: 'Cabeçalho ilustrado',
     ed_illustration_theme: 'Tema da ilustração',
@@ -342,6 +378,10 @@ var WeroI18n = {
     card_desc: 'Kod QR Wero, bez CDN',
     waiting: 'Oczekiwanie na płatność',
     received: 'Płatność otrzymana',
+    st_ready: 'Gotowe',
+    st_waiting: 'Oczekiwanie',
+    st_received: 'Otrzymano',
+    st_off: 'Niedostępne',
     ed_entity: 'Encja stanu płatności (opcjonalnie)',
     ed_illustration: 'Ilustrowany nagłówek',
     ed_illustration_theme: 'Motyw ilustracji',
@@ -376,6 +416,10 @@ var WeroI18n = {
     card_desc: 'Cod QR Wero, fără CDN',
     waiting: 'Se așteaptă plata',
     received: 'Plată primită',
+    st_ready: 'Pregătit',
+    st_waiting: 'În așteptare',
+    st_received: 'Primit',
+    st_off: 'Indisponibil',
     ed_entity: 'Entitate de stare a plății (opțional)',
     ed_illustration: 'Antet ilustrat',
     ed_illustration_theme: 'Tema ilustrației',
@@ -410,6 +454,10 @@ var WeroI18n = {
     card_desc: 'Wero-QR-kode, uden CDN',
     waiting: 'Venter på betaling',
     received: 'Betaling modtaget',
+    st_ready: 'Klar',
+    st_waiting: 'Afventer',
+    st_received: 'Modtaget',
+    st_off: 'Utilgængelig',
     ed_entity: 'Enhed for betalingsstatus (valgfri)',
     ed_illustration: 'Illustreret overskrift',
     ed_illustration_theme: 'Illustrationstema',
@@ -444,6 +492,10 @@ var WeroI18n = {
     card_desc: 'Wero-QR-kod, utan CDN',
     waiting: 'Väntar på betalning',
     received: 'Betalning mottagen',
+    st_ready: 'Redo',
+    st_waiting: 'Väntar',
+    st_received: 'Mottagen',
+    st_off: 'Otillgänglig',
     ed_entity: 'Entitet för betalningsstatus (valfri)',
     ed_illustration: 'Illustrerat sidhuvud',
     ed_illustration_theme: 'Illustrationstema',
@@ -478,6 +530,10 @@ var WeroI18n = {
     card_desc: 'QR код на Wero, без CDN',
     waiting: 'Изчаква се плащане',
     received: 'Плащането е получено',
+    st_ready: 'Готово',
+    st_waiting: 'Изчакване',
+    st_received: 'Получено',
+    st_off: 'Недостъпно',
     ed_entity: 'Обект за статус на плащането (по избор)',
     ed_illustration: 'Илюстрирана заглавна част',
     ed_illustration_theme: 'Тема на илюстрацията',
@@ -512,6 +568,10 @@ var WeroI18n = {
     card_desc: 'QR-код Wero, без CDN',
     waiting: 'Ожидание платежа',
     received: 'Платёж получен',
+    st_ready: 'Готово',
+    st_waiting: 'Ожидание',
+    st_received: 'Получено',
+    st_off: 'Недоступно',
     ed_entity: 'Объект статуса платежа (необязательно)',
     ed_illustration: 'Иллюстрированный заголовок',
     ed_illustration_theme: 'Тема иллюстрации',
@@ -546,6 +606,10 @@ var WeroI18n = {
     card_desc: 'QR-код Wero, без CDN',
     waiting: 'Очікування платежу',
     received: 'Платіж отримано',
+    st_ready: 'Готово',
+    st_waiting: 'Очікування',
+    st_received: 'Отримано',
+    st_off: 'Недоступно',
     ed_entity: 'Сутність статусу платежу (необов’язково)',
     ed_illustration: 'Ілюстрований заголовок',
     ed_illustration_theme: 'Тема ілюстрації',
@@ -580,6 +644,10 @@ var WeroI18n = {
     card_desc: 'Wero QR-kód, CDN nélkül',
     waiting: 'Fizetésre vár',
     received: 'Fizetés megérkezett',
+    st_ready: 'Kész',
+    st_waiting: 'Várakozik',
+    st_received: 'Megérkezett',
+    st_off: 'Nem elérhető',
     ed_entity: 'Fizetési állapot entitás (opcionális)',
     ed_illustration: 'Illusztrált fejléc',
     ed_illustration_theme: 'Illusztráció témája',
@@ -614,6 +682,10 @@ var WeroI18n = {
     card_desc: 'QR kód Wero, bez CDN',
     waiting: 'Čaká sa na platbu',
     received: 'Platba prijatá',
+    st_ready: 'Pripravené',
+    st_waiting: 'Čaká sa',
+    st_received: 'Prijaté',
+    st_off: 'Nedostupné',
     ed_entity: 'Entita stavu platby (voliteľné)',
     ed_illustration: 'Ilustrovaná hlavička',
     ed_illustration_theme: 'Téma ilustrácie',
@@ -648,6 +720,10 @@ var WeroI18n = {
     card_desc: 'QR kód Wero, bez CDN',
     waiting: 'Čeká se na platbu',
     received: 'Platba přijata',
+    st_ready: 'Připraveno',
+    st_waiting: 'Čeká se',
+    st_received: 'Přijato',
+    st_off: 'Nedostupné',
     ed_entity: 'Entita stavu platby (volitelné)',
     ed_illustration: 'Ilustrovaná hlavička',
     ed_illustration_theme: 'Motiv ilustrace',
@@ -682,6 +758,10 @@ var WeroI18n = {
     card_desc: 'Koda QR Wero, brez CDN',
     waiting: 'Čakanje na plačilo',
     received: 'Plačilo prejeto',
+    st_ready: 'Pripravljeno',
+    st_waiting: 'V čakanju',
+    st_received: 'Prejeto',
+    st_off: 'Ni na voljo',
     ed_entity: 'Entiteta stanja plačila (neobvezno)',
     ed_illustration: 'Ilustrirana glava',
     ed_illustration_theme: 'Tema ilustracije',
@@ -716,6 +796,10 @@ var WeroI18n = {
     card_desc: 'Wero QR kods, bez CDN',
     waiting: 'Gaida maksājumu',
     received: 'Maksājums saņemts',
+    st_ready: 'Gatavs',
+    st_waiting: 'Gaida',
+    st_received: 'Saņemts',
+    st_off: 'Nav pieejams',
     ed_entity: 'Maksājuma statusa entītija (neobligāti)',
     ed_illustration: 'Ilustrēta galvene',
     ed_illustration_theme: 'Ilustrācijas tēma',
@@ -750,6 +834,10 @@ var WeroI18n = {
     card_desc: 'Κωδικός QR Wero, χωρίς CDN',
     waiting: 'Αναμονή πληρωμής',
     received: 'Η πληρωμή ελήφθη',
+    st_ready: 'Έτοιμο',
+    st_waiting: 'Σε αναμονή',
+    st_received: 'Ελήφθη',
+    st_off: 'Μη διαθέσιμο',
     ed_entity: 'Οντότητα κατάστασης πληρωμής (προαιρετικό)',
     ed_illustration: 'Εικονογραφημένη κεφαλίδα',
     ed_illustration_theme: 'Θέμα εικονογράφησης',
@@ -821,7 +909,7 @@ function weroMiniScene(uid) {
     <g class="wc-lamp"><circle class="wc-halo" cx="20" cy="16" r="12" fill="url(#wc-glow-${uid})"/><path class="wc-cord" d="M20 0v11"/><path class="wc-shade" d="M15 16a5 4.5 0 0 1 10 0Z"/><circle class="wc-bulb" cx="20" cy="16.5" r="1.4"/></g>
     <rect class="wc-cf" x="4" y="71.4" width="126" height="8.6"/>
     <rect class="wc-ct" x="0" y="68" width="130" height="3.6" rx="1.2"/>
-    <rect class="wc-stand" x="62" y="66" width="12" height="2.4" rx=".8"/>
+    <rect class="wc-stand" x="93" y="66" width="12" height="2.4" rx=".8"/>
     <g transform="translate(20 68)"><rect class="wc-term" x="-9" y="-22" width="18" height="22" rx="3"/><rect class="wc-scr" x="-6" y="-19" width="12" height="8" rx="1"/>
       <g class="wc-dots"><circle cx="-3" cy="-15" r=".9"/><circle cx="0" cy="-15" r=".9"/><circle cx="3" cy="-15" r=".9"/></g>
       <g class="wc-keys">${keys}</g></g>
@@ -854,16 +942,27 @@ var WERO_BANNER_STYLE = `
         .hicon[role="button"] { cursor: zoom-in; }
         .hicon:focus-visible { outline: 2px solid var(--primary-color, #03a9f4); outline-offset: 2px; }
         .htitles { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
-        .hname { font-size: 16px; font-weight: 500; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        /* Title row: the title (ellipsis, at least 4 characters) then the status pill, 8 px apart, centred on the title */
+        .hrow { display: flex; align-items: center; gap: 8px; min-width: 0; }
+        .hname { flex: 0 1 auto; min-width: 4ch; font-size: 16px; font-weight: 500; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .banner .chip { max-width: 51%; background: color-mix(in srgb, var(--c) 18%, rgba(255,255,255,.78)); color: color-mix(in srgb, var(--c) 45%, #0d2a45); }
+        .banner.night .chip { background: color-mix(in srgb, var(--c) 30%, rgba(8,18,38,.55)); color: color-mix(in srgb, var(--c) 35%, #ffffff); }
+        /* Narrow card: the pill on its own line under the subtitle; very narrow: the dot alone (the label in its tooltip
+           and for screen readers) */
+        @container (max-width: 260px) { .hrow { display: contents; } .htitles .hsub { order: 2; } .htitles .chip { order: 3; align-self: flex-start; max-width: 100%; } }
+        @container (max-width: 200px) { .htitles .chip { padding: 3px; } .htitles .chip .ptxt { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; } }
         .hsub { font-size: 13px; line-height: 1.25; color: #6b5d1f; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .night .hsub { color: rgba(255,255,255,.8); }
-        .hact { position: absolute; top: 6px; right: 6px; display: flex; gap: 4px; }
-        /* The mini card's column (detail, then copy) stays above the counter: two 22 px buttons */
-        .hact .side { margin: 0; gap: 2px; }
-        .hact .side .zoom, .hact .side #copy { width: 22px; height: 22px; }
-        .hact #copy, .hact .zoom { color: #3d3a2a; background: rgba(255,255,255,.62); }
-        .night .hact #copy, .night .hact .zoom { color: #fff; background: rgba(20,20,28,.5); }
-        .hact ha-icon { color: inherit; }
+        /* The header's buttons on one line in the top right corner: the detail button at the corner, the copy button at its left */
+        .hact { position: absolute; z-index: 2; top: 5px; right: 5px; display: flex; gap: 4px; }
+        .hact #copy, .hact .zoom { all: unset; position: relative; flex: none; cursor: pointer; width: 24px; height: 24px; border-radius: 50%; margin: 0;
+                                   display: grid; place-items: center; color: #33506b; background: rgba(255,255,255,.55);
+                                   box-shadow: inset 0 0 0 1px rgba(255,255,255,.7); backdrop-filter: blur(4px); }
+        .night .hact #copy, .night .hact .zoom { color: #fff; background: rgba(255,255,255,.12); box-shadow: inset 0 0 0 1px rgba(255,255,255,.2); }
+        .hact #copy:hover, .hact .zoom:hover { background: rgba(255,255,255,.75); }
+        .night .hact #copy:hover, .night .hact .zoom:hover { background: rgba(255,255,255,.22); }
+        .hact #copy:focus-visible, .hact .zoom:focus-visible { outline: 2px solid var(--primary-color, #03a9f4); outline-offset: 2px; }
+        .hact ha-icon, .hact #copy ha-icon { color: inherit; --mdc-icon-size: 16px; }
         .wc-aw { fill: #ffe600; } .wc-aw.alt { fill: #fff; } .wc-awbar { fill: #f5b400; }
         .night .wc-aw { fill: #6b6100; } .night .wc-aw.alt { fill: #4a4860; } .night .wc-awbar { fill: #8a7e10; }
         .wc-cord { stroke: #6b6650; stroke-width: .8; } .wc-shade { fill: #1d1c1c; } .wc-bulb { fill: #fff3c4; } .wc-halo { display: none; }
@@ -889,17 +988,16 @@ var WERO_BANNER_STYLE = `
         .wc-scene.mini { width: 130px; -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 8%); mask-image: linear-gradient(90deg, transparent 0, #000 8%); }
         .wc-stand { fill: #8a7a3a; } .night .wc-stand { fill: #23222b; }
         .banner .htext.mini { right: 120px; }
-        .banner .qr-wrap.thumb { position: absolute; z-index: 1; right: 32px; bottom: 24px; border-radius: 6px;
+        /* The QR under the buttons' line, centred under the detail and copy buttons */
+        .banner .qr-wrap.thumb { position: absolute; z-index: 1; right: 8px; top: 32px; border-radius: 6px;
                                  box-shadow: 0 0 0 2px #fff, 0 1px 4px 2px rgba(0,0,0,.18); }
         .banner.night .qr-wrap.thumb { box-shadow: 0 0 0 2px #e6e6e6, 0 1px 4px 2px rgba(0,0,0,.45); }
-        .banner .qr-wrap.thumb svg { width: 60px; }
+        .banner .qr-wrap.thumb svg { width: 46px; }
         .banner .qr-wrap.thumb:focus-visible { outline: 2px solid var(--primary-color, #03a9f4); outline-offset: 4px; }
-        @container (max-width: 300px) { .wc-scene.mini .wc-lamp, .wc-scene.mini .wc-ok, .wc-scene.mini g[transform] { display: none; } .banner .htext.mini { right: 92px; gap: 8px; } .banner .qr-wrap.thumb svg { width: 56px; } .banner .htext.mini .hicon { width: 36px; height: 36px; } }
+        @container (max-width: 300px) { .wc-scene.mini .wc-lamp, .wc-scene.mini .wc-ok, .wc-scene.mini g[transform] { display: none; } .banner .htext.mini { right: 62px; gap: 8px; } .banner .htext.mini .hicon { width: 36px; height: 36px; } }
         /* Very narrow mini card (copy button hidden): the QR under the detail button, at the right edge */
         @container (max-width: 200px) {
           .wc-scene.mini { display: none; }
-          .banner .qr-wrap.thumb { right: 8px; bottom: 14px; }
-          .banner .qr-wrap.thumb svg { width: 46px; }
           .banner .htext.mini { left: 8px; right: 60px; gap: 6px; }
           .banner .htext.mini .hname { font-size: 14px; }
           .banner .htext.mini .hicon { width: 32px; height: 32px; }
@@ -1085,7 +1183,18 @@ class WeroCard extends HTMLElement {
     var copy = weroEsc(this._t('copy'));
     var zoom = weroEsc(this._t('zoom'));
     // show_title: false keeps the (empty) name, which pushes the buttons to the right
+    var status = this._status();
+    var night = this._isNight();
+    this._sig = `${status}|${night}`;
+    // The badge's colour follows the payment status (classic header without the logo, illustrated header)
+    var stColor = { ready: 'var(--primary-color, #03a9f4)', waiting: 'var(--primary-color, #03a9f4)', received: 'var(--success-color, #43a047)', off: 'var(--disabled-text-color, #9e9e9e)' }[status];
+    // The status pill (same colour as the icon): a dot and a short label; the label stays in its tooltip and for
+    // screen readers when a very narrow card shows the dot alone
+    var stLabel = weroEsc(this._t(`st_${status}`));
+    var chip = `<span class="chip" style="--c:${stColor}" title="${stLabel}"><span class="dot"></span><span class="ptxt">${stLabel}</span></span>`;
+    // show_title: false keeps the (empty) name, which pushes the buttons to the right
     var title = c.show_title ? `<span class="name" title="${weroEsc(c.title)}">${weroEsc(c.title)}</span>` : '<span class="name"></span>';
+    title = `<div class="trow">${title}${chip}</div>`;
     // The SVG is aria-hidden inside the role=button wrapper: its role=img would otherwise be read as part of the button
     var qrEl = `<div class="qr-wrap${compact ? ' thumb' : ''}" id="qr" role="button" tabindex="0" title="${zoom}" aria-label="${zoom}"${qrStyle}>${svg.replace('<svg ', '<svg aria-hidden="true" ')}</div>`;
     var body = compact
@@ -1096,30 +1205,29 @@ class WeroCard extends HTMLElement {
         <div class="hint">${weroEsc(this._t('hint'))}</div>`;
     var copyBtn = `<button id="copy" title="${copy}" aria-label="${copy}"><ha-icon icon="mdi:content-copy" id="ico"></ha-icon></button>`;
     // Compact view: the copy button goes under the detail button, so the thumbnail sits right next to that column
-    var actions = compact ? `<div class="side">${this._zoomButton()}${copyBtn}</div>` : copyBtn + this._zoomButton();
-    var status = this._status();
-    var night = this._isNight();
-    this._sig = `${status}|${night}`;
-    // The badge's colour follows the payment status (classic header without the logo, illustrated header)
-    var stColor = { ready: 'var(--primary-color, #03a9f4)', waiting: 'var(--primary-color, #03a9f4)', received: 'var(--success-color, #43a047)', off: 'var(--disabled-text-color, #9e9e9e)' }[status];
+    // The other buttons line up at the left of the detail button, on its top line
+    var actions = copyBtn + this._zoomButton();
     var header;
     if (c.illustration) {
       // Illustrated header: the round QR icon (in the status colour) and the title / status on the background at
       // the left, the shop counter at the right, a 10 px Wero-yellow strip edge to edge at the bottom. The compact
       // mini card shows its QR code itself on the counter (it opens the full screen QR, like the big one).
-      var subText = status === 'received' ? this._t('received') : status === 'waiting' ? this._t('waiting') : c.name || 'Wero';
+      // The status is in the pill: the subtitle names the payee
+      var subText = c.name || 'Wero';
       var hsub = `<span class="hsub" title="${weroEsc(subText)}">${weroEsc(subText)}</span>`;
       var htitle = c.show_title ? `<span class="hname" title="${weroEsc(c.title)}">${weroEsc(c.title)}</span>` : '';
       var icon = '<ha-icon icon="mdi:qrcode"></ha-icon>';
       header = `<div class="banner st-${status}${night ? ' night' : ''}" style="--wc-st:${stColor}">
           ${compact ? weroMiniScene(this._uid) : weroScene(this._uid, c.logo)}<div class="wc-ground"></div>
-          <div class="htext${compact ? ' mini' : ''}"><div class="hicon">${icon}</div><div class="htitles">${htitle}${hsub}</div></div>
+          <div class="htext${compact ? ' mini' : ''}"><div class="hicon">${icon}</div><div class="htitles"><div class="hrow">${htitle}${chip}</div>${hsub}</div></div>
           ${compact ? qrEl : ''}<div class="hact">${actions}</div>
         </div>`;
     } else {
       if (compact) {
         var sub = c.name ? `<span class="sub" title="${weroEsc(c.name)}">${weroEsc(c.name)}</span>` : '';
         title = `<div class="txt">${title}${sub}</div>${qrEl}`;
+      } else {
+        title = `<div class="txt">${title}</div>`;
       }
       header = `<div class="header">
           ${c.logo ? `<img class="logo" src="${WERO_LOGO}" alt="Wero">` : `<div class="badge" style="--c:${stColor}"><ha-icon icon="mdi:qrcode-scan"></ha-icon></div>`}
@@ -1176,6 +1284,14 @@ class WeroCard extends HTMLElement {
         ha-card.mini .header { margin-bottom: 0; }
         .txt { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
         .txt .name { flex: none; min-width: 0; }
+        /* The title and the status pill on one row; the pill goes to its own line when the title would lose its 4 characters */
+        .trow { display: flex; flex-wrap: wrap; align-items: center; column-gap: 8px; row-gap: 2px; min-width: 0; }
+        .trow .name { flex: 0 1 auto; min-width: 4ch; }
+        .chip { --c: var(--primary-color, #03a9f4); display: inline-flex; align-items: center; gap: 4px; flex: none; max-width: 100%; box-sizing: border-box;
+                padding: 1px 8px; border-radius: 12px; font-size: 11px; font-weight: 500; line-height: 16px; white-space: nowrap; overflow: hidden;
+                background: color-mix(in srgb, var(--c) 15%, transparent); color: color-mix(in srgb, var(--c) 40%, var(--primary-text-color, #212121)); }
+        .chip .ptxt { display: block; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+        .dot { width: 7px; height: 7px; border-radius: 50%; flex: none; background: var(--c); }
         .sub { font-size: 13px; line-height: 1.25; color: var(--secondary-text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .qr-wrap.thumb { flex: none; border-radius: 8px; }
         .qr-wrap.thumb svg { width: 64px; display: block; }
@@ -1184,10 +1300,8 @@ class WeroCard extends HTMLElement {
         .zoom ha-icon { color: inherit; --mdc-icon-size: 16px; }
         .zoom:hover { background: color-mix(in srgb, var(--secondary-text-color) 14%, transparent); color: var(--primary-text-color); }
         .zoom:focus-visible { outline: 2px solid var(--primary-color, #03a9f4); outline-offset: 1px; }
-        /* The detail button with the copy button under it, in a column at the top right (the 4 px of the button's own margin) */
-        .side { flex: none; align-self: flex-start; display: flex; flex-direction: column; gap: 4px; margin: -4px -4px -4px 0; }
-        .side .zoom { margin: 0; }
-        .side #copy ha-icon { --mdc-icon-size: 16px; }
+        ha-card.mini #copy ha-icon { --mdc-icon-size: 16px; }
+        ha-card.mini .header > #copy { align-self: flex-start; margin: -4px 0; }
         /* A very narrow mini card: a smaller thumbnail, the copy button gives way (the full card keeps it) */
         @container (max-width: 200px) {
           ha-card.mini { padding: 10px; }
