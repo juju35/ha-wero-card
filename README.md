@@ -55,7 +55,7 @@ The card needs no integration. The optional payment status `entity` can come fro
 
 - [Input boolean](https://www.home-assistant.io/integrations/input_boolean/) — a helper switched on by you or an automation (e.g. on your bank's notification)
 - [Template](https://www.home-assistant.io/integrations/template/) — a `binary_sensor` built from your own sensors
-- [Sun](https://www.home-assistant.io/integrations/sun/) — `sun.sun` switches the illustration to night (`illustration_theme: auto`)
+- [Sun](https://www.home-assistant.io/integrations/sun/) — `sun.sun` below the horizon (or a dark theme) switches the illustration to night (`illustration_theme: auto`)
 
 ## Installation
 

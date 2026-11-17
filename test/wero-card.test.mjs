@@ -802,7 +802,7 @@ test("editor: the detail button toggle only in the mini card's editor, true drop
     assert.equal(m.editor._form.data.illustration, true);
     assert.equal(m.editor._form.data.illustration_theme, "auto");
     const theme = m.editor._form.schema.find((f) => f.name === "illustration_theme");
-    assert.deepEqual(Array.from(theme.selector.select.options, (o) => o.label), ["Automatic (sun / dark mode)", "Day", "Night"]);
+    assert.deepEqual(Array.from(theme.selector.select.options, (o) => o.label), ["Automatic (sun or dark theme)", "Day", "Night"]);
     m.editor._valueChanged({ detail: { value: { url: URL_, illustration: true, illustration_theme: "auto" } } });
     assert.equal(m.editor._config.illustration, undefined);
     assert.equal(m.editor._config.illustration_theme, undefined);
