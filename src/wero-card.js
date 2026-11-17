@@ -923,7 +923,7 @@ function weroMiniScene(uid) {
 var WERO_BANNER_STYLE = `
         ha-card[data-ill] { padding-top: 0; }
         ha-card.mini[data-ill] { padding: 0; }
-        .banner { --sw: min(200px, 62cqw); position: relative; overflow: hidden; flex: none; align-self: stretch; height: 90px; margin: 0 -12px;
+        .banner { --sw: min(200px, 62cqw); container-type: inline-size; position: relative; overflow: hidden; flex: none; align-self: stretch; height: 90px; margin: 0 -12px;
                   container-type: inline-size; border-radius: var(--ha-card-border-radius, 12px) var(--ha-card-border-radius, 12px) 0 0;
                   background: #fff7d6; color: #1d1c1c; }
         ha-card.mini .banner { margin: 0; border-radius: var(--ha-card-border-radius, 12px); }
@@ -986,6 +986,9 @@ var WERO_BANNER_STYLE = `
         .st-off .wc-tap { opacity: .6; }
         /* Narrow card: a smaller counter, so that the title keeps its room */
         @container (max-width: 300px) { .wc-scene, .htext { --sw: 50cqw; } .wc-awning, .wc-lamp { display: none; } }
+        /* Narrower still: the yellow strip alone, so that the title stays whole and the status pill keeps its label (the
+           text stops short of the buttons' corner) */
+        @container (max-width: 270px) { .wc-scene:not(.mini) { display: none; } .banner .htext:not(.mini) { right: 60px; } }
         /* Mini card: its QR code on the counter at the right, big enough to be scanned from the card (a white frame
            around its own Wero-yellow quiet zone), the detail / copy column at its right, the text up to the terminal */
         .wc-scene.mini { width: 130px; -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 8%); mask-image: linear-gradient(90deg, transparent 0, #000 8%); }
