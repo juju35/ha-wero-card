@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.14.2 - 2026-11-20
+
+### Fixes
+- The status pill is placed from the card's first frame: it was measured before Home Assistant's `<ha-card>` had laid out its content (0 px wide), so for a frame it showed on the wrong line (under the title, or beside it when it belongs under it), sometimes changing the card's height, before jumping to its place. It is now fitted once the card is drawn.
+- A state update patches the card in place instead of drawing it again — the banner's picture, the Wero logo and their animations keep their nodes, the full screen QR code stays open, and the card keeps its height: a re-created card is laid out again, which can make the dashboard jump (scroll anchoring). Updates of other entities still touch nothing.
+- Mini card: the header icon keeps the full card's size (40 px) on narrow cards too, as on the other ha-* mini cards (it shrank to 36 px under 300 px and 32 px under 200 px).
+
+### Maintenance
+- README: a row with the Wero logo (linking to Wero's site) under the repo's own logo, and a line saying that every option applies to both cards (except `zoom`, mini card only) and is editable in the visual editor.
+
 ## 1.14.1 - 2026-11-18
 
 ### Fixes
