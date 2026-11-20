@@ -10,6 +10,8 @@
 
 <p align="center"><img src="https://raw.githubusercontent.com/juju35/ha-wero-card/main/images/icon.svg" alt="Wero QR Card" width="120"></p>
 
+<p align="center"><a href="https://wero-wallet.eu"><img src="https://raw.githubusercontent.com/juju35/ha-wero-card/main/images/wero.svg" alt="Wero" height="36"></a></p>
+
 Custom Lovelace card for Home Assistant that displays your [Wero](https://wero-wallet.eu) QR code, so guests can pay you back without asking for your phone number or IBAN.
 
 **Zero external dependencies** — the QR code is generated in pure JavaScript with an embedded Reed-Solomon encoder. No CDN, no network requests.
@@ -122,6 +124,8 @@ zoom: true
 The mini card takes the same options as the full card, plus `zoom`. With the illustrated header (default), it is the 90 px header alone: the QR code itself stands on the shop counter at the right, framed in white around its quiet zone (day and night), under the copy and detail buttons of the top right corner; a tap on it opens it full screen. With `illustration: false`, it shows the logo, the title and the payee name on one row, with a small QR thumbnail on the right. A tap on the thumbnail opens the QR code full screen, like the big one of the full card. The detail button (top right) switches to the full card; the button, or a click anywhere outside the card, brings the compact view back. The copy button sits at the left of the detail button, on its line; on a card 200 px wide or less the thumbnail gets smaller and the copy button gives way (the full card keeps it).
 
 ### Options reference
+
+Every option applies to **both** cards (`wero-card` and `wero-mini-card`) except `zoom` (mini card only), and every one is editable in the visual editor — none is YAML only.
 
 | Option | Required | Default | Description |
 |---|---|---|---|
