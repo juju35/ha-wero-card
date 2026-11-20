@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.14.2 - 2026-11-20
+
+### Fixes
+- A state update patches the card in place instead of drawing it again — the banner's picture, the Wero logo and their animations keep their nodes, the full screen QR code stays open, and the card keeps its height: a re-created card is laid out again, which can make the dashboard jump (scroll anchoring). Updates of other entities still touch nothing.
+
 ## 1.14.1 - 2026-11-18
 
 ### Fixes
