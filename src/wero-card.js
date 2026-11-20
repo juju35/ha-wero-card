@@ -1057,6 +1057,52 @@ function weroEsc(s) {
 }
 
 // ── wero-card ─────────────────────────────────────────────────────────────────
+// Shadow DOM patching: a redraw updates the nodes already on the page (text, attributes, classes) instead of replacing
+// them, so that a state update never re-creates the pictures (SVG scenes, logos) nor restarts their animations, and the
+// card keeps its height (a re-created card is laid out again, which can move the dashboard under the reader's eyes).
+// An open <dialog> keeps its `open` state: it is driven by showModal() / close().
+function weroMorphAttrs(cur, next) {
+  for (var a of Array.from(cur.attributes)) {
+    if (!next.hasAttribute(a.name) && !(a.name === 'open' && cur.localName === 'dialog')) cur.removeAttribute(a.name);
+  }
+  for (var b of Array.from(next.attributes)) {
+    if (cur.getAttribute(b.name) === b.value) continue;
+    if (b.namespaceURI) cur.setAttributeNS(b.namespaceURI, b.name, b.value);
+    else cur.setAttribute(b.name, b.value);
+  }
+}
+
+function weroMorphChildren(cur, next) {
+  var old = Array.from(cur.childNodes);
+  var fresh = Array.from(next.childNodes);
+  fresh.forEach((n, i) => {
+    var o = old[i];
+    var ref = cur.childNodes[i] || null;
+    if (!o || o.nodeType !== n.nodeType || o.nodeName !== n.nodeName) {
+      cur.insertBefore(n, ref);
+      return;
+    }
+    if (o !== ref) cur.insertBefore(o, ref);
+    if (n.nodeType === 1) {
+      weroMorphAttrs(o, n);
+      weroMorphChildren(o, n);
+    } else if (o.nodeValue !== n.nodeValue) o.nodeValue = n.nodeValue;
+  });
+  while (cur.childNodes.length > fresh.length) cur.removeChild(cur.lastChild);
+}
+
+// Gives `root` (a shadow root or an element) the content of `html`, patching what is already there (a plain
+// innerHTML where there is no DOM to patch, as in the unit tests' stubs).
+function weroMorph(root, html) {
+  var tpl = root.childNodes && typeof document !== 'undefined' && document.createElement?.('template');
+  if (!tpl?.content) {
+    root.innerHTML = html;
+    return;
+  }
+  tpl.innerHTML = html;
+  weroMorphChildren(root, tpl.content);
+}
+
 class WeroCard extends HTMLElement {
   static getConfigElement() {
     return document.createElement('wero-card-editor');
@@ -1276,16 +1322,14 @@ class WeroCard extends HTMLElement {
           ${actions}
         </div>`;
     }
-    // A re-render (e.g. language change via `set hass`) replaces an open zoom
-    // dialog: close it cleanly first and reopen the new one afterwards
+    // The redraw patches the nodes in place (weroMorph): an open full screen QR stays open, its QR copy is put back
+    // below; the keyboard focus is given back to the same control if it was lost, without scrolling the page
     var prevDlg = this.shadowRoot.getElementById('zoom');
     var wasOpen = !!(prevDlg && prevDlg.open);
-    if (wasOpen) prevDlg.close();
-    // innerHTML drops the keyboard focus: it is given back to the same control afterwards, without scrolling the page
     var focusId = this.shadowRoot.activeElement?.id;
     if (focusId !== 'copy' && focusId !== 'qr') focusId = null;
 
-    this.shadowRoot.innerHTML = `
+    weroMorph(this.shadowRoot, `
       <style>
         :host { display: block; height: 100%; }
         ha-card { height: 100%; box-sizing: border-box; padding: 12px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 10px; }
@@ -1367,11 +1411,13 @@ ${c.illustration ? WERO_BANNER_STYLE : ''}
         ${header}
         ${body}
         <span class="sr" id="live" aria-live="polite"></span>
-      </ha-card>`;
+      </ha-card>`);
 
     this.shadowRoot.getElementById('copy').onclick = () => this._copy();
     var qr = this.shadowRoot.getElementById('qr');
     var dlg = this.shadowRoot.getElementById('zoom');
+    // A dialog that was replaced (the mini card switching views) is closed: it would come back open elsewhere
+    if (wasOpen && prevDlg !== dlg) prevDlg.close();
     var open = () => {
       // The dialog gets its copy of the QR (a clone, the SVG path can be big) on first open only
       // The button's label covers its QR (hidden from screen readers there); the full screen one is an image again
@@ -1388,7 +1434,7 @@ ${c.illustration ? WERO_BANNER_STYLE : ''}
     // Escape is handled natively by <dialog>; a click anywhere (QR or backdrop) closes it
     if (dlg) dlg.onclick = () => dlg.close();
     if (wasOpen) open();
-    else if (focusId) this.shadowRoot.getElementById(focusId)?.focus?.({ preventScroll: true });
+    else if (focusId && this.shadowRoot.activeElement?.id !== focusId) this.shadowRoot.getElementById(focusId)?.focus?.({ preventScroll: true });
     this._fitPill();
   }
 

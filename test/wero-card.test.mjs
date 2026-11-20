@@ -252,25 +252,39 @@ test("the full screen QR dialog draws no focus ring, in the card and the mini ca
   }
 });
 
-test("a re-render closes an open zoom dialog cleanly and reopens it", () => {
+test("a re-render keeps an open zoom dialog open, and reopens a replaced one", () => {
   const card = new WeroCard();
   card.setConfig({ url: "https://share.weropay.eu/p/1/c/AbCdEfGhIj" });
   const calls = [];
-  const dlg = {
-    open: true,
-    firstChild: {},
-    close: () => {
-      dlg.open = false;
-      calls.push("close");
-    },
-    showModal: () => {
-      dlg.open = true;
-      calls.push("showModal");
-    },
+  const dialog = (name) => {
+    const d = {
+      open: true,
+      firstChild: {},
+      close: () => {
+        d.open = false;
+        calls.push(`close ${name}`);
+      },
+      showModal: () => {
+        d.open = true;
+        calls.push(`showModal ${name}`);
+      },
+    };
+    return d;
   };
-  card.shadowRoot.getElementById = (id) => (id === "zoom" ? dlg : {});
+  // Patched in place: the same dialog stays open, nothing closes or reopens it
+  const same = dialog("same");
+  card.shadowRoot.getElementById = (id) => (id === "zoom" ? same : {});
   card._render();
-  assert.deepEqual(calls, ["close", "showModal"]);
+  assert.deepEqual(calls, []);
+  assert.equal(same.open, true);
+  // Replaced: the old one is closed, the new one opened
+  const before = dialog("old");
+  const after = Object.assign(dialog("new"), { open: false });
+  let rendered = false;
+  card.shadowRoot.getElementById = (id) => (id === "zoom" ? (rendered ? after : before) : {});
+  Object.defineProperty(card.shadowRoot, "innerHTML", { configurable: true, set() { rendered = true; }, get() { return ""; } });
+  card._render();
+  assert.deepEqual(calls, ["close old", "showModal new"]);
 });
 
 const LANGS = [
@@ -603,6 +617,8 @@ test("a re-render keeps the keyboard focus on the copy button or the QR, without
     const focused = [];
     card.shadowRoot.activeElement = { id };
     card.shadowRoot.getElementById = (i) => ({ id: i, focus: (opts) => focused.push(JSON.stringify([i, opts])) });
+    // A replaced node loses the focus (a node patched in place keeps it, and is not focused again)
+    Object.defineProperty(card.shadowRoot, "innerHTML", { configurable: true, set() { card.shadowRoot.activeElement = null; }, get() { return ""; } });
     card._render();
     // preventScroll: giving the focus back must not scroll the dashboard to the card
     assert.deepEqual(focused, [JSON.stringify([id, { preventScroll: true }])], id);
@@ -1024,4 +1040,92 @@ test("status pill place: beside the whole title, else under the subtitle, else i
   assert.equal(placed({ title: 300, pill: 60, row: 200, bottom: 85, ground: null }), "data-wrap");
   // A card of 200 px or less: the dot alone
   assert.equal(placed({ title: 50, pill: 60, row: 180, card: 190 }), "data-dot");
+});
+
+// ── DOM patching (layout shift): a redraw keeps the nodes on the page ───────────────────────────────────────────
+// A tiny DOM, enough for the patch helper: elements with attributes and children, and text nodes.
+class FakeNode {
+  constructor(type, name, value = null) {
+    this.nodeType = type;
+    this.nodeName = name.toUpperCase();
+    this.localName = name.toLowerCase();
+    this.nodeValue = value;
+    this.childNodes = [];
+    this.parentNode = null;
+    this.attrs = new Map();
+  }
+  get attributes() {
+    return [...this.attrs].map(([name, value]) => ({ name, value, namespaceURI: null }));
+  }
+  hasAttribute(n) {
+    return this.attrs.has(n);
+  }
+  getAttribute(n) {
+    return this.attrs.has(n) ? this.attrs.get(n) : null;
+  }
+  setAttribute(n, v) {
+    this.attrs.set(n, String(v));
+  }
+  removeAttribute(n) {
+    this.attrs.delete(n);
+  }
+  get lastChild() {
+    return this.childNodes[this.childNodes.length - 1] || null;
+  }
+  insertBefore(n, ref) {
+    if (n.parentNode) n.parentNode.removeChild(n);
+    const i = ref ? this.childNodes.indexOf(ref) : this.childNodes.length;
+    this.childNodes.splice(i, 0, n);
+    n.parentNode = this;
+    return n;
+  }
+  removeChild(n) {
+    this.childNodes.splice(this.childNodes.indexOf(n), 1);
+    n.parentNode = null;
+    return n;
+  }
+}
+const fakeEl = (name, attrs = {}, ...kids) => {
+  const e = new FakeNode(1, name);
+  for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+  for (const k of kids) e.insertBefore(typeof k === "string" ? new FakeNode(3, "#text", k) : k, null);
+  return e;
+};
+
+test("a redraw patches the card in place: pictures, images and texts keep their nodes", () => {
+  const patch = vm.runInContext("weroMorphChildren", ctx);
+  const img = fakeEl("img", { src: "logo.svg", alt: "" });
+  const svg = fakeEl("svg", { class: "scene" }, fakeEl("path", { d: "M0 0" }));
+  const label = fakeEl("span", { class: "t" }, "3 min");
+  const root = fakeEl("div", {}, fakeEl("div", { class: "banner st-ok", "data-wrap": "" }, svg, img), label, fakeEl("p", {}, "gone"));
+  const next = fakeEl("div", {}, fakeEl("div", { class: "banner st-late" }, fakeEl("svg", { class: "scene" }, fakeEl("path", { d: "M0 0" })), fakeEl("img", { src: "logo.svg", alt: "" })), fakeEl("span", { class: "t" }, "2 min"));
+  const banner = root.childNodes[0];
+  const text = label.childNodes[0];
+  patch(root, next);
+  // The same nodes, updated: no picture or image is re-created (they would be laid out again)
+  assert.equal(root.childNodes[0], banner);
+  assert.equal(banner.childNodes[0], svg);
+  assert.equal(banner.childNodes[1], img);
+  assert.equal(root.childNodes[1], label);
+  assert.equal(label.childNodes[0], text);
+  assert.equal(text.nodeValue, "2 min");
+  assert.equal(banner.getAttribute("class"), "banner st-late");
+  assert.equal(banner.hasAttribute("data-wrap"), false);
+  // What the new HTML no longer has is removed
+  assert.equal(root.childNodes.length, 2);
+});
+
+test("a redraw replaces only the nodes whose element changed, and keeps an open dialog open", () => {
+  const patch = vm.runInContext("weroMorphChildren", ctx);
+  const dlg = fakeEl("dialog", { id: "zoom", open: "" });
+  const keep = fakeEl("div", { class: "a" });
+  const root = fakeEl("div", {}, keep, fakeEl("span", {}, "x"), dlg);
+  const fresh = fakeEl("button", { class: "b" });
+  patch(root, fakeEl("div", {}, fakeEl("div", { class: "a" }), fresh, fakeEl("dialog", { id: "zoom" })));
+  assert.deepEqual(root.childNodes.map((n) => n.localName), ["div", "button", "dialog"]);
+  assert.equal(root.childNodes[0], keep);
+  assert.equal(root.childNodes[1], fresh);
+  assert.equal(root.childNodes[2], dlg);
+  // `open` belongs to showModal() / close(), not to the HTML
+  assert.equal(dlg.hasAttribute("open"), true);
 });
