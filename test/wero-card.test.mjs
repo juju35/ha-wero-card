@@ -1158,3 +1158,30 @@ test("a redraw keeps what a Home Assistant element drew in itself, and replaces 
   assert.equal(card.hasAttribute("class"), false);
   assert.equal(card.childNodes[0].childNodes[0].nodeValue, "b");
 });
+
+// Home Assistant's <ha-card> is a Lit element: it lays out its content from its first update only, a microtask after it
+// is connected. Measured before, the title and the pill are 0 px wide and the pill lands on the wrong line for a frame:
+// the card waits for that update (updateComplete), then measures once.
+test("the status pill is measured only once <ha-card> has drawn its content", async () => {
+  const card = new WeroCard();
+  const asked = [];
+  let drawn;
+  const haCard = { hasUpdated: false, updateComplete: new Promise((done) => (drawn = done)) };
+  const root = {
+    querySelector: (sel) => (sel === "ha-card" ? haCard : (asked.push(sel), null)),
+    querySelectorAll: (sel) => (asked.push(sel), []),
+  };
+  Object.defineProperty(card, "shadowRoot", { value: root });
+  card._fitPill();
+  card._fitPill();
+  await null;
+  assert.deepEqual(asked, [], "nothing measured before <ha-card>'s first update");
+  haCard.hasUpdated = true;
+  drawn(true);
+  await haCard.updateComplete;
+  await null;
+  assert.ok(asked.length > 0, "measured once it is drawn");
+  const once = asked.length;
+  card._fitPill();
+  assert.equal(asked.length, once * 2, "then measured right away, with no wait");
+});
