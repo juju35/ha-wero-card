@@ -1185,3 +1185,15 @@ test("the status pill is measured only once <ha-card> has drawn its content", as
   card._fitPill();
   assert.equal(asked.length, once * 2, "then measured right away, with no wait");
 });
+
+test("the header icon keeps its 40 px size in the mini card at every width (as the full card)", () => {
+  const src = readFileSync(new URL("../src/wero-card.js", import.meta.url), "utf8");
+  assert.match(src, /\.hicon \{ position: relative; width: 40px; height: 40px;/);
+  assert.doesNotMatch(src, /\.hicon \{ width: (?!40px)\d+px/);
+});
+
+test("README: the Wero logo row comes right after the repo's own logo", () => {
+  const readme = readFileSync(new URL("../README.md", import.meta.url), "utf8");
+  assert.match(readme, /images\/icon\.svg"[^\n]*<\/p>\n\n<p align="center"><a href="https:\/\/wero-wallet\.eu"><img src="[^"]*images\/wero\.svg"/);
+  assert.ok(readFileSync(new URL("../images/wero.svg", import.meta.url), "utf8").startsWith("<svg"));
+});

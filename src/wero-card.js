@@ -1006,14 +1006,13 @@ var WERO_BANNER_STYLE = `
         .banner .qr-wrap.thumb svg { width: 56px; }
         .banner .qr-wrap.thumb:focus-visible { outline: 2px solid var(--primary-color, #03a9f4); outline-offset: 4px; }
         /* Narrow mini card: the buttons back on one line, the QR under them at the right edge */
-        @container (max-width: 300px) { .wc-scene.mini .wc-lamp, .wc-scene.mini .wc-ok, .wc-scene.mini g[transform] { display: none; } .banner .htext.mini { right: 62px; gap: 8px; } .banner .htext.mini .hicon { width: 36px; height: 36px; }
+        @container (max-width: 300px) { .wc-scene.mini .wc-lamp, .wc-scene.mini .wc-ok, .wc-scene.mini g[transform] { display: none; } .banner .htext.mini { right: 62px; gap: 8px; }
           ha-card.mini .hact { flex-direction: row; } .banner .qr-wrap.thumb { right: 8px; top: 32px; } .banner .qr-wrap.thumb svg { width: 46px; } }
         /* Very narrow mini card (copy button hidden): the QR under the detail button, at the right edge */
         @container (max-width: 200px) {
           .wc-scene.mini { display: none; }
           .banner .htext.mini { left: 8px; right: 60px; gap: 6px; }
           .banner .htext.mini .hname { font-size: 14px; }
-          .banner .htext.mini .hicon { width: 32px; height: 32px; }
         }
         @keyframes wc-tap { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-26px); } }
         @keyframes wc-ok { 0%, 45% { opacity: 0; } 55%, 100% { opacity: 1; } }
