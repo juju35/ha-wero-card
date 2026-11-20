@@ -31,7 +31,7 @@ Custom Lovelace card for Home Assistant that displays your [Wero](https://wero-w
 - Fully compatible with Home Assistant dark mode and sections dashboards (6 columns by default and at least, so the title stays readable)
 - Keyboard friendly: visible focus on the copy button and the QR code, Enter or Space opens the QR code fullscreen
 - English, French, German, Spanish, Serbian (Cyrillic and Latin), Italian, Dutch, European Portuguese, Polish, Romanian, Danish, Swedish, Bulgarian, Russian, Ukrainian, Hungarian, Slovak, Czech, Slovenian, Latvian and Greek, auto-detected
-- Ready for the Marketplace, single file (~55 KB)
+- Ready for the Marketplace: one bundle (~70 KB, English inline) plus a small file per other language, fetched only when needed
 
 ## Prerequisites
 
@@ -128,7 +128,7 @@ The mini card takes the same options as the full card, plus `zoom`. With the ill
 | `url` | ✅ | — | The `https://` link encoded in your Wero QR code |
 | `title` | ❌ | Auto (i18n) | Card title |
 | `show_title` | ❌ | `true` | Show the title in the header (e.g. `false` under a section heading of your own) |
-| `name` | ❌ | — | Payee name, shown under the QR code |
+| `name` | ❌ | — | Payee name: shown under the QR code, and as the subtitle of the illustrated header (« Wero » without it) |
 | `entity` | ❌ | — | Payment status entity (e.g. an `input_boolean` or a `binary_sensor` set by an automation). `on`, `true`, `received`, `paid`, `completed`, `done` or `success` mean « Received », any other state « Waiting », `unavailable` / `unknown` greys the icon and the pill (« Unavailable »). Without it the pill shows « Ready » |
 | `logo` | ❌ | `true` | Show the Wero logo (on the illustration's counter; in the classic header, `false` shows a generic icon) |
 | `illustration` | ❌ | `true` | Illustrated 90 px header (shop counter, payment terminal); `false` keeps the classic header |
