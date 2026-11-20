@@ -1084,6 +1084,13 @@ class FakeNode {
     n.parentNode = null;
     return n;
   }
+  replaceChild(n, o) {
+    this.insertBefore(n, o);
+    return this.removeChild(o);
+  }
+  get firstChild() {
+    return this.childNodes[0] || null;
+  }
 }
 const fakeEl = (name, attrs = {}, ...kids) => {
   const e = new FakeNode(1, name);
@@ -1128,4 +1135,26 @@ test("a redraw replaces only the nodes whose element changed, and keeps an open 
   assert.equal(root.childNodes[2], dlg);
   // `open` belongs to showModal() / close(), not to the HTML
   assert.equal(dlg.hasAttribute("open"), true);
+});
+
+test("a redraw keeps what a Home Assistant element drew in itself, and replaces it when its attributes change", () => {
+  const patch = vm.runInContext("weroMorphChildren", ctx);
+  // <ha-icon> draws its own content (and may style its own node): the redraw leaves it alone
+  const icon = fakeEl("ha-icon", { icon: "mdi:refresh", style: "display: inline-flex" }, fakeEl("svg"));
+  const root = fakeEl("div", {}, icon);
+  patch(root, fakeEl("div", {}, fakeEl("ha-icon", { icon: "mdi:refresh" })));
+  assert.equal(root.childNodes[0], icon);
+  assert.equal(icon.childNodes.length, 1);
+  assert.equal(icon.getAttribute("style"), "display: inline-flex");
+  // Another icon: a new element, which draws the new icon
+  patch(root, fakeEl("div", {}, fakeEl("ha-icon", { icon: "mdi:check" })));
+  assert.notEqual(root.childNodes[0], icon);
+  assert.equal(root.childNodes[0].getAttribute("icon"), "mdi:check");
+  // An element we fill ourselves (<ha-card>) is patched like any other
+  const card = fakeEl("ha-card", { class: "mini" }, fakeEl("div", {}, "a"));
+  const host = fakeEl("div", {}, card);
+  patch(host, fakeEl("div", {}, fakeEl("ha-card", {}, fakeEl("div", {}, "b"))));
+  assert.equal(host.childNodes[0], card);
+  assert.equal(card.hasAttribute("class"), false);
+  assert.equal(card.childNodes[0].childNodes[0].nodeValue, "b");
 });
