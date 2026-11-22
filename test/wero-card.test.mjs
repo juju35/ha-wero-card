@@ -876,7 +876,7 @@ test("mini card i18n: new strings in every language, and a translated picker ent
   const entry = ctx.customCards.find((c) => c.type === "wero-mini-card");
   assert.equal(entry.name, i18n.en.mini_name);
   assert.equal(entry.description, i18n.en.mini_desc);
-  assert.equal(entry.preview, true);
+  assert.equal(entry.preview, false);
   // The mini card follows the language like the full card
   const card = mini();
   card.hass = { language: "fr" };

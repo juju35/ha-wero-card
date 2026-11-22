@@ -1718,7 +1718,7 @@ console.info(`%c WERO-CARD %c v${WERO_CARD_VERSION} `, 'color:#1d1c1c;background
 window.customCards = window.customCards || [];
 var weroPicker = (type, name, description) => {
   if (window.customCards.some((c) => c.type === type)) return;
-  window.customCards.push({ type: type, name: name, description: description, preview: true, documentationURL: 'https://github.com/juju35/ha-wero-card' });
+  window.customCards.push({ type: type, name: name, description: description, preview: false, documentationURL: 'https://github.com/juju35/ha-wero-card' });
 };
 // Both entries in the language of the page (Home Assistant sets it on <html>)
 var weroPickerI18n = WeroI18n[weroResolveLang(document.documentElement.lang)];
