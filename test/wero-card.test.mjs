@@ -5,8 +5,9 @@ import { readFileSync } from "node:fs";
 import { test } from "node:test";
 import vm from "node:vm";
 import jsQR from "jsqr";
+import { source } from "./source.mjs";
 
-// Evaluates src/wero-card.js with just enough browser stubs to reach its functions and classes.
+// Evaluates the bundled card source (test/source.mjs) with just enough browser stubs to reach its functions and classes.
 function loadCard(lang = "en") {
   const defined = {};
   const ctx = {
@@ -30,7 +31,7 @@ function loadCard(lang = "en") {
   };
   ctx.window = ctx;
   vm.createContext(ctx);
-  vm.runInContext(readFileSync(new URL("../src/wero-card.js", import.meta.url), "utf8"), ctx);
+  vm.runInContext(source, ctx);
   return { ctx, WeroCard: defined["wero-card"] };
 }
 
@@ -1187,7 +1188,7 @@ test("the status pill is measured only once <ha-card> has drawn its content", as
 });
 
 test("the header icon keeps its 40 px size in the mini card at every width (as the full card)", () => {
-  const src = readFileSync(new URL("../src/wero-card.js", import.meta.url), "utf8");
+  const src = source;
   assert.match(src, /\.hicon \{ position: relative; width: 40px; height: 40px;/);
   assert.doesNotMatch(src, /\.hicon \{ width: (?!40px)\d+px/);
 });
