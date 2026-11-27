@@ -34,6 +34,8 @@ export class WeroMiniCard extends WeroCard {
   disconnectedCallback() {
     super.disconnectedCallback();
     document.removeEventListener('click', this._onOutside, true);
+    // Left the page (another view, a conditional card hidden): back to the compact view.
+    this._zoomed = false;
   }
 
   getCardSize() { return this._zoomed ? super.getCardSize() : 2; }

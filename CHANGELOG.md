@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.14.6 - 2026-11-27
+
+### Fixes
+- Mini card: back to the compact view when it leaves the page (another view, a conditional card hidden), like the other mini cards.
+
 ## 1.14.5 - 2026-11-24
 
 ### Maintenance
